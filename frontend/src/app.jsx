@@ -3,7 +3,7 @@ import React from 'react';
 import { BrowserRouter, Routes } from 'react-router-dom';
 
 import routes from './routes';
-import { AuthProvider } from './context/AuthContext';
+import { AuthProvider } from './context/auth-context';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'perfect-scrollbar/css/perfect-scrollbar.css';
