@@ -2,16 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\CreateUserRequest;
-use App\Http\Requests\UpdateUserRequest;
+use App\Http\Requests\UserCreateRequest;
+use App\Http\Requests\UserUpdateRequest;
 use Illuminate\Http\Request;
-use App\Http\Requests\SearchUserRequest;
+use App\Http\Requests\UserSearchRequest;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
+use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
 {
-    public function index(SearchUserRequest $request)
+    public function index(UserSearchRequest $request)
     {
         try {
             $validated = $request->validated();
@@ -73,7 +74,7 @@ class UserController extends Controller
         }
     }
 
-    public function store(CreateUserRequest $request)
+    public function store(UserCreateRequest $request)
     {
         try {
             $validated = $request->validated();
@@ -82,12 +83,16 @@ class UserController extends Controller
             $validated['password'] = bcrypt($validated['password']);
             $user = User::create($validated);
 
-            if ($user->group_role == 'Admin') {
-                $user->assignRole('Admin');
-            } elseif ($user->group_role == 'Editor') {
-                $user->assignRole('Editor');
-            } else {
-                $user->assignRole('Reviewer');
+            if (isset($validated['group_role'])) {
+                $role = Role::findByName($validated['group_role'], 'sanctum');
+                if ($role) {
+                    $user->assignRole($role);
+                } else {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Vai trò không hợp lệ'
+                    ], 400);
+                }
             }
 
             DB::commit();
@@ -126,7 +131,7 @@ class UserController extends Controller
         }
     }
 
-    public function update(UpdateUserRequest $request, $id)
+    public function update(UserUpdateRequest $request, $id)
     {
         try {
             $user = User::findOrFail($id);

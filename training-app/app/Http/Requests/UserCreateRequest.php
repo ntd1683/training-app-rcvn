@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class CreateUserRequest extends FormRequest
+class UserCreateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -13,9 +13,8 @@ class CreateUserRequest extends FormRequest
      */
     public function authorize()
     {
-        return auth('sanctum')->check() &&
-            auth('sanctum')->user()->hasRole('Admin') &&
-            auth('sanctum')->user()->hasPermissionTo('edit-user');
+        $checkPermission = $this->user()->hasRole('Admin') || $this->user()->can('users.store');
+        return auth('sanctum')->check() && $checkPermission;
     }
 
     /**
@@ -29,7 +28,7 @@ class CreateUserRequest extends FormRequest
             'name' => 'required|string|max:255',
             'email' => 'required|email|max:255|email|unique:mst_users,email',
             'password' => 'nullable|string|min:6|max:100',
-            'group_role' => 'required|string|in:Admin,Editor,Reviewer',
+            'group_role' => 'required|string|max:50|exists:roles,name',
             'is_active' => 'boolean',
             'is_delete' => 'boolean',
         ];
@@ -49,7 +48,7 @@ class CreateUserRequest extends FormRequest
             'email.unique' => 'Email đã được sử dụng.',
             'password.min' => 'Mật khẩu phải có ít nhất 6 ký tự.',
             'group_role.required' => 'Vai trò nhóm là bắt buộc.',
-            'group_role.in' => 'Vai trò nhóm không hợp lệ.',
+            'group_role.*' => 'Vai trò nhóm không hợp lệ.',
             'is_active.boolean' => 'Trạng thái hoạt động phải là true hoặc false.',
             'is_delete.boolean' => 'Trạng thái xóa phải là true hoặc false.',
         ];

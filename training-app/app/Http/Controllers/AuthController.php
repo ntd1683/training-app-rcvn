@@ -36,9 +36,12 @@ class AuthController extends Controller
                 'last_login_ip' => $request->ip(),
             ]);
 
+            $permissions = $user->getAllPermissions()->pluck('name')->toArray();
+            $user->permissions = $permissions;
+
             return response()->json([
                 'success' => true,
-                'user' => $user->only(['id', 'name', 'email', 'group_role', 'last_login_at']),
+                'user' => $user->only(['id', 'name', 'email', 'group_role', 'permissions', 'last_login_at']),
                 'token' => $token,
             ], 200);
         }
@@ -46,6 +49,51 @@ class AuthController extends Controller
         return response()->json([
             'success' => false,
             'message' => 'Email hoặc mật khẩu không chính xác',
+        ], 401);
+    }
+
+    /**
+     * Handle the incoming request to update the user's profile.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function profile(Request $request)
+    {
+        $user = $request->user();
+        $permissions = $user->getAllPermissions()->pluck('name')->toArray();
+        $user->permissions = $permissions;
+        $user = $user->only('id', 'name', 'email', 'avatar', 'status', 'permissions');
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Lấy thông tin người dùng thành công',
+            'data' => $user,
+        ], 200);
+    }
+
+    /**
+     * Verify the user's token.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function verifyToken(Request $request)
+    {
+        $user = $request->user();
+        if ($user) {
+            $user->permissions = $user->getAllPermissions()->pluck('name')->toArray();
+            $user = $user->only(['id', 'name', 'email', 'group_role', 'permissions']);
+            return response()->json([
+                'success' => true,
+                'message' => 'Token hợp lệ',
+                'data' => $user,
+            ], 200);
+        }
+
+        return response()->json([
+            'success' => false,
+            'message' => 'Token không hợp lệ hoặc đã hết hạn',
         ], 401);
     }
 

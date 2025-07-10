@@ -1,4 +1,4 @@
-export const UsersFilter = ({ filterText, setFilterText, filterEmail, setFilterEmail, filterGroup, setFilterGroup, filterStatus, setFilterStatus }) => {
+export const UsersFilter = ({ filterText, setFilterText, filterEmail, setFilterEmail,roles,filterGroup, setFilterGroup, filterStatus, setFilterStatus }) => {
     return (
         <div className="row g-3 px-3">
             <div className="col-md-3">
@@ -27,9 +27,11 @@ export const UsersFilter = ({ filterText, setFilterText, filterEmail, setFilterE
                     onChange={e => setFilterGroup(e.target.value)}
                 >
                     <option value="">Chọn nhóm</option>
-                    <option value="Admin">Admin</option>
-                    <option value="Editor">Editor</option>
-                    <option value="Reviewer">Reviewer</option>
+                    {roles.map(role => (
+                        <option key={role.id} value={role.name}>
+                            {role.name}
+                        </option>
+                    ))}
                 </select>
             </div>
             <div className="col-md-3">

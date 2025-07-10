@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { fetchUserById, deleteUser, createUser, updateUser } from '~/services/api';
+import { fetchUserById, deleteUser, createUser, updateUser, fetchAllRoles } from '~/services/api';
 import { toast } from 'react-toastify';
 
 export const useCreateOrEdit = () => {
@@ -23,6 +23,7 @@ export const useCreateOrEdit = () => {
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [isDeleting, setIsDeleting] = useState(false);
     const [errorDelete, setErrorDelete] = useState();
+    const [roles, setRoles] = useState([]);
 
     const navigate = useNavigate();
 
@@ -35,11 +36,10 @@ export const useCreateOrEdit = () => {
         navigate('/users', { state: { error: 'Không tìm thấy ID người dùng để chỉnh sửa' } });
     }
 
-    const fetchUser = async () => {
+    const fetchUser = useCallback(async () => {
         if (isEdit && id) {
             try {
                 const response = await fetchUserById(id);
-                console.log('Fetched user:', response);
                 if (response) {
                     setUser({
                         name: response.name || '',
@@ -55,11 +55,30 @@ export const useCreateOrEdit = () => {
                 console.error('Error fetching user:', error);
             }
         }
-    };
+    }, [isEdit, id]);
+
+    const loadRoles = useCallback(async () => {
+        try {
+            const response = await fetchAllRoles();
+            if (response.success) {
+                setRoles(response.data);
+            } else {
+                toast.error('Không thể tải danh sách nhóm người dùng.', { toastId: 'fetch-roles-error-toast' });
+            }
+        } catch (error) {
+            console.error('Error fetching roles:', error);
+            toast.error('Có lỗi xảy ra khi tải danh sách nhóm người dùng.', { toastId: 'fetch-roles-error-toast' });
+        }
+    }, []);
 
     useEffect(() => {
         fetchUser();
-    }, [isEdit, id]);
+    }, [fetchUser]);
+
+
+    useEffect(() => {
+        loadRoles();
+    }, [loadRoles])
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -178,6 +197,7 @@ export const useCreateOrEdit = () => {
         handleDelete,
         valDelete,
         setValDelete,
-        errorDelete
+        errorDelete,
+        roles,
     }
 }

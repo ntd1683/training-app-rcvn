@@ -12,6 +12,7 @@ const Layout = () => {
   };
 
   const isActive = (path) => location.pathname === path ? "active" : "";
+  const user = JSON.parse(localStorage.getItem('user') || '{}');
 
   return (
     <div className="layout-wrapper layout-content-navbar">
@@ -19,7 +20,7 @@ const Layout = () => {
         <aside id="layout-menu" className={`layout-menu menu-vertical menu bg-menu-theme d-sm-none ${isMenuOpen ? "menu-open" : ""}`}>
           <div className="app-brand demo">
             <a href="index.html" className="app-brand-link">
-              <img src="logo192.png" alt="logo" className="img-fluid" />
+              <img src="/logo192.png" alt="logo" className="img-fluid" />
             </a>
             <button className="layout-menu-toggle menu-link text-large ms-auto" onClick={toggleMenu}>
               <Icon icon="bx:bx-chevron-left-circle" className="d-block align-middle" />
@@ -36,16 +37,24 @@ const Layout = () => {
                 </div>
               </Link>
             </li>
-            <li className={`menu-item ${isActive('/role-and-permission')}`}>
-              <Link to="/role-and-permission" className="menu-link">
+            <li className={`menu-item ${isActive('/roles')}`}>
+              <Link to="/roles" className="menu-link">
                 <Icon icon="bx:lock-open" className="menu-icon bx" />
                 <div className="text-truncate">
-                  Quản lý quyền và vai trò
+                  Quản lý Vai Trò
                 </div>
               </Link>
             </li>
-            <li className="menu-item">
-              <Link to="/products" className={`menu-link ${isActive('/products')}`}>
+            <li className={`menu-item ${isActive('/permissions')}`}>
+              <Link to="/permissions" className="menu-link">
+                <Icon icon="bx:lock-blanket" className="menu-icon bx" />
+                <div className="text-truncate">
+                  Quản lý Quyền
+                </div>
+              </Link>
+            </li>
+            <li className={`menu-item ${isActive('/products')}`}>
+              <Link to="/products" className={`menu-link`}>
                   <Icon icon="bx:cart-alt" className="menu-icon bx" />
                   <div className="text-truncate">
                     Sản Phẩm
@@ -66,17 +75,23 @@ const Layout = () => {
               </button>
             </div>
             <div className="navbar-nav-right d-flex align-items-center justify-content-end" id="navbar-collapse">
-              <ul className="navbar-nav d-none d-sm-flex flex-sm-column flex-md-row justify-content-evenly w-100">
+              <ul className="navbar-nav d-none d-sm-flex flex-sm-row justify-content-evenly w-100">
                 <li className={`nav-item ${isActive('/users')}`}>
                   <Link to="/users" className="nav-link d-flex align-items-center">
                     <Icon icon="bx:user-voice" className="me-2" style={{ fontSize: '1.5rem' }}/>
                     <span>Users</span>
                   </Link>
                 </li>
-                <li className={`nav-item ${isActive('/role-and-permission')}`}>
-                  <Link to="/role-and-permission" className="nav-link d-flex align-items-center">
+                <li className={`nav-item ${isActive('/roles')}`}>
+                  <Link to="/roles" className="nav-link d-flex align-items-center">
                     <Icon icon="bx:lock-open" className="me-2" style={{ fontSize: '1.5rem' }}/>
-                    <span>Quản lý quyền và vai trò</span>
+                    <span>Quản lý vai trò</span>
+                  </Link>
+                </li>
+                <li className={`nav-item ${isActive('/permissions')}`}>
+                  <Link to="/permissions" className="nav-link d-flex align-items-center">
+                    <Icon icon="bx:lock-blanket" className="me-2" style={{ fontSize: '1.5rem' }}/>
+                    <span>Quản lý quyền</span>
                   </Link>
                 </li>
                 <li className={`nav-item ${isActive('/products')}`}>
@@ -95,6 +110,19 @@ const Layout = () => {
                         </div>
                     </Link>
                     <ul className="dropdown-menu dropdown-menu-end">
+                      <li>
+                        <Link to="" className="dropdown-item">
+                          <div className="d-flex">
+                            <div className="flex-grow-1">
+                              <h6 className="mb-0">{user.name}</h6>
+                              <small className="text-body-secondary">{user.group_role}</small>
+                            </div>
+                          </div>
+                        </Link>
+                    </li>
+                    <li>
+                      <div className="dropdown-divider my-1"></div>
+                    </li>
                     <li>
                       <Link to="/profile" className="dropdown-item">
                         <Icon icon="bx:user" className="icon-base bx icon-md me-3"></Icon><span>My Profile</span>

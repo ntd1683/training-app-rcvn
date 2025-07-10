@@ -23,7 +23,8 @@ const CreateOrEditUser = () => {
         isDeleting,
         handleDelete,
         valDelete,
-        errorDelete
+        errorDelete,
+        roles,
     } = useCreateOrEdit();
     
     return (
@@ -161,9 +162,11 @@ const CreateOrEditUser = () => {
                             value={user.groupRole}
                             onChange={(e) => setUser({ ...user, groupRole: e.target.value })}
                         >
-                            <option value="Reviewer">Reviewer</option>
-                            <option value="Editor">Editor</option>
-                            <option value="Admin">Admin</option>
+                            {roles.map(role => (
+                                <option key={role.id} value={role.name}>
+                                    {role.name}
+                                </option>
+                            ))}
                         </select>
                     </div>
                     <div className="mb-6 w-100 d-flex justify-content-center">

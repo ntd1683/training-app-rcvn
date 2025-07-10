@@ -44,7 +44,7 @@ export const columns = (navigate, pagination, currentUserId, setSelectedUser, se
                 }}>
                     <Icon icon="bx:pen" className="text-primary fs-4" />
                 </button>
-                {row.id != currentUserId ? (
+                {Number(row.id) !== Number(currentUserId) ? (
                     <button type="button" className="btn p-0" onClick={() => {
                         setSelectedUser(row);
                         setShowDeleteModal(true);

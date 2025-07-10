@@ -1,8 +1,9 @@
+import { tab } from '@testing-library/user-event/dist/tab';
 import { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
-import { fetchUsers, deleteUser, toggleUserStatus } from '~/services/api';
+import { fetchUsers, deleteUser, toggleUserStatus, fetchAllRoles } from '~/services/api';
 
-export const useUserManagement = () => {
+export const useUserManage = () => {
 
   // State
   const [data, setData] = useState([]);
@@ -19,8 +20,11 @@ export const useUserManagement = () => {
   const [filterEmail, setFilterEmail] = useState('');
   const [filterGroup, setFilterGroup] = useState('');
   const [filterStatus, setFilterStatus] = useState('');
-  const [sortBy, setSortBy] = useState('id');
-  const [sortOrder, setSortOrder] = useState('asc');
+  const [sortBy, setSortBy] = useState('');
+  const [sortOrder, setSortOrder] = useState('');
+  const [sortClickCount, setSortClickCount] = useState({});
+  const [lastSortedColumn, setLastSortedColumn] = useState('');
+  const [tableKey, setTableKey] = useState(0);
   const [selectedUser, setSelectedUser] = useState(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showLockModal, setShowLockModal] = useState(false);
@@ -28,6 +32,7 @@ export const useUserManagement = () => {
   const [deleteError, setDeleteError] = useState(null);
   const [isLocking, setIsLocking] = useState(false);
   const [lockError, setLockError] = useState(null);
+  const [roles, setRoles] = useState([]);
 
   // Load users
   const loadUsers = async (page = 1, perPage = 10, filters = {}) => {
@@ -45,8 +50,23 @@ export const useUserManagement = () => {
     }
   };
 
+  const loadRoles = async () => {
+    try {
+      const response = await fetchAllRoles();
+      if (response.success) {
+        setRoles(response.data);
+      } else {
+        toast.error('Không thể tải danh sách nhóm người dùng.', { toastId: 'fetch-roles-error-toast' });
+      }
+    } catch (error) {
+      console.error('Error fetching roles:', error);
+      toast.error('Có lỗi xảy ra khi tải danh sách nhóm người dùng.', { toastId: 'fetch-roles-error-toast' });
+    }
+  };
+
   useEffect(() => {
     loadUsers();
+    loadRoles();
   }, []);
 
   // Handlers
@@ -61,6 +81,9 @@ export const useUserManagement = () => {
     setFilterStatus('');
     setSortBy('');
     setSortOrder('');
+    setSortClickCount({});
+    setLastSortedColumn('');
+    setTableKey(prev => prev + 1);
     loadUsers(1, pagination.per_page, {});
   };
 
@@ -77,6 +100,27 @@ export const useUserManagement = () => {
       const selector = typeof column.selector === 'function' 
         ? column.selector.toString().split('.').pop() || column.name.toLowerCase()
         : column.selector;
+      
+      if (lastSortedColumn !== selector) {
+        setSortClickCount({ [selector]: 1 });
+        setLastSortedColumn(selector);
+      } else {
+        const currentCount = sortClickCount[selector] || 0;
+        const nextCount = currentCount + 1;
+        setSortClickCount({ [selector]: nextCount });
+        
+        if (nextCount >= 3) {
+          setSortBy('');
+          setSortOrder('');
+          setSortClickCount({});
+          setLastSortedColumn('');
+          setTableKey(prev => prev + 1);
+          
+          loadUsers(pagination.current_page, pagination.per_page, {});
+          return;
+        }
+      }
+      
       setSortBy(selector);
       setSortOrder(sortDirection);
       loadUsers(pagination.current_page, pagination.per_page, {
@@ -89,6 +133,7 @@ export const useUserManagement = () => {
       });
     }
   };
+
 
   const handleDelete = async (userId) => {
     if (!userId) return;
@@ -131,6 +176,7 @@ export const useUserManagement = () => {
 
   return {
     data,
+    roles,
     isLoading,
     pagination,
     filterText,
@@ -143,6 +189,7 @@ export const useUserManagement = () => {
     setFilterStatus,
     sortBy,
     sortOrder,
+    tableKey,
     selectedUser,
     setSelectedUser,
     showDeleteModal,
