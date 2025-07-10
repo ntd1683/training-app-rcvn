@@ -14,6 +14,7 @@ class User extends Authenticatable
     use HasApiTokens, HasFactory, Notifiable, HasRoles;
 
     protected $table = 'mst_users';
+    protected string $guard_name = 'sanctum';
 
     /**
      * The attributes that are mass assignable.
