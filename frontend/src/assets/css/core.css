@@ -23359,3 +23359,38 @@ body:not(.modal-open) .layout-content-navbar .layout-navbar {
   --bs-footer-link-color: var(--bs-body-color);
   --bs-footer-brand-color: var(--bs-heading-color);
 }
+
+/* Thêm vào file CSS của bạn */
+@media (max-width: 768px) {
+    .rdt_Table {
+        min-width: 600px !important;
+    }
+}
+
+@media (min-width: 769px) {
+    .rdt_Table {
+        width: 100% !important;
+        table-layout: fixed !important;
+    }
+}
+
+.min-height-input-multi-select {
+  min-height: 38px;
+}
+
+.outline-0-input-multi-select:focus {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.cursor-pointer-input-multi-select:hover {
+  background-color: #f8f9fa !important;
+}
+
+.btn-close-input-multi-select:focus {
+  box-shadow: none;
+}
+
+.input-group-text.is-invalid {
+  border-color: var(--bs-danger) !important;
+}

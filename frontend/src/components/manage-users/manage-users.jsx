@@ -5,7 +5,7 @@ import DataTable from 'react-data-table-component';
 import { StyleSheetManager } from 'styled-components';
 import isPropValid from '@emotion/is-prop-valid';
 import CustomPagination from '~/components/ui/custom-pagination';
-import { useUserManagement } from '~/hooks/use-user-manager';
+import { useUserManage } from '~/hooks/use-user-manage';
 import { UsersFilter } from './users-filter';
 import { columns, customStyles } from './user-table-config';
 import { DeleteUserModal, LockUserModal } from './manage-users-modal';
@@ -13,6 +13,7 @@ import { DeleteUserModal, LockUserModal } from './manage-users-modal';
 const ManageUsers = () => {
   const {
     data,
+    roles,
     isLoading,
     pagination,
     filterText,
@@ -40,10 +41,14 @@ const ManageUsers = () => {
     handleSort,
     handleDelete,
     handleLock,
-  } = useUserManagement();
+    sortBy,
+    sortOrder,
+    tableKey,
+  } = useUserManage();
   const navigate = useNavigate();
 
-  const currentUserId = localStorage.getItem('user_id');
+  const user = JSON.parse(localStorage.getItem('user') || '{}');
+  const currentUserId = user.id;
 
   const shouldForwardProp = (prop, defaultValidatorFn) => {
     return !['allowOverflow', 'button'].includes(prop) && isPropValid(prop);
@@ -66,6 +71,7 @@ const ManageUsers = () => {
               setFilterText={setFilterText}
               filterEmail={filterEmail}
               setFilterEmail={setFilterEmail}
+              roles={roles}
               filterGroup={filterGroup}
               setFilterGroup={setFilterGroup}
               filterStatus={filterStatus}
@@ -87,6 +93,7 @@ const ManageUsers = () => {
           </div>
           <div className="table-responsive">
             <DataTable
+              key={tableKey}
               columns={columns(navigate, pagination, currentUserId, setSelectedUser, setShowDeleteModal, setShowLockModal)}
               data={data}
               pagination={false}
@@ -94,13 +101,15 @@ const ManageUsers = () => {
               noDataComponent={isLoading ? "Đang tải..." : "Không có dữ liệu để hiển thị"}
               sortServer
               onSort={handleSort}
+              defaultSortFieldId={sortBy || 'created_at'}
+              defaultSortAsc={sortOrder === 'desc'}
               progressPending={isLoading}
               progressComponent={<div className="p-3">Đang tải dữ liệu...</div>}
             />
-            { pagination.total > 20 && (
+            {pagination.total > 20 && (
               <CustomPagination
                 rowsPerPage={pagination.per_page}
-                totalRows={pagination.total}
+                rowCount={pagination.total}
                 currentPage={pagination.current_page}
                 onChangePage={handlePageChange}
                 onChangeRowsPerPage={handleRowsPerPageChange}

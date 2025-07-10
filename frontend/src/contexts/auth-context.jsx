@@ -1,89 +1,130 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
-import { login as loginFetch, logout as logoutFetch } from '~/services/api';
+import { login as loginFetch, logout as logoutFetch, verifyToken } from '~/services/api';
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const [groupRole, setGroupRole] = useState(localStorage.getItem('group_role') || '');
+  const [user, setUser] = useState(null);
+  const [permissions, setPermissions] = useState([]);
 
   useEffect(() => {
-    const mount = true;
-    const token = localStorage.getItem('token');
-    if (token) {
-      fetch('/api/verify-token', {
-        headers: { Authorization: `Bearer ${token}` },
-      })
-        .then((response) => {
-          if (!mount) return;
-          if (response.ok) {
+    const initAuth = async () => {
+      const token = localStorage.getItem('token');
+      if (token) {
+        try {
+          const response = await verifyToken();
+          if (response.success) {
+            const userData = response.data;
+            setUser(userData);
+            setPermissions(userData.permissions || []);
             setIsAuthenticated(true);
-            setGroupRole(localStorage.getItem('group_role') || '');
+            
+            localStorage.setItem('permissions', JSON.stringify(userData.permissions || []));
+            localStorage.setItem('user', JSON.stringify(userData));
           } else {
-            localStorage.removeItem('token');
-            localStorage.removeItem('group_role');
-            setGroupRole('');
+            console.error('Token verification failed:', response.data.message);
+            clearAuthData();
           }
-        })
-        .catch(() => {
-          if (mount) {
-            localStorage.removeItem('token');
-            localStorage.removeItem('group_role');
-            setGroupRole('');
+        } catch (error) {
+          console.error('Token verification failed:', error);
+          clearAuthData();
+        }
+      } else {
+        const cachedPermissions = localStorage.getItem('permissions');
+        const cachedUser = localStorage.getItem('user');
+        if (cachedPermissions && cachedUser) {
+          try {
+            const parsedUser = JSON.parse(cachedUser);
+            const parsedPermissions = JSON.parse(cachedPermissions);
+            
+            setUser(parsedUser);
+            setPermissions(parsedPermissions);
+            setIsAuthenticated(true);
+          } catch (error) {
+            console.error('Error parsing cached data:', error);
+            clearAuthData();
           }
-        })
-        .finally(() => {
-          if (mount) setIsLoading(false);
-        });
-    } else {
-      setGroupRole('');
+        }
+      }
       setIsLoading(false);
-    }
+    };
+
+    initAuth();
   }, []);
 
-  const handleLogin = async (username, password, remember) => {
+  const clearAuthData = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('permissions');
+    localStorage.removeItem('user');
+    setUser(null);
+    setPermissions([]);
+    setIsAuthenticated(false);
+  };
+
+  const handleLogin = async (email, password, remember) => {
     try {
-      const response = await loginFetch(username, password, remember);
+      const response = await loginFetch(email, password, remember);
       const data = response.data;
-      if (response.status === 200 && data.token) {
+      if (response.status && data.token) {
         localStorage.setItem('token', data.token);
-        localStorage.setItem('email', data.user.email);
-        localStorage.setItem('group_role', data.user.group_role);
-        localStorage.setItem('user_id', data.user.id);
-        localStorage.setItem('name', data.user.name);
-        localStorage.setItem('last_login_at', data.user.last_login_at);
+        localStorage.setItem('permissions', JSON.stringify(data.user.permissions || []));
+        localStorage.setItem('user', JSON.stringify(data.user));
+        
+        setUser(data.user);
+        setPermissions(data.user.permissions || []);
         setIsAuthenticated(true);
-        setGroupRole(data.user.group_role);
-        return true;
+        return { success: true };
       } else {
         throw new Error(data.message || 'Đăng nhập thất bại');
       }
     } catch (error) {
       console.error('Login error:', error);
-      return false;
+      return { success: false, message: error.message };
     }
   };
 
   const handleLogout = async () => {
     try {
       await logoutFetch();
-      localStorage.removeItem('token');
-      localStorage.removeItem('email');
-      localStorage.removeItem('group_role');
-      localStorage.removeItem('user_id');
-      localStorage.removeItem('name');
-      localStorage.removeItem('last_login_at');
-      setIsAuthenticated(false);
-      setGroupRole('');
     } catch (error) {
-      console.error('Logout failed:', error);
+      console.error('Logout API failed:', error);
+      clearAuthData();
       throw ('Logout failed:', error);
+    } finally {
     }
   };
 
+  const hasPermission = (permission) => {
+    return permissions.includes(permission);
+  };
+
+  const hasAnyPermission = (permissionList) => {
+    return permissionList.some(permission => permissions.includes(permission));
+  };
+
+  const hasAllPermissions = (permissionList) => {
+    return permissionList.every(permission => permissions.includes(permission));
+  };
+
+  const isAdmin = () => {
+    return user && user.group_role === 'Admin';
+  }
+
   return (
-    <AuthContext.Provider value={{ isAuthenticated, isLoading, groupRole, handleLogin, handleLogout }}>
+    <AuthContext.Provider value={{
+      isAuthenticated,
+      isLoading,
+      user,
+      permissions,
+      isAdmin,
+      handleLogin,
+      handleLogout,
+      hasPermission,
+      hasAnyPermission,
+      hasAllPermissions
+    }}>
       {children}
     </AuthContext.Provider>
   );
