@@ -1,0 +1,183 @@
+import { useEffect, useState } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { fetchUserById, deleteUser, createUser, updateUser } from '~/services/api';
+import { toast } from 'react-toastify';
+
+export const useCreateOrEdit = () => {
+    const [user, setUser] = useState({
+        name: '',
+        email: '',
+        password: '',
+        isActive: 1,
+        isDelete: 0,
+        groupRole: 'Reviewer'
+    });
+    const [valDelete, setValDelete] = useState(0);
+    const [checkPassword, setCheckPassword] = useState(true);
+    const [isLoading, setIsLoading] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
+    const togglePassword = () => setShowPassword((prev) => !prev);
+    const [errorName, setErrorName] = useState();
+    const [errorEmail, setErrorEmail] = useState();
+    const [errorPassword, setErrorPassword] = useState();
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [isDeleting, setIsDeleting] = useState(false);
+    const [errorDelete, setErrorDelete] = useState();
+
+    const navigate = useNavigate();
+
+    const path = window.location.pathname;
+    const isEdit = path.split('/')[2] === 'edit' ? true : false;
+    const { id } = useParams();
+    const title = isEdit ? 'Chỉnh Sửa' : 'Thêm';
+
+    if (isEdit && !id) {
+        navigate('/users', { state: { error: 'Không tìm thấy ID người dùng để chỉnh sửa' } });
+    }
+
+    const fetchUser = async () => {
+        if (isEdit && id) {
+            try {
+                const response = await fetchUserById(id);
+                console.log('Fetched user:', response);
+                if (response) {
+                    setUser({
+                        name: response.name || '',
+                        email: response.email || '',
+                        isActive: response.is_active,
+                        isDelete: response.is_delete,
+                        groupRole: response.group_role || 'Reviewer'
+                    });
+                    setCheckPassword(false);
+                    setValDelete(response.is_delete || 0);
+                }
+            } catch (error) {
+                console.error('Error fetching user:', error);
+            }
+        }
+    };
+
+    useEffect(() => {
+        fetchUser();
+    }, [isEdit, id]);
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setIsLoading(true);
+        if (!user.name) {
+            setErrorName('Vui lòng nhập tên đầy đủ');
+            setIsLoading(false);
+            return;
+        } else if (user.name.length < 3 || user.name.length > 50) {
+            setErrorName('Tên không hợp lệ, phải từ 3 đến 50 ký tự');
+            setIsLoading(false);
+            return;
+        }
+
+        if (!user.email) {
+            setErrorEmail('Vui lòng nhập email');
+            setIsLoading(false);
+            return;
+        } else if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(user.email)) {
+            setErrorEmail('Email không hợp lệ');
+            setIsLoading(false);
+            return;
+        }
+
+        if (checkPassword && !user.password) {
+            setErrorPassword('Vui lòng nhập mật khẩu');
+            setIsLoading(false);
+            return;
+        } else if (checkPassword && user.password.length > 100) {
+            setErrorPassword('Mật khẩu không hợp lệ');
+            setIsLoading(false);
+            return;
+        }
+
+        if (!isEdit) {
+            try {
+                await createUser({
+                    name: user.name,
+                    email: user.email,
+                    password: user.password,
+                    isActive: user.isActive,
+                    isDelete: user.isDelete,
+                    groupRole: user.groupRole
+                });
+                navigate('/users', { state: { success: 'Tạo thành viên thành công' } });
+            } catch (error) {
+                console.error('Error creating user:', error);
+                toast.error(`Tạo thành viên không thành công: ${error.response.data.message}`);
+                setIsLoading(false);
+                return;
+            }
+            setIsLoading(false);
+        } else {
+            try {
+                await updateUser(id, {
+                    name: user.name,
+                    email: user.email,
+                    password: user.password,
+                    isActive: user.isActive,
+                    isDelete: user.isDelete,
+                    groupRole: user.groupRole
+                });
+                setValDelete(user.isDelete);
+                navigate('/users', { state: { success: 'Chỉnh sửa thành viên thành công' } });
+            } catch (error) {
+                console.error('Error updating user:', error);
+                toast.error('Cập nhật thành viên không thành công');
+                setIsLoading(false);
+                return;
+            }
+            setIsLoading(false);
+        }
+    }
+
+    const handleDelete = async () => {
+        setIsDeleting(true);
+        setErrorDelete('');
+        try {
+            const response = await deleteUser(id);
+
+            if (!response) {
+                throw new Error('Xoá thành viên không thành công');
+            }
+
+            setShowDeleteModal(false);
+            toast.success('Xoá thành viên thành công');
+            navigate('/users', { state: { success: 'Xoá thành viên thành công' } });
+        } catch (error) {
+            console.error('Error deleting user:', error);
+            setErrorDelete('Xoá thành viên không thành công');
+        } finally {
+            setIsDeleting(false);
+        }
+    }
+
+    return {
+        user,
+        setUser,
+        isEdit,
+        title,
+        isLoading,
+        showPassword,
+        togglePassword,
+        errorName,
+        setErrorName,
+        errorEmail,
+        setErrorEmail,
+        errorPassword,
+        setErrorPassword,
+        checkPassword,
+        setCheckPassword,
+        handleSubmit,
+        showDeleteModal,
+        setShowDeleteModal,
+        isDeleting,
+        handleDelete,
+        valDelete,
+        setValDelete,
+        errorDelete
+    }
+}

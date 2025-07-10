@@ -41,8 +41,6 @@ class User extends Authenticatable
         'password',
         'remember_token',
         'verify_email',
-        'is_active',
-        'is_delete',
     ];
 
     /**

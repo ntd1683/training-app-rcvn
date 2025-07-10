@@ -1,0 +1,49 @@
+export const UsersFilter = ({ filterText, setFilterText, filterEmail, setFilterEmail, filterGroup, setFilterGroup, filterStatus, setFilterStatus }) => {
+    return (
+        <div className="row g-3 px-3">
+            <div className="col-md-3">
+                <input
+                    type="text"
+                    className="form-control"
+                    placeholder="Tìm kiếm họ tên..."
+                    value={filterText}
+                    onChange={e => setFilterText(e.target.value)}
+                />
+            </div>
+            <div className="col-md-3">
+                <input
+                    type="text"
+                    className="form-control"
+                    placeholder="Tìm kiếm email..."
+                    value={filterEmail}
+                    onChange={e => setFilterEmail(e.target.value)}
+                />
+            </div>
+            <div className="col-md-3">
+                <select
+                    name="group"
+                    className="form-select"
+                    value={filterGroup}
+                    onChange={e => setFilterGroup(e.target.value)}
+                >
+                    <option value="">Chọn nhóm</option>
+                    <option value="Admin">Admin</option>
+                    <option value="Editor">Editor</option>
+                    <option value="Reviewer">Reviewer</option>
+                </select>
+            </div>
+            <div className="col-md-3">
+                <select
+                    name="status"
+                    className="form-select"
+                    value={filterStatus}
+                    onChange={e => setFilterStatus(e.target.value)}
+                >
+                    <option value="">Chọn trạng thái</option>
+                    <option value="0">Đang tạm khoá</option>
+                    <option value="1">Hoạt động</option>
+                </select>
+            </div>
+        </div>
+    )
+}

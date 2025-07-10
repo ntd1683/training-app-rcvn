@@ -1,0 +1,65 @@
+.layout-menu {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 260px;
+  transform: translateX(-100%);
+  transition: transform 0.3s ease-in-out !important;
+  z-index: 1000;
+}
+
+.layout-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out !important;
+  z-index: 999;
+}
+
+.menu-open ~ .layout-overlay {
+  opacity: 1;
+  visibility: visible;
+}
+
+.layout-page {
+  transition: margin-left 0.3s ease-in-out  !important;
+}
+
+.menu-open ~ .layout-page {
+  margin-left: 0;
+}
+
+@media (min-width: 576px) {
+  .layout-menu {
+    display: none;
+  }
+  .layout-overlay {
+    display: none;
+  }
+}
+
+.menu-open.menu .app-brand .layout-menu-toggle {
+  display: block;
+  font-size: 1.5rem;
+  color: var(--bs-primary);
+  background-color: white;
+}
+
+.menu-open.menu .app-brand .layout-menu-toggle:hover {
+  color: white;
+  background-color: var(--bs-primary);
+}
+
+.menu-open {
+  transform: translateX(0) !important;
+}
+
+li.nav-item.active span, li.nav-item.active svg{
+  color: var(--bs-menu-active-color) !important;
+}

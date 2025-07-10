@@ -22426,8 +22426,9 @@ li:not(:first-child) .dropdown-item, .dropdown-menu .dropdown-item:not(:first-ch
   .layout-navbar .navbar-nav .nav-item.dropdown .dropdown-menu {
     position: absolute;
     inline-size: 92%;
-    inset-inline-start: 0.9rem;
+    inset-inline-end: 0.9rem;
     min-inline-size: auto;
+    width: fit-content;
   }
 }
 

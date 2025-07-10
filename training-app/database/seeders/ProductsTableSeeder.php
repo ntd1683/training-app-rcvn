@@ -22,7 +22,7 @@ class ProductsTableSeeder extends Seeder
         $users = User::all()->pluck('id')->toArray();
 
         for ($i = 0; $i < 100; $i++) {
-            $name = $faker->word;
+            $name = ucfirst($faker->word) . ' ' . $faker->word;
             $number = str_pad($i + 1, 9, '0', STR_PAD_LEFT);
             $id = $name[0] . $number;
             $products[] = [

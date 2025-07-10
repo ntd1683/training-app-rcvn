@@ -7,7 +7,6 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\LoginRequest;
 use App\Models\User;
 use Carbon\Carbon;
-use Str;
 
 class AuthController extends Controller
 {
@@ -18,12 +17,13 @@ class AuthController extends Controller
 
         $user = User::where('email', $credentials['email'])
                             ->where('is_delete', false)
+                            ->where('is_active', true)
                             ->first();
 
         if (!$user) {
             return response()->json([
                 'success' => false,
-                'message' => 'The provided email does not exist or has been deleted.',
+                'message' => 'Email không tồn tại hoặc tài khoản đã bị xóa hoặc không hoạt động',
             ], 401);
         }
 
@@ -45,7 +45,7 @@ class AuthController extends Controller
 
         return response()->json([
             'success' => false,
-            'message' => 'Invalid credentials',
+            'message' => 'Email hoặc mật khẩu không chính xác',
         ], 401);
     }
 
@@ -53,12 +53,16 @@ class AuthController extends Controller
     {
         if ($request->user()) {
             $request->user()->currentAccessToken()->delete();
-            Auth::logout();
-            return response()->json(['success' => true, 'message' => 'Logged out successfully'])
-                ->withCookie(cookie()->forget('XSRF-TOKEN'))
-                ->withCookie(cookie()->forget('laravel_session'));
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Đăng xuất thành công'
+            ], 200);
         }
 
-        return response()->json(['success' => false, 'message' => 'No authenticated user'], 401);
+        return response()->json([
+            'success' => false,
+            'message' => 'Bạn chưa đăng nhập hoặc token không hợp lệ',
+        ], 401);
     }
 }
