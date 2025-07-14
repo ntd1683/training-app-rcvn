@@ -23,7 +23,7 @@ class PermissionMiddleware
             throw UnauthorizedException::notLoggedIn();
         }
 
-        if($authGuard->user()->hasRole('Admin')) {
+        if ($authGuard->user()->hasRole('Admin')) {
             return $next($request);
         }
 
@@ -33,7 +33,7 @@ class PermissionMiddleware
                 : explode('|', $permission);
         }
 
-        if ( is_null($permission) ) {
+        if (is_null($permission)) {
             $permission = $request->route()->getName();
             $permissions = array($permission);
         }

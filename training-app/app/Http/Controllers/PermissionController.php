@@ -17,10 +17,10 @@ class PermissionController extends Controller
         try {
             $validated = $request->validated();
             $query = Permission::query();
-            $query->select(
-                ['id', 'name', 'guard_name',
-                    DB::raw('(SELECT COUNT(*) FROM role_has_permissions WHERE permission_id = permissions.id) as roles_count')
-                ]);
+            $query->select(['id', 'name', 'guard_name',
+                DB::raw('(SELECT COUNT(*) FROM role_has_permissions
+                WHERE permission_id = permissions.id) as roles_count')
+            ]);
 
             if (!empty($validated['selected'])) {
                 $query->whereNotIn('id', $validated['selected']);
@@ -58,7 +58,6 @@ class PermissionController extends Controller
                 ],
                 'message' => 'Lấy danh sách vai trò thành công',
             ], 200);
-
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
@@ -79,7 +78,7 @@ class PermissionController extends Controller
                 $errorCreated = [];
                 foreach ($permissionsDefault as $permission) {
                     $name = $validated['model'] . '.' . $permission;
-                    if(Str::length($name) > 255) {
+                    if (Str::length($name) > 255) {
                         return response()->json([
                             'success' => false,
                             'message' => "Tên quyền '{$name}' quá dài, tối đa 255 ký tự",
@@ -99,7 +98,8 @@ class PermissionController extends Controller
 
                 if (!empty($errorCreated)) {
                     $message =  'Một số quyền đã tồn tại: ' . implode(', ', $errorCreated);
-                    $message .= !empty($permissionCreated) ? '. Quyền mới được tạo: ' . implode(', ', $permissionCreated) : '';
+                    $message .= !empty($permissionCreated) ?
+                        '. Quyền mới được tạo: ' . implode(', ', $permissionCreated) : '';
                     return response()->json([
                         'success' => false,
                         'message' => $message,

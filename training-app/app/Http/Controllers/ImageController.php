@@ -12,7 +12,7 @@ class ImageController extends Controller
     public function show($image)
     {
         // Cache query để tăng hiệu suất
-        $imageRecord = Cache::remember("image_{$image}", 3600, function() use ($image) {
+        $imageRecord = Cache::remember("image_{$image}", 3600, function () use ($image) {
             return Image::where('filename', $image)->first();
         });
 

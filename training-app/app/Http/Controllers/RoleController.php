@@ -18,10 +18,9 @@ class RoleController extends Controller
                 $query->select('id', 'name');
             }]);
 
-            $query->select(
-                ['id', 'name', 'guard_name',
-                    DB::raw('(SELECT COUNT(*) FROM model_has_roles WHERE role_id = roles.id) as users_count')
-                ]);
+            $query->select(['id', 'name', 'guard_name',
+                DB::raw('(SELECT COUNT(*) FROM model_has_roles WHERE role_id = roles.id) as users_count')
+            ]);
 
             if (!empty($validated['name'])) {
                 $query->where('name', 'like', '%' . $validated['name'] . '%');
@@ -61,7 +60,6 @@ class RoleController extends Controller
                 ],
                 'message' => 'Lấy danh sách vai trò thành công',
             ], 200);
-
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
@@ -101,7 +99,7 @@ class RoleController extends Controller
 
     public function edit($name)
     {
-    try {
+        try {
             $role = Role::where('name', $name)->firstOrFail();
             $role->load('permissions:id,name');
 
@@ -119,7 +117,7 @@ class RoleController extends Controller
         }
     }
 
-    public function Update(RoleUpdateRequest $request, $role)
+    public function update(RoleUpdateRequest $request, $role)
     {
         try {
             DB::beginTransaction();
@@ -184,4 +182,3 @@ class RoleController extends Controller
         ], 200);
     }
 }
-

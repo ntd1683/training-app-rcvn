@@ -66,7 +66,6 @@ class UserController extends Controller
                 ],
                 'message' => 'Lấy danh sách users thành công'
             ], 200);
-
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
@@ -112,7 +111,6 @@ class UserController extends Controller
                 'data' => $user,
                 'message' => 'Tạo user thành công'
             ], 201);
-
         } catch (\Exception $e) {
             DB::rollBack();
             return response()->json([
@@ -139,7 +137,6 @@ class UserController extends Controller
                 'data' => $user,
                 'message' => 'Lấy thông tin user thành công'
             ], 200);
-
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
@@ -188,7 +185,6 @@ class UserController extends Controller
                 'data' => $user,
                 'message' => 'Cập nhật user thành công'
             ], 200);
-
         } catch (\Exception $e) {
             DB::rollBack();
             return response()->json([
@@ -202,7 +198,7 @@ class UserController extends Controller
     {
         try {
             $currentUser = auth()->user();
-            if($currentUser && $currentUser->id == $id) {
+            if ($currentUser && $currentUser->id == $id) {
                 return response()->json([
                     'success' => false,
                     'message' => 'Bạn không thể xóa chính mình'
@@ -222,7 +218,6 @@ class UserController extends Controller
                 'success' => true,
                 'message' => 'Xóa user thành công'
             ], 200);
-
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
@@ -243,7 +238,6 @@ class UserController extends Controller
                 'data' => $user,
                 'message' => 'Thay đổi trạng thái thành công'
             ], 200);
-
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
