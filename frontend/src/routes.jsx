@@ -1,14 +1,18 @@
 import { Route, Navigate, Outlet } from 'react-router-dom';
 import Login from './components/auth/login';
 import Logout from './components/auth/logout';
+import DashBoard from './components/dashboard';
 import ManageUsers from './components/manage-users/manage-users';
 import CreateOrEditUser from './components/create-or-edit-user/create-or-edit-user';
 import Roles from './components/roles/roles';
 import Permissions from './components/permissions/permissions';
 import CreateOrEditRole from './components/create-or-edit-role/create-or-edit-role';
 import CreateOrEditPermission from './components/create-or-edit-permission/create-or-edit-permission';
+import ManageProducts from './components/manage-products/manage-products';
+import CreateOrEditProduct from './components/create-or-edit-product/create-or-edit-product';
 import Test from './components/test';
 import NoPermission from './components/no-permission';
+import NotFound from './components/not-found';
 import Layout from './components/layout/layout';
 import { useAuth } from './contexts/auth-context';
 
@@ -102,12 +106,31 @@ const permissionProtectedRoutes = [
     element: <CreateOrEditPermission />,
     requiredPermission: 'permissions.edit',
   },
+  {
+    path: '/products',
+    element: <ManageProducts />,
+    requiredPermission: 'products.index',
+  },
+  {
+    path: '/products/add',
+    element: <CreateOrEditProduct />,
+    requiredPermission: 'products.store',
+  },
+  {
+    path: '/products/edit/:id',
+    element: <CreateOrEditProduct />,
+    requiredPermission: 'products.edit',
+  }
 ];
 
 const authProtectedRoutes = [
   {
     path: '/logout',
     element: <Logout />,
+  },
+  {
+    path: '/no-permission',
+    element: <NoPermission />,
   },
   {
     path: '/test',
@@ -119,10 +142,6 @@ const routes = (
   <>
     <Route element={<PublicRoutes />}>
       <Route path="/login" element={<Login />} />
-    </Route>
-
-    <Route element={<Layout />}>
-
     </Route>
 
     <Route element={<Layout />}>
@@ -143,11 +162,14 @@ const routes = (
     </Route>
 
     <Route element={<AuthProtectedRoute />}>
+      <Route element={<Layout />}>
+        <Route path="/" element={<DashBoard />}></Route>
+      </Route>
       {authProtectedRoutes.map(({ path, element }) => (
         <Route key={path} path={path} element={element} />
       ))}
     </Route>
-    <Route path="*" element={<NoPermission />} />
+    <Route path="*" element={<NotFound />} />
   </>
 );
 

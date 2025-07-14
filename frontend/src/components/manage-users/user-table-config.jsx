@@ -1,6 +1,7 @@
 import { Icon } from '@iconify/react';
+import RoleMain from '../../constants/role-main';
 
-export const columns = (navigate, pagination, currentUserId, setSelectedUser, setShowDeleteModal, setShowLockModal) => [
+export const columns = (navigate, pagination, currentUserId, currentUserRole, setSelectedUser, setShowDeleteModal, setShowLockModal) => [
     {
         name: '#',
         cell: (row, index) => index + 1 + (pagination.current_page - 1) * pagination.per_page,
@@ -37,29 +38,33 @@ export const columns = (navigate, pagination, currentUserId, setSelectedUser, se
     },
     {
         name: '',
-        cell: (row) => (
-            <div className="d-flex gap-2">
-                <button type="button" className="btn p-0" onClick={() => {
-                    navigate(`/users/edit/${row.id}`);
-                }}>
-                    <Icon icon="bx:pen" className="text-primary fs-4" />
-                </button>
-                {Number(row.id) !== Number(currentUserId) ? (
+        cell: (row) => {
+            const isHigherRole = RoleMain.getValue(currentUserRole) > RoleMain.getValue(row.group_role);
+            return (isHigherRole && (
+                <div className="d-flex gap-2">
+                    <button type="button" className="btn p-0" onClick={() => {
+                        navigate(`/users/edit/${row.id}`);
+                    }}>
+                        <Icon icon="bx:pen" className="text-primary fs-4" />
+                    </button>
+                    {Number(row.id) !== Number(currentUserId) ? (
+                        <button type="button" className="btn p-0" onClick={() => {
+                            setSelectedUser(row);
+                            setShowDeleteModal(true);
+                        }}>
+                            <Icon icon="bx:trash" className="text-danger fs-4" />
+                        </button>
+                    ) : null}
                     <button type="button" className="btn p-0" onClick={() => {
                         setSelectedUser(row);
-                        setShowDeleteModal(true);
+                        setShowLockModal(true);
                     }}>
-                        <Icon icon="bx:trash" className="text-danger fs-4" />
+                        <Icon icon="bx:user-x" className="fs-4" />
                     </button>
-                ) : null}
-                <button type="button" className="btn p-0" onClick={() => {
-                    setSelectedUser(row);
-                    setShowLockModal(true);
-                }}>
-                    <Icon icon="bx:user-x" className="fs-4" />
-                </button>
-            </div>
-        ),
+                </div>
+            )
+            );
+        },
         allowOverflow: true,
         button: true,
         sortable: false,

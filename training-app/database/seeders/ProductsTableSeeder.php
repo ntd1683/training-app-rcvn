@@ -36,7 +36,6 @@ class ProductsTableSeeder extends Seeder
                     StatusProductEnum::SELLING->value,
                     StatusProductEnum::OUT_OF_STOCK->value,
                 ]),
-                'image_url' => null,
                 'deleted_at' => $faker->boolean(10) ? now() : null,
                 'user_id' => $faker->randomElement($users),
                 'created_at' => now(),

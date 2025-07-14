@@ -24,6 +24,7 @@ const CreateOrEditUser = () => {
         handleDelete,
         valDelete,
         errorDelete,
+        errorRole,
         roles,
     } = useCreateOrEdit();
     
@@ -156,7 +157,7 @@ const CreateOrEditUser = () => {
                     <div className="mb-6">
                         <label htmlFor="groupRole" className="form-label">Quyền</label>
                         <select
-                            className="form-select"
+                            className={`form-select ${errorRole ? 'is-invalid' : ''}`}
                             id="groupRole"
                             aria-label="Default select2"
                             value={user.groupRole}
@@ -168,6 +169,7 @@ const CreateOrEditUser = () => {
                                 </option>
                             ))}
                         </select>
+                        <div className="text-danger">{errorRole}</div>
                     </div>
                     <div className="mb-6 w-100 d-flex justify-content-center">
                         <button

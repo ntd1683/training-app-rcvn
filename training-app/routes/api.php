@@ -1,6 +1,9 @@
 <?php
 
+use App\Http\Controllers\AnalyticController;
+use App\Http\Controllers\ImageController;
 use App\Http\Controllers\PermissionController;
+use App\Http\Controllers\ProductController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
@@ -19,6 +22,7 @@ use App\Http\Controllers\AuthController;
 */
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
+    Route::get('/analytics', [AnalyticController::class, 'analytic'])->name('analytics');
     Route::post('/verify-token', [AuthController::class, 'verifyToken'])->name('verify.token');
     Route::get('/user', [AuthController::class, 'profile'])->name('profile.update');
 
@@ -50,7 +54,18 @@ Route::middleware('auth:sanctum')->group(function () {
             Route::put('/{id}', [PermissionController::class, 'update'])->name('permissions.update');
             Route::delete('/{id}', [PermissionController::class, 'destroy'])->name('permissions.delete');
         });
+
+        Route::prefix('products')->group(function () {
+            Route::get('/', [ProductController::class, 'index'])->name('products.index');
+            Route::get('/{id}', [ProductController::class, 'edit'])->name('products.edit');
+            Route::post('/', [ProductController::class, 'store'])->name('products.store');
+            Route::post('/{id}', [ProductController::class, 'update'])->name('products.update');
+            Route::delete('/{id}', [ProductController::class, 'destroy'])->name('products.delete');
+        });
     });
 });
 
 Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:10,1');
+
+Route::get('/images/products/{image}', [ImageController::class, 'show'])
+    ->name('images.show')->middleware(['throttle:100,1', 'check.file.allow.domain']);

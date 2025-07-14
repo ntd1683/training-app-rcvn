@@ -9,6 +9,20 @@ const api = axios.create({
   },
 });
 
+export const getAnalytics = async () => {
+  try {
+    await getCsrfToken();
+    const token = localStorage.getItem('token');
+    const response = await api.get('/api/analytics', {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error get analytics:', error);
+    throw error;
+  }
+}
+
 // Authentication functions
 
 export const getCsrfToken = async () => {
@@ -22,7 +36,7 @@ export const login = async (email, password, remember) => {
 
 export const logout = async () => {
   await getCsrfToken();
-  
+
   const token = localStorage.getItem('token');
   return api.post('/api/logout', {}, {
     headers: { Authorization: `Bearer ${token}` },
@@ -33,7 +47,7 @@ export const verifyToken = async () => {
   try {
     await getCsrfToken();
     const token = localStorage.getItem('token');
-    const response = await api.post('/api/verify-token', null ,{
+    const response = await api.post('/api/verify-token', null, {
       headers: { Authorization: `Bearer ${token}` },
     });
     return response.data;
@@ -380,3 +394,142 @@ export const deletePermission = async (id) => {
     throw error;
   }
 };
+
+// Product management functions
+export const fetchProducts = async (page = 1, perPage = 10, filters = {}) => {
+  try {
+    await getCsrfToken();
+    const token = localStorage.getItem('token');
+
+    const params = {
+      page,
+      per_page: perPage,
+      name: filters.filterText || undefined,
+      status: filters.filterStatus || undefined,
+      price_to: filters.filterPriceTo || undefined,
+      price_from: filters.filterPriceFrom || undefined,
+      sort_by: filters.sortBy,
+      sort_order: filters.sortOrder
+    };
+
+    Object.keys(params).forEach(key => {
+      if (params[key] === undefined) {
+        delete params[key];
+      }
+    });
+
+    const response = await api.get('/api/products', {
+      params,
+      headers: { Authorization: `Bearer ${token}` }
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching products:', error);
+    throw error;
+  }
+};
+
+export const fetchProductById = async (id) => {
+  try {
+    await getCsrfToken();
+    const token = localStorage.getItem('token');
+    const response = await api.get(`/api/products/${id}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return response.data.data;
+  } catch (error) {
+    console.error('Error fetching product by ID:', error);
+    throw error;
+  }
+}
+
+export const createProduct = async (productData) => {
+  try {
+    await getCsrfToken();
+
+    const formData = new FormData();
+    formData.append('name', productData.name);
+    formData.append('description', productData.description);
+    formData.append('price', productData.price);
+    formData.append('currency', productData.currency);
+    formData.append('status', productData.status);
+    formData.append('is_delete', productData.isDelete || 0);
+
+    if (productData.image) {
+      formData.append('image', productData.image);
+    }
+
+    const token = localStorage.getItem('token');
+    const response = await api.post('/api/products', formData, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'multipart/form-data'
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error creating product:', error);
+    throw error;
+  }
+}
+
+export const updateProduct = async (id, productData) => {
+  try {
+    await getCsrfToken();
+
+    const formData = new FormData();
+    formData.append('name', productData.name);
+    formData.append('description', productData.description);
+    formData.append('price', productData.price);
+    formData.append('currency', productData.currency);
+    formData.append('status', productData.status);
+    formData.append('is_delete', productData.isDelete || 0);
+    formData.append('image_url', productData.image_url || '');
+
+    if (productData.image) {
+      formData.append('image', productData.image);
+    }
+
+    const token = localStorage.getItem('token');
+    const response = await api.post(`/api/products/${id}`, formData, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'multipart/form-data'
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error creating product:', error);
+    throw error;
+  }
+}
+
+export const deleteProduct = async (id) => {
+  try {
+    await getCsrfToken();
+    const token = localStorage.getItem('token');
+    await api.delete(`/api/products/${id}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    return true;
+  } catch (error) {
+    console.error('Error deleting product:', error);
+    throw error;
+  }
+};
+
+// Image management functions
+export const getImage = async (imageFile) => {
+  try {
+    const response = await api.get(`/api/images/products/${imageFile}`, {
+      responseType: 'blob'
+    });
+
+    return URL.createObjectURL(new Blob([response.data]));
+  } catch (error) {
+    console.error('Error fetching image:', error);
+    throw error;
+  }
+}

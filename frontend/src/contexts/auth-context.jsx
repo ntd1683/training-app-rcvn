@@ -1,5 +1,6 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import { login as loginFetch, logout as logoutFetch, verifyToken } from '~/services/api';
+import RoleMain from '../constants/role-main';
 
 const AuthContext = createContext();
 
@@ -109,7 +110,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   const isAdmin = () => {
-    return user && user.group_role === 'Admin';
+    return user && RoleMain.getValue(user.group_role) >= RoleMain.Admin;
   }
 
   return (

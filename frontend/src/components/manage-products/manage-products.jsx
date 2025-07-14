@@ -5,12 +5,12 @@ import DataTable from 'react-data-table-component';
 import { StyleSheetManager } from 'styled-components';
 import isPropValid from '@emotion/is-prop-valid';
 import CustomPagination from '~/components/ui/custom-pagination';
-import { useUserManage } from '~/hooks/use-user-manage';
-import { UsersFilter } from './users-filter';
-import { columns, customStyles } from './user-table-config';
-import { DeleteUserModal, LockUserModal } from './manage-users-modal';
+import { useProductManage } from '~/hooks/use-product-manage';
+import { ProductsFilter } from './products-filter';
+import { columns, customStyles } from './products-table-config';
+import { DeleteProductsModal } from './manage-products-modal';
 
-const ManageUsers = () => {
+const ManageProducts = () => {
   const {
     data,
     roles,
@@ -18,38 +18,29 @@ const ManageUsers = () => {
     pagination,
     filterText,
     setFilterText,
-    filterEmail,
-    setFilterEmail,
-    filterGroup,
-    setFilterGroup,
     filterStatus,
     setFilterStatus,
-    selectedUser,
-    setSelectedUser,
+    filterPriceTo,
+    setFilterPriceTo,
+    filterPriceFrom,
+    setFilterPriceFrom,
+    selectedProduct,
+    setSelectedProduct,
     showDeleteModal,
     setShowDeleteModal,
-    showLockModal,
-    setShowLockModal,
     isDeleting,
     deleteError,
-    isLocking,
-    lockError,
     handleSearch,
     handleReset,
     handlePageChange,
     handleRowsPerPageChange,
     handleSort,
     handleDelete,
-    handleLock,
     sortBy,
     sortOrder,
     tableKey,
-  } = useUserManage();
+  } = useProductManage();
   const navigate = useNavigate();
-
-  const user = JSON.parse(localStorage.getItem('user') || '{}');
-  const currentUserId = user.id;
-  const currentUserRole = user.group_role || 'Reviewer';
 
   const shouldForwardProp = (prop, defaultValidatorFn) => {
     return !['allowOverflow', 'button'].includes(prop) && isPropValid(prop);
@@ -60,21 +51,20 @@ const ManageUsers = () => {
       <div className="container-fluid flex-grow-1 py-4">
         <div className="card pb-4">
           <div className="card-header d-flex justify-content-between align-items-center">
-            <h5 className="mb-0">Quản lý Users</h5>
-            <Link to="/users/add" className="btn btn-primary">
+            <h5 className="mb-0">Quản lý Sản Phẩm</h5>
+            <Link to="/products/add" className="btn btn-primary">
               <Icon icon="bx:plus" className="me-1" />
               Thêm mới
             </Link>
           </div>
           <div>
-            <UsersFilter
+            <ProductsFilter
               filterText={filterText}
               setFilterText={setFilterText}
-              filterEmail={filterEmail}
-              setFilterEmail={setFilterEmail}
-              roles={roles}
-              filterGroup={filterGroup}
-              setFilterGroup={setFilterGroup}
+              filterPriceFrom={filterPriceFrom}
+              setFilterPriceFrom={setFilterPriceFrom}
+              filterPriceTo={filterPriceTo}
+              setFilterPriceTo={setFilterPriceTo}
               filterStatus={filterStatus}
               setFilterStatus={setFilterStatus}
             />
@@ -95,7 +85,7 @@ const ManageUsers = () => {
           <div className="table-responsive">
             <DataTable
               key={tableKey}
-              columns={columns(navigate, pagination, currentUserId, currentUserRole, setSelectedUser, setShowDeleteModal, setShowLockModal)}
+              columns={columns(navigate, pagination, setSelectedProduct, setShowDeleteModal)}
               data={data}
               pagination={false}
               customStyles={customStyles}
@@ -119,25 +109,16 @@ const ManageUsers = () => {
           </div>
         </div>
 
-        <DeleteUserModal
-          selectedUser={selectedUser}
+        <DeleteProductsModal
+          selectedProduct={selectedProduct}
           showDeleteModal={showDeleteModal}
           setShowDeleteModal={setShowDeleteModal}
           isDeleting={isDeleting}
           deleteError={deleteError}
           handleDelete={handleDelete}
         />
-
-        <LockUserModal
-          selectedUser={selectedUser}
-          showLockModal={showLockModal}
-          setShowLockModal={setShowLockModal}
-          isLocking={isLocking}
-          lockError={lockError}
-          handleLock={handleLock}
-        />
       </div>
     </StyleSheetManager>
   );
 };
-export default ManageUsers;
+export default ManageProducts;
