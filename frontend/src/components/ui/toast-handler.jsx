@@ -14,7 +14,7 @@ const ToastHandler = () => {
       toast.success(location.state.success, { toastId: 'state-success-toast' });
       navigate(location.pathname, { replace: true, state: {} });
     }
-  }, [location.key, location.pathname, location.state, navigate]);
+  }, [location.pathname, location.state, navigate]);
 
   return null;
 };

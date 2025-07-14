@@ -67,7 +67,7 @@ const Login = () => {
                       onChange={(e) => setPassword(e.target.value)}
                       placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;"
                       aria-describedby="password" />
-                    <span className="input-group-text cursor-pointer" onClick={togglePassword} style={{ zIndex: 10 }}>
+                    <span className={`input-group-text cursor-pointer ${errorPassword ? 'is-invalid' : ''}`} onClick={togglePassword} style={{ zIndex: 10 }}>
                       <Icon icon={showPassword ? 'bx:show' : 'bx:hide'} className='icon-base' />
                     </span>
                   </div>

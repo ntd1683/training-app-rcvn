@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { fetchUserById, deleteUser, createUser, updateUser, fetchAllRoles } from '~/services/api';
 import { toast } from 'react-toastify';
+import RoleMain from '../constants/role-main';
 
 export const useCreateOrEdit = () => {
     const [user, setUser] = useState({
@@ -10,7 +11,7 @@ export const useCreateOrEdit = () => {
         password: '',
         isActive: 1,
         isDelete: 0,
-        groupRole: 'Reviewer'
+        groupRole: 'Reviewer',
     });
     const [valDelete, setValDelete] = useState(0);
     const [checkPassword, setCheckPassword] = useState(true);
@@ -20,12 +21,15 @@ export const useCreateOrEdit = () => {
     const [errorName, setErrorName] = useState();
     const [errorEmail, setErrorEmail] = useState();
     const [errorPassword, setErrorPassword] = useState();
+    const [errorRole, setErrorRole] = useState();
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [isDeleting, setIsDeleting] = useState(false);
     const [errorDelete, setErrorDelete] = useState();
     const [roles, setRoles] = useState([]);
 
     const navigate = useNavigate();
+    const userLocal = JSON.parse(localStorage.getItem('user') || '{}');
+    const groupRoleLocal = userLocal.group_role || 'Reviewer';
 
     const path = window.location.pathname;
     const isEdit = path.split('/')[2] === 'edit' ? true : false;
@@ -41,6 +45,11 @@ export const useCreateOrEdit = () => {
             try {
                 const response = await fetchUserById(id);
                 if (response) {
+                    if (response.group_role && RoleMain.getValue(groupRoleLocal) <= RoleMain.getValue(response.group_role)) {
+                        navigate('/users', { state: { error: 'Bạn không có quyền chỉnh sửa thành viên này' } });
+                        return;
+                    }
+
                     setUser({
                         name: response.name || '',
                         email: response.email || '',
@@ -50,12 +59,15 @@ export const useCreateOrEdit = () => {
                     });
                     setCheckPassword(false);
                     setValDelete(response.is_delete || 0);
+                } else {
+                    navigate('/users', { state: { error: 'Không tìm thấy người dùng với ID đã cho' } });
                 }
             } catch (error) {
                 console.error('Error fetching user:', error);
+                navigate('/users', { state: { error: 'Có lỗi xảy ra khi tải thông tin người dùng' } });
             }
         }
-    }, [isEdit, id]);
+    }, [isEdit, id, navigate, groupRoleLocal]);
 
     const loadRoles = useCallback(async () => {
         try {
@@ -109,6 +121,12 @@ export const useCreateOrEdit = () => {
             return;
         } else if (checkPassword && user.password.length > 100) {
             setErrorPassword('Mật khẩu không hợp lệ');
+            setIsLoading(false);
+            return;
+        }
+
+        if (RoleMain.getValue(user.groupRole) >= RoleMain.getValue(groupRoleLocal)) {
+            setErrorRole('Bạn không có quyền chỉnh sửa hoặc vai trò cao hơn của bạn');
             setIsLoading(false);
             return;
         }
@@ -198,6 +216,7 @@ export const useCreateOrEdit = () => {
         valDelete,
         setValDelete,
         errorDelete,
+        errorRole,
         roles,
     }
 }

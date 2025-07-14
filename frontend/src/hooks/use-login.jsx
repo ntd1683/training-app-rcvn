@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '~/contexts/auth-context';
 import { toast } from 'react-toastify';
@@ -15,6 +15,20 @@ export const useLogin = () => {
     const navigate = useNavigate();
 
     const togglePassword = () => setShowPassword((prev) => !prev);
+    
+    useEffect(() => {
+        setErrorEmail('');
+        setErrorPassword('');
+        setEmail('');
+        setPassword('');
+        setRememberMe(false);
+
+        const user = JSON.parse(localStorage.getItem('user') || '{}');
+        const token = localStorage.getItem('token');
+        if (user && token) {
+            navigate('/users', { state: { success: 'Bạn đã đăng nhập' } });
+        }
+    }, [navigate]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -34,9 +48,10 @@ export const useLogin = () => {
             return;
         }
 
-        const success = await handleLogin(email, password, rememberMe);
-        if (success) {
-            navigate('/users');
+        const response = await handleLogin(email, password, rememberMe);
+        console.log('success', response.success);
+        if (response.success) {
+            navigate('/users', {state: { success: 'Đăng nhập thành công' } });
         } else {
             setErrorPassword('Invalid username or password');
             toast.error('Đăng nhập không thành công. Vui lòng kiểm tra lại email và mật khẩu.', {toastId: 'login-error'});
