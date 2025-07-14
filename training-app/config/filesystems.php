@@ -73,4 +73,5 @@ return [
         public_path('storage') => storage_path('app/public'),
     ],
 
+    'allowed_domains' => explode(',', env('FILE_STATEFUL_DOMAINS', '')),
 ];

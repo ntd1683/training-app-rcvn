@@ -11,6 +11,13 @@ class Product extends Model
     use HasFactory, SoftDeletes;
 
     /**
+     * Indicates if the IDs are auto-incrementing.
+     *
+     * @var bool
+     */
+    public $incrementing = false;
+
+    /**
      * The attributes that are mass assignable.
      *
      * @var array<int, string>
@@ -22,7 +29,45 @@ class Product extends Model
         'price',
         'currency',
         'status',
-        'image_url',
         'user_id',
     ];
+
+    /**
+     * The attributes that should be hidden for serialization.
+     *
+     * @var array<int, string>
+     */
+    protected $hidden = [
+        'image_id',
+    ];
+
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array<string, string>
+     */
+    protected $casts = [];
+
+    /**
+     * The attributes that should be appended to the model's array form.
+     *
+     * @var array<string>
+     */
+    public function image()
+    {
+        return $this->hasOne(Image::class, 'id', 'image_id');
+    }
+
+    /**
+     * Get the image URL for the product.
+     *
+     * @return string|null
+     */
+    public function getImageUrlAttribute()
+    {
+        if ($this->image_id) {
+            return route('images.show', ['image' => $this->image->filename]);
+        }
+        return null;
+    }
 }

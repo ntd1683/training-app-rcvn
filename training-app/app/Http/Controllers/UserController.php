@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\DefaultRoleEnum;
 use App\Http\Requests\UserCreateRequest;
 use App\Http\Requests\UserUpdateRequest;
 use Illuminate\Http\Request;
@@ -78,6 +79,15 @@ class UserController extends Controller
     {
         try {
             $validated = $request->validated();
+            $currentUserRole = auth()->user()->getRoleNames()[0];
+            $currentUserRoleValue = DefaultRoleEnum::getValueFromName($currentUserRole);
+            $newUserRoleValue = DefaultRoleEnum::getValueFromName($validated['group_role']);
+            if ($currentUserRoleValue <= $newUserRoleValue) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Bạn không có quyền tạo user mới với vai trò này.'
+                ], 403);
+            }
 
             DB::beginTransaction();
             $validated['password'] = bcrypt($validated['password']);
@@ -116,6 +126,13 @@ class UserController extends Controller
     {
         try {
             $user = User::findOrFail($id);
+            if ($user->is_delete) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'User đã bị xóa trước đó'
+                ], 404);
+            }
+
             $user->select(['id', 'name', 'email', 'group_role', 'is_active', 'is_delete']);
             return response()->json([
                 'success' => true,
@@ -126,8 +143,8 @@ class UserController extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Có lỗi xảy ra: ' . $e->getMessage()
-            ], 500);
+                'message' => 'Không tìm thấy user hoặc có lỗi xảy ra: ' . $e->getMessage()
+            ], $e->getCode() ?: 404);
         }
     }
 
@@ -137,6 +154,16 @@ class UserController extends Controller
             $user = User::findOrFail($id);
 
             $validated = $request->validated();
+
+            $currentUserRoleValue = auth()->user()->getRoleNames()[0];
+            $currentUserRoleValue = DefaultRoleEnum::getValueFromName($currentUserRoleValue);
+            $newUserRoleValue = DefaultRoleEnum::getValueFromName($validated['group_role']);
+            if ($currentUserRoleValue <= $newUserRoleValue) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Bạn không có quyền cập nhật user với vai trò này.'
+                ], 403);
+            }
             DB::beginTransaction();
 
             if (!empty($validated['password'])) {

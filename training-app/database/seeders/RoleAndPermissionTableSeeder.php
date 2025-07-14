@@ -23,9 +23,11 @@ class RoleAndPermissionTableSeeder extends Seeder
 
         $permissionProduct = [];
         $permissionUser = [];
+        $permissionRoles = [];
+        $permissionPermissions = [];
 
         $suffixRoute = ['store', 'index', 'edit', 'update', 'delete'];
-        $prefixRoute = ['products', 'users'];
+        $prefixRoute = ['products', 'users', 'roles', 'permissions'];
         foreach ($prefixRoute as $model) {
             foreach ($suffixRoute as $route) {
                 $namePermission = "{$model}.{$route}";
@@ -33,13 +35,17 @@ class RoleAndPermissionTableSeeder extends Seeder
                     $permissionProduct[] = $namePermission;
                 } elseif ($model === 'users') {
                     $permissionUser[] = $namePermission;
+                } elseif($model === 'roles') {
+                    $permissionRoles[] = $namePermission;
+                } elseif($model === 'permissions') {
+                    $permissionPermissions[] = $namePermission;
                 }
                 Permission::create(['name' => $namePermission, 'guard_name' => 'sanctum']);
             }
         }
 
         $roleAdmin = Role::findByName('Admin', 'sanctum');
-        $roleAdmin->givePermissionTo(array_merge($permissionProduct, $permissionUser));
+        $roleAdmin->givePermissionTo(array_merge($permissionProduct, $permissionUser, $permissionRoles, $permissionPermissions));
 
         $roleEditor = Role::findByName('Editor', 'sanctum');
         $roleEditor->givePermissionTo($permissionProduct);

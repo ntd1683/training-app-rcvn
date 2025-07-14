@@ -17,10 +17,12 @@ return new class extends Migration
             $table->string('id')->primary();
             $table->string('name');
             $table->text('description')->nullable();
+//            $table->bigInteger('quantity')->default(0); // Uncomment if you want to track quantity
             $table->bigInteger('price');
             $table->string('currency')->default('VND');
             $table->tinyInteger('status')->default(1);
-            $table->string('image_url')->nullable();
+            $table->unsignedBigInteger('image_id')->nullable();
+            $table->foreign('image_id')->references('id')->on('images')->onDelete('set null');
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('mst_users')->onDelete('cascade');
             $table->softDeletes();
