@@ -24,6 +24,7 @@ const ManageProducts = () => {
     setFilterPriceTo,
     filterPriceFrom,
     setFilterPriceFrom,
+    errorFilterPrice,
     selectedProduct,
     setSelectedProduct,
     showDeleteModal,
@@ -67,6 +68,7 @@ const ManageProducts = () => {
               setFilterPriceTo={setFilterPriceTo}
               filterStatus={filterStatus}
               setFilterStatus={setFilterStatus}
+              errorFilterPrice={errorFilterPrice}
             />
             <div className="d-flex row gap-3 py-3 px-6 justify-content-end">
               <button className="btn btn-primary col-md-2" onClick={handleSearch} disabled={isLoading}>

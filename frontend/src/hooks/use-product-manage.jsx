@@ -19,6 +19,7 @@ export const useProductManage = () => {
   const [filterStatus, setFilterStatus] = useState('');
   const [filterPriceTo, setFilterPriceTo] = useState('');
   const [filterPriceFrom, setFilterPriceFrom] = useState('');
+  const [errorFilterPrice, setErrorFilterPrice] = useState('');
   const [sortBy, setSortBy] = useState('');
   const [sortOrder, setSortOrder] = useState('');
   const [sortClickCount, setSortClickCount] = useState({});
@@ -50,7 +51,11 @@ export const useProductManage = () => {
 
   // Handlers
   const handleSearch = () => {
-    console.log('Searching products with filters:', pagination.per_page);
+    if(filterPriceFrom && filterPriceTo && filterPriceFrom > filterPriceTo) {
+      toast.error('Giá từ không thể lớn hơn giá đến.', { toastId: 'price-error-toast' });
+      setErrorFilterPrice('Giá từ không thể lớn hơn giá đến.');
+      return;
+    }
     loadProducts(1, pagination.per_page, { filterText, filterStatus, filterPriceTo, filterPriceFrom, sortBy, sortOrder });
   };
 
@@ -59,6 +64,7 @@ export const useProductManage = () => {
     setFilterStatus('');
     setFilterPriceFrom('');
     setFilterPriceTo('');
+    setErrorFilterPrice('');
     setSortBy('');
     setSortOrder('');
     setSortClickCount({});
@@ -145,6 +151,7 @@ export const useProductManage = () => {
     setFilterPriceTo,
     filterPriceFrom,
     setFilterPriceFrom,
+    errorFilterPrice,
     selectedProduct,
     setSelectedProduct,
     sortBy,

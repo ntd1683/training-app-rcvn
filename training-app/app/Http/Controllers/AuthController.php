@@ -2,115 +2,126 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\LoginRequest;
-use App\Models\User;
-use Carbon\Carbon;
+use App\Http\Resources\AuthResource;
+use App\Http\Resources\UserResource;
+use App\Repositories\Services\AuthService;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
+/**
+ * Class AuthController
+ * Handles authentication-related HTTP requests.
+ */
 class AuthController extends Controller
 {
-    public function login(LoginRequest $request)
+    protected $authService;
+
+    /**
+     * AuthController constructor.
+     * @param AuthService $authService
+     */
+    public function __construct(AuthService $authService)
     {
-        $credentials = $request->only('email', 'password');
-        $remember = $request->input('remember', false);
-
-        $user = User::where('email', $credentials['email'])
-                            ->where('is_delete', false)
-                            ->where('is_active', true)
-                            ->first();
-
-        if (!$user) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Email không tồn tại hoặc tài khoản đã bị xóa hoặc không hoạt động',
-            ], 401);
-        }
-
-        if (Auth::attempt($credentials, $remember)) {
-            $user = Auth::user();
-            $token = $user->createToken('authToken')->plainTextToken;
-
-            $user->update([
-                'last_login_at' => Carbon::now(),
-                'last_login_ip' => $request->ip(),
-            ]);
-
-            $permissions = $user->getAllPermissions()->pluck('name')->toArray();
-            $user->permissions = $permissions;
-
-            return response()->json([
-                'success' => true,
-                'user' => $user->only(['id', 'name', 'email', 'group_role', 'permissions', 'last_login_at']),
-                'token' => $token,
-            ], 200);
-        }
-
-        return response()->json([
-            'success' => false,
-            'message' => 'Email hoặc mật khẩu không chính xác',
-        ], 401);
+        $this->authService = $authService;
     }
 
     /**
-     * Handle the incoming request to update the user's profile.
-     *
-     * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\JsonResponse
+     * Handle user login
+     * @param LoginRequest $request
+     * @return AuthResource|\Illuminate\Http\JsonResponse
+     */
+    public function login(LoginRequest $request)
+    {
+        try {
+            $result = $this->authService->login(
+                $request->only('email', 'password'),
+                $request->input('remember', false),
+                $request->ip()
+            );
+            return new AuthResource($result, 'Đăng nhập thành công thành công');
+        } catch (\Exception $e) {
+            return (new AuthResource(null))->errorResponse(
+                'SERVER_ERROR',
+                null,
+                'Có lỗi xảy ra: ' . $e->getMessage()
+            );
+        }
+    }
+
+    /**
+     * Get the authenticated user's profile
+     * @param Request $request
+     * @return AuthResource|\Illuminate\Http\JsonResponse
      */
     public function profile(Request $request)
     {
-        $user = $request->user();
-        $permissions = $user->getAllPermissions()->pluck('name')->toArray();
-        $user->permissions = $permissions;
-        $user = $user->only('id', 'name', 'email', 'avatar', 'status', 'permissions');
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Lấy thông tin người dùng thành công',
-            'data' => $user,
-        ], 200);
+        try {
+            $user = $this->authService->getProfile($request->user());
+            return new AuthResource($user, 'Lấy thông tin người dùng thành công');
+        } catch (\Exception $e) {
+            return (new AuthResource(null))->errorResponse(
+                'SERVER_ERROR',
+                null,
+                'Có lỗi xảy ra: ' . $e->getMessage()
+            );
+        }
     }
 
     /**
-     * Verify the user's token.
-     *
-     * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\JsonResponse
+     * Verify the user's token
+     * @param Request $request
+     * @return AuthResource|JsonResponse
      */
     public function verifyToken(Request $request)
     {
-        $user = $request->user();
-        if ($user) {
-            $user->permissions = $user->getAllPermissions()->pluck('name')->toArray();
-            $user = $user->only(['id', 'name', 'email', 'group_role', 'permissions']);
-            return response()->json([
-                'success' => true,
-                'message' => 'Token hợp lệ',
-                'data' => $user,
-            ], 200);
+        try {
+            $result = $this->authService->verifyToken($request->user());
+            if (!$result['success']) {
+                return (new AuthResource(null))->errorResponse(
+                    'UNAUTHORIZED',
+                    null,
+                    $result['message']
+                );
+            }
+            return new AuthResource($result['data'], $result['message']);
+        } catch (\Exception $e) {
+            return (new AuthResource(null))->errorResponse(
+                'SERVER_ERROR',
+                null,
+                'Có lỗi xảy ra: ' . $e->getMessage()
+            );
         }
-
-        return response()->json([
-            'success' => false,
-            'message' => 'Token không hợp lệ hoặc đã hết hạn',
-        ], 401);
     }
 
+    /**
+     * Log the user out
+     * @param Request $request
+     * @return AuthResource|JsonResponse
+     */
     public function logout(Request $request)
     {
-        if ($request->user()) {
-            $request->user()->currentAccessToken()->delete();
+        try {
+            $result = $this->authService->logout($request->user());
+            if (!$result['success']) {
+                return (new AuthResource(null))->errorResponse(
+                    'UNAUTHORIZED',
+                    null,
+                    $result['message']
+                );
+            }
 
-            return response()->json([
-                'success' => true,
-                'message' => 'Đăng xuất thành công'
-            ], 200);
+            \Log::info(
+                'User logged out',
+                ['user_id' => $request->user()->id, 'ip' => $request->ip()]
+            );
+            return new AuthResource(null, $result['message']);
+        } catch (\Exception $e) {
+            return (new AuthResource(null))->errorResponse(
+                'SERVER_ERROR',
+                null,
+                'Có lỗi xảy ra: ' . $e->getMessage()
+            );
         }
-
-        return response()->json([
-            'success' => false,
-            'message' => 'Bạn chưa đăng nhập hoặc token không hợp lệ',
-        ], 401);
     }
 }

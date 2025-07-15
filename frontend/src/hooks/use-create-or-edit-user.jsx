@@ -103,6 +103,8 @@ export const useCreateOrEdit = () => {
             setErrorName('Tên không hợp lệ, phải từ 3 đến 50 ký tự');
             setIsLoading(false);
             return;
+        } else {
+            setErrorName('');
         }
 
         if (!user.email) {
@@ -113,6 +115,8 @@ export const useCreateOrEdit = () => {
             setErrorEmail('Email không hợp lệ');
             setIsLoading(false);
             return;
+        } else {
+            setErrorEmail('');
         }
 
         if (checkPassword && !user.password) {
@@ -123,6 +127,8 @@ export const useCreateOrEdit = () => {
             setErrorPassword('Mật khẩu không hợp lệ');
             setIsLoading(false);
             return;
+        } else {
+            setErrorPassword('');
         }
 
         if (RoleMain.getValue(user.groupRole) >= RoleMain.getValue(groupRoleLocal)) {
@@ -182,7 +188,6 @@ export const useCreateOrEdit = () => {
             }
 
             setShowDeleteModal(false);
-            toast.success('Xoá thành viên thành công');
             navigate('/users', { state: { success: 'Xoá thành viên thành công' } });
         } catch (error) {
             console.error('Error deleting user:', error);

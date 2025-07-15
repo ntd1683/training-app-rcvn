@@ -38,7 +38,7 @@ const CreateOrEditUser = () => {
                     <div className="mb-6">
                         <label className="form-label" htmlFor="basic-icon-default-name">*Tên của bạn</label>
                         <div className="input-group input-group-merge">
-                            <span id="basic-icon-default-name2" className="input-group-text">
+                            <span id="basic-icon-default-name2" className={`input-group-text ${errorName ? 'is-invalid' : ''}`}>
                                 <Icon icon="bx:user" className='icon-base bx' />
                             </span>
                             <input
@@ -57,7 +57,7 @@ const CreateOrEditUser = () => {
                     <div className="mb-6">
                         <label className="form-label" htmlFor="basic-icon-default-email">*Email</label>
                         <div className="input-group input-group-merge">
-                            <span id="basic-icon-default-email2" className="input-group-text">
+                            <span id="basic-icon-default-email2" className={`input-group-text ${errorEmail ? 'is-invalid' : ''}`}>
                                 <Icon icon="bx:mail-send" className='icon-base bx' />
                             </span>
                             <input
@@ -90,7 +90,7 @@ const CreateOrEditUser = () => {
                             <>
                                 <label className="form-label" htmlFor="basic-icon-default-password">*Mật khẩu</label>
                                 <div className="input-group input-group-merge">
-                                    <span id="basic-icon-default-password2" className="input-group-text">
+                                    <span id="basic-icon-default-password2" className={`input-group-text ${errorPassword ? 'is-invalid' : ''}`}>
                                         <Icon icon="bx:lock-alt" className='icon-base bx' />
                                     </span>
                                     <input
@@ -103,7 +103,7 @@ const CreateOrEditUser = () => {
                                         placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;"
                                         aria-describedby="password"
                                     />
-                                    <span className="input-group-text cursor-pointer" onClick={togglePassword} style={{ zIndex: 10 }}>
+                                    <span className={`input-group-text cursor-pointer ${errorPassword ? "is-invalid" : ""}`} onClick={togglePassword} style={{ zIndex: 10 }}>
                                         <Icon icon={showPassword ? 'bx:show' : 'bx:hide'} className='icon-base' />
                                     </span>
                                 </div>

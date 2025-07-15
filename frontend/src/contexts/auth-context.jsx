@@ -68,13 +68,14 @@ export const AuthProvider = ({ children }) => {
     try {
       const response = await loginFetch(email, password, remember);
       const data = response.data;
-      if (response.status && data.token) {
+      console.log('Login response:', data);
+      if (response.success && data.token) {
         localStorage.setItem('token', data.token);
-        localStorage.setItem('permissions', JSON.stringify(data.user.permissions || []));
-        localStorage.setItem('user', JSON.stringify(data.user));
+        localStorage.setItem('permissions', JSON.stringify(data.permissions || []));
+        localStorage.setItem('user', JSON.stringify(data));
         
-        setUser(data.user);
-        setPermissions(data.user.permissions || []);
+        setUser(data);
+        setPermissions(data.permissions || []);
         setIsAuthenticated(true);
         return { success: true };
       } else {

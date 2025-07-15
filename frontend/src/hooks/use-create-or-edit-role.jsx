@@ -64,6 +64,8 @@ export const useCreateOrEditRole = () => {
             setErrorName('Tên vai trò không được chứa các kí tự đặc biệt');
             setIsLoading(false);
             return;
+        } else {
+            setErrorName('');
         }
 
         if(!isEdit) {
@@ -77,6 +79,7 @@ export const useCreateOrEditRole = () => {
                     toast.success('Tạo vai trò thành công!');
                     setInputName('');
                     setPermissions([]);
+                    setSelectedItems([]);
                 } else {
                     console.error('Role creation failed:', response.error);
                     toast.error('Tạo vai trò thất bại: ' + response.message);
@@ -95,7 +98,7 @@ export const useCreateOrEditRole = () => {
                 })
 
                 if(response.success) {
-                    toast.success('Chỉnh sửa vai trò thành công!');
+                    navigate('/roles', {state: {success: "Chỉnh sửa vai trò thành công!"}});
                 } else {
                     console.error('Role Updated failed', response.error);
                     toast.error('Chỉnh sửa vai trò thất bại: ' + response.message);

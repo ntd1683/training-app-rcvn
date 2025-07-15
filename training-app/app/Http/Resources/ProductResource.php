@@ -1,0 +1,28 @@
+<?php
+
+namespace App\Http\Resources;
+
+class ProductResource extends BaseApiResource
+{
+    /**
+     * Message for the response.
+     *
+     * @var string
+     */
+    protected string $message = 'Lấy thông tin sản phẩm thành công';
+
+    /**
+     * Transform the resource into an array.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
+     */
+    public function toArray($request)
+    {
+        if (is_null($this->resource)) {
+            return [];
+        }
+
+        return parent::toArray($request);
+    }
+}

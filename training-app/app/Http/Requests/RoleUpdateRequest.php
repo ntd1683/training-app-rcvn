@@ -24,7 +24,6 @@ class RoleUpdateRequest extends FormRequest
      */
     public function rules()
     {
-        \Log::info("Role Name : " . $this->route('role'));
         return [
             'name' => 'required|string|max:50|unique:roles,name,' . $this->route('role') . ',name',
             'permissions' => 'array|nullable',

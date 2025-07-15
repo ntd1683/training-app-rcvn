@@ -1,9 +1,15 @@
 <?php
-
 namespace App\Enums;
 
 use ValueError;
 
+/**
+ * Enum representing default roles in the application.
+ *
+ * @package App\Enums
+ * @author Nguyen.Tan.Dung
+ * @lastUpdate Nguyen.Tan.Dung
+ */
 enum DefaultRoleEnum: int
 {
     case REVIEWER = 0;
@@ -11,17 +17,13 @@ enum DefaultRoleEnum: int
     case ADMIN = 2;
     case SUPER_ADMIN = 3;
 
-    public static function fromValue(int $value): self
-    {
-        return match ($value) {
-            0 => self::REVIEWER,
-            1 => self::EDITOR,
-            2 => self::ADMIN,
-            3 => self::SUPER_ADMIN,
-            default => throw new ValueError("Giá trị không hợp lệ cho DefaultRoleEnum: $value"),
-        };
-    }
-
+    /**
+     * Get value from name.
+     * @param string $name
+     * @return int
+     * @author Nguyen.Tan.Dung
+     * @lastUpdate Nguyen.Tan.Dung
+     */
     public static function getValueFromName(string $name): int
     {
         return match ($name) {

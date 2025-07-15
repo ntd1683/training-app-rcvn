@@ -47,7 +47,7 @@ const Layout = () => {
             </li>
             <li className={`menu-item ${isActive('/permissions')}`}>
               <Link to="/permissions" className="menu-link">
-                <Icon icon="bx:lock-blanket" className="menu-icon bx" />
+                <Icon icon="bx:book-reader" className="menu-icon bx" />
                 <div className="text-truncate">
                   Quản lý Quyền
                 </div>
@@ -90,7 +90,7 @@ const Layout = () => {
                 </li>
                 <li className={`nav-item ${isActive('/permissions')}`}>
                   <Link to="/permissions" className="nav-link d-flex align-items-center">
-                    <Icon icon="bx:lock-blanket" className="me-2" style={{ fontSize: '1.5rem' }}/>
+                    <Icon icon="bx:book-reader" className="me-2" style={{ fontSize: '1.5rem' }}/>
                     <span>Quản lý quyền</span>
                   </Link>
                 </li>

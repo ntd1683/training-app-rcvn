@@ -2,253 +2,110 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\DefaultRoleEnum;
 use App\Http\Requests\UserCreateRequest;
 use App\Http\Requests\UserUpdateRequest;
-use Illuminate\Http\Request;
+use App\Http\Resources\UserCollection;
+use App\Http\Resources\UserResource;
+use App\Repositories\Services\UserService;
 use App\Http\Requests\UserSearchRequest;
-use App\Models\User;
-use Illuminate\Support\Facades\DB;
-use Spatie\Permission\Models\Role;
+use Exception;
 
 class UserController extends Controller
 {
+    protected UserService $userService;
+
+    /**
+     * UserController constructor.
+     * @param UserService $userService
+     */
+    public function __construct(UserService $userService)
+    {
+        $this->userService = $userService;
+    }
+
     public function index(UserSearchRequest $request)
     {
         try {
             $validated = $request->validated();
+            $users = $this->userService->getFilteredUsers($validated);
 
-            $query = User::query();
-            $query->where('is_delete', false);
-            $query->select(['id', 'name', 'email', 'group_role', 'is_active']);
-
-            if (!empty($validated['search_name'])) {
-                $query->where('name', 'like', '%' . $validated['search_name'] . '%');
-            }
-
-            if (!empty($validated['search_email'])) {
-                $query->where('email', 'like', '%' . $validated['search_email'] . '%');
-            }
-
-            if (!empty($validated['filter_group'])) {
-                $query->where('group_role', $validated['filter_group']);
-            }
-
-            if (isset($validated['filter_status'])) {
-                $query->where('is_active', $validated['filter_status']);
-            }
-
-            $sortBy = $validated['sort_by'] ?? 'created_at';
-            $sortOrder = $validated['sort_order'] ?? 'desc';
-            $query->orderBy($sortBy, $sortOrder);
-
-            if ($query->count() > 20) {
-                $perPage = $validated['per_page'] ?? 10;
-            } else {
-                $perPage = 20;
-            }
-
-            $currentPage = $validated['page'] ?? 1;
-            $users = $query->paginate($perPage, ['*'], 'page', $currentPage);
-
-            return response()->json([
-                'success' => true,
-                'data' => $users->items(),
-                'pagination' => [
-                    'current_page' => $users->currentPage(),
-                    'per_page' => $users->perPage(),
-                    'total' => $users->total(),
-                    'last_page' => $users->lastPage(),
-                    'from' => $users->firstItem(),
-                    'to' => $users->lastItem(),
-                    'has_next_page' => $users->hasMorePages(),
-                    'has_prev_page' => $users->currentPage() > 1
-                ],
-                'message' => 'Lấy danh sách users thành công'
-            ], 200);
-
-        } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Có lỗi xảy ra: ' . $e->getMessage()
-            ], 500);
+            return new UserCollection($users, 'Lấy danh sách users thành công');
+        } catch (Exception $e) {
+            return (new UserResource(null))->errorResponse(
+                'SERVER_ERROR',
+                null,
+                'Có lỗi xảy ra: ' . $e->getMessage()
+            );
         }
     }
 
     public function store(UserCreateRequest $request)
     {
         try {
-            $validated = $request->validated();
-            $currentUserRole = auth()->user()->getRoleNames()[0];
-            $currentUserRoleValue = DefaultRoleEnum::getValueFromName($currentUserRole);
-            $newUserRoleValue = DefaultRoleEnum::getValueFromName($validated['group_role']);
-            if ($currentUserRoleValue <= $newUserRoleValue) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Bạn không có quyền tạo user mới với vai trò này.'
-                ], 403);
-            }
-
-            DB::beginTransaction();
-            $validated['password'] = bcrypt($validated['password']);
-            $user = User::create($validated);
-
-            if (isset($validated['group_role'])) {
-                $role = Role::findByName($validated['group_role'], 'sanctum');
-                if ($role) {
-                    $user->assignRole($role);
-                } else {
-                    return response()->json([
-                        'success' => false,
-                        'message' => 'Vai trò không hợp lệ'
-                    ], 400);
-                }
-            }
-
-            DB::commit();
-
-            return response()->json([
-                'success' => true,
-                'data' => $user,
-                'message' => 'Tạo user thành công'
-            ], 201);
-
-        } catch (\Exception $e) {
-            DB::rollBack();
-            return response()->json([
-                'success' => false,
-                'message' => 'Có lỗi xảy ra: ' . $e->getMessage()
-            ], 500);
+            $user = $this->userService->createUser($request->validated(), auth()->user());
+            return new UserResource($user, null, 'CREATED');
+        } catch (Exception $e) {
+            return (new UserResource(null))->errorResponse(
+                'SERVER_ERROR',
+                null,
+                'Có lỗi xảy ra: ' . $e->getMessage()
+            );
         }
     }
 
     public function edit($id)
     {
         try {
-            $user = User::findOrFail($id);
-            if ($user->is_delete) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'User đã bị xóa trước đó'
-                ], 404);
-            }
-
-            $user->select(['id', 'name', 'email', 'group_role', 'is_active', 'is_delete']);
-            return response()->json([
-                'success' => true,
-                'data' => $user,
-                'message' => 'Lấy thông tin user thành công'
-            ], 200);
-
-        } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Không tìm thấy user hoặc có lỗi xảy ra: ' . $e->getMessage()
-            ], $e->getCode() ?: 404);
+            $user = $this->userService->getUserById($id);
+            return new UserResource($user);
+        } catch (Exception $e) {
+            return (new UserResource(null))->errorResponse(
+                'NOT_FOUND',
+                null,
+                'Không tìm thấy user hoặc có lỗi xảy ra: ' . $e->getMessage()
+            );
         }
     }
 
     public function update(UserUpdateRequest $request, $id)
     {
         try {
-            $user = User::findOrFail($id);
-
-            $validated = $request->validated();
-
-            $currentUserRoleValue = auth()->user()->getRoleNames()[0];
-            $currentUserRoleValue = DefaultRoleEnum::getValueFromName($currentUserRoleValue);
-            $newUserRoleValue = DefaultRoleEnum::getValueFromName($validated['group_role']);
-            if ($currentUserRoleValue <= $newUserRoleValue) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Bạn không có quyền cập nhật user với vai trò này.'
-                ], 403);
-            }
-            DB::beginTransaction();
-
-            if (!empty($validated['password'])) {
-                $validated['password'] = bcrypt($validated['password']);
-            } else {
-                unset($validated['password']);
-            }
-
-            if (isset($validated['is_delete'])) {
-                $validated['is_delete'] = false;
-            }
-
-            if (isset($validated['group_role'])) {
-                $user->syncRoles($validated['group_role']);
-            }
-
-            $user->update($validated);
-            DB::commit();
-
-            return response()->json([
-                'success' => true,
-                'data' => $user,
-                'message' => 'Cập nhật user thành công'
-            ], 200);
-
-        } catch (\Exception $e) {
-            DB::rollBack();
-            return response()->json([
-                'success' => false,
-                'message' => 'Có lỗi xảy ra: ' . $e->getMessage()
-            ], 500);
+            $user = $this->userService->updateUser($id, $request->validated(), auth()->user());
+            return new UserResource($user, 'Cập nhật thành viên thành công');
+        } catch (Exception $e) {
+            return (new UserResource(null))->errorResponse(
+                'SERVER_ERROR',
+                null,
+                'Có lỗi xảy ra: ' . $e->getMessage()
+            );
         }
     }
 
     public function destroy($id)
     {
         try {
-            $currentUser = auth()->user();
-            if($currentUser && $currentUser->id == $id) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Bạn không thể xóa chính mình'
-                ], 403);
-            }
-            $user = User::findOrFail($id);
-            if ($user->is_delete) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'User đã bị xóa trước đó'
-                ], 404);
-            }
-            $user->is_delete = true;
-            $user->save();
-
-            return response()->json([
-                'success' => true,
-                'message' => 'Xóa user thành công'
-            ], 200);
-
-        } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Có lỗi xảy ra: ' . $e->getMessage()
-            ], 500);
+            $this->userService->deleteUser($id, auth()->user());
+            return new UserResource(null, 'Xóa thành viên thành công');
+        } catch (Exception $e) {
+            return (new UserResource(null))->errorResponse(
+                'SERVER_ERROR',
+                null,
+                'Có lỗi xảy ra: ' . $e->getMessage()
+            );
         }
     }
 
     public function toggleStatus($id)
     {
         try {
-            $user = User::findOrFail($id);
-            $user->is_active = $user->is_active ? 0 : 1;
-            $user->save();
-
-            return response()->json([
-                'success' => true,
-                'data' => $user,
-                'message' => 'Thay đổi trạng thái thành công'
-            ], 200);
-
-        } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Có lỗi xảy ra: ' . $e->getMessage()
-            ], 500);
+            $user = $this->userService->toggleUserStatus($id);
+            return new UserResource($user, 'Thay đổi trạng thái thành công');
+        } catch (Exception $e) {
+            return (new UserResource(null))->errorResponse(
+                'SERVER_ERROR',
+                null,
+                'Có lỗi xảy ra: ' . $e->getMessage()
+            );
         }
     }
 }
