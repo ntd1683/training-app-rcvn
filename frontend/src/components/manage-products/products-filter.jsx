@@ -8,7 +8,8 @@ export const ProductsFilter = ({
     filterPriceTo,
     setFilterPriceTo,
     filterStatus,
-    setFilterStatus
+    setFilterStatus,
+    errorFilterPrice,
 }) => {
     return (
         <div className="row g-3 px-3">
@@ -39,7 +40,7 @@ export const ProductsFilter = ({
             <div className="col-md-6 d-flex justify-content-end align-items-center">
                     <input
                         type="number"
-                        className="form-control"
+                        className={`form-control ${errorFilterPrice ? 'is-invalid' : ''}`}
                         placeholder="Giá từ"
                         value={filterPriceFrom}
                         onChange={e => setFilterPriceFrom(e.target.value)}
@@ -47,7 +48,7 @@ export const ProductsFilter = ({
                     <span className='fs-4 mx-2'>~</span>
                     <input
                         type="number"
-                        className="form-control"
+                        className={`form-control ${errorFilterPrice ? 'is-invalid' : ''}`}
                         placeholder="Giá đến"
                         value={filterPriceTo}
                         onChange={e => setFilterPriceTo(e.target.value)}

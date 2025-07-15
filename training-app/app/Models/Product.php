@@ -30,6 +30,7 @@ class Product extends Model
         'currency',
         'status',
         'user_id',
+        'image_id',
     ];
 
     /**

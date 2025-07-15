@@ -26,7 +26,7 @@ export const useLogin = () => {
         const user = JSON.parse(localStorage.getItem('user') || '{}');
         const token = localStorage.getItem('token');
         if (user && token) {
-            navigate('/users', { state: { success: 'Bạn đã đăng nhập' } });
+            navigate('/', { state: { success: 'Bạn đã đăng nhập' } });
         }
     }, [navigate]);
 
@@ -51,7 +51,7 @@ export const useLogin = () => {
         const response = await handleLogin(email, password, rememberMe);
         console.log('success', response.success);
         if (response.success) {
-            navigate('/users', {state: { success: 'Đăng nhập thành công' } });
+            navigate('/', {state: { success: 'Đăng nhập thành công' } });
         } else {
             setErrorPassword('Invalid username or password');
             toast.error('Đăng nhập không thành công. Vui lòng kiểm tra lại email và mật khẩu.', {toastId: 'login-error'});

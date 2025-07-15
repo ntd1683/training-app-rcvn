@@ -47,8 +47,8 @@ const CustomPagination = ({ rowsPerPage, rowCount, onChangePage, onChangeRowsPer
   };
 
   return (
-    <div className="d-flex justify-content-between align-items-center mt-3 px-3">
-      <div className="d-flex align-items-center gap-2">
+    <div className="d-block d-sm-flex justify-content-between align-items-center mt-3 px-3">
+      <div className="d-flex align-items-center justify-content-center justify-content-sm-start gap-2 mb-3 mb-sm-0 fs-6 fs-sm-5">
         <span>Hiển thị</span>
         <select
           className="form-select"
@@ -67,7 +67,7 @@ const CustomPagination = ({ rowsPerPage, rowCount, onChangePage, onChangeRowsPer
         </select>
         <span>mỗi trang</span>
       </div>
-      <nav aria-label="Page navigation">
+      <nav aria-label="Page navigation" className="mb-3 mb-sm-0">
         <ul className="pagination mb-0">
           <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
             <button

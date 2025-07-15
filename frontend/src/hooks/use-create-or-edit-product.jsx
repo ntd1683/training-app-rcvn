@@ -81,15 +81,19 @@ export const useCreateOrEditProduct = () => {
             setErrorName('Tên không hợp lệ, phải từ 5 đến 255 ký tự');
             setIsLoading(false);
             return;
+        } else {
+            setErrorName('');
         }
 
         if (!product.description) {
             setErrorDescription('Vui lòng nhập mô tả sản phẩm');
             setIsLoading(false);
             return;
+        } else {
+            setErrorDescription('');
         }
 
-        if(!product.price) {
+        if (!product.price) {
             setErrorPrice('Vui lòng nhập giá sản phẩm');
             setIsLoading(false);
             return;
@@ -101,21 +105,28 @@ export const useCreateOrEditProduct = () => {
             setErrorPrice('Vui lòng nhập giá sản phẩm là số');
             setIsLoading(false);
             return;
+        } else {
+            setErrorPrice('');
         }
 
         if (product.currency < 1 || product.currency > 3) {
             setErrorCurrency('Vui lòng chọn loại tiền tệ hợp lệ');
             setIsLoading(false);
             return;
+        } else {
+            setErrorCurrency('');
         }
-        if(!product.status) {
+
+        if (!product.status) {
             setErrorStatus('Vui lòng chọn trạng thái sản phẩm');
             setIsLoading(false);
             return;
-        }else if (product.status < 0 || product.status > 2) {
+        } else if (product.status < 0 || product.status > 2) {
             setErrorStatus('Vui lòng chọn trạng thái hợp lệ');
             setIsLoading(false);
             return;
+        } else {
+            setErrorStatus('');
         }
 
         if (image && image.size > 2 * 1024 * 1024) {
@@ -130,6 +141,8 @@ export const useCreateOrEditProduct = () => {
             setErrorImage('Kích thước ảnh không được vượt quá 1024x1024 pixels');
             setIsLoading(false);
             return;
+        } else {
+            setErrorImage('');
         }
 
         setProduct({

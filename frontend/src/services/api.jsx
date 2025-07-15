@@ -31,16 +31,20 @@ export const getCsrfToken = async () => {
 
 export const login = async (email, password, remember) => {
   await getCsrfToken();
-  return api.post('/api/login', { email, password, remember });
+  const response = await api.post('/api/login', { email, password, remember });
+  
+  return response.data;
 };
 
 export const logout = async () => {
   await getCsrfToken();
 
   const token = localStorage.getItem('token');
-  return api.post('/api/logout', {}, {
+  const response = await api.post('/api/logout', {}, {
     headers: { Authorization: `Bearer ${token}` },
   });
+
+  return response;
 };
 
 export const verifyToken = async () => {
