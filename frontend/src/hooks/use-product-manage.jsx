@@ -55,6 +55,8 @@ export const useProductManage = () => {
       toast.error('Giá từ không thể lớn hơn giá đến.', { toastId: 'price-error-toast' });
       setErrorFilterPrice('Giá từ không thể lớn hơn giá đến.');
       return;
+    } else {
+      setErrorFilterPrice('');
     }
     loadProducts(1, pagination.per_page, { filterText, filterStatus, filterPriceTo, filterPriceFrom, sortBy, sortOrder });
   };

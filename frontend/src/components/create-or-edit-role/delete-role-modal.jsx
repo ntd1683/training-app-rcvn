@@ -38,7 +38,7 @@ export const DeleteRoleModal = ({ showDeleteModal, setShowDeleteModal, isDeletin
             <div className="p-4">
                 <p>Bạn có chắc chắn muốn xoá vai trò này không?</p>
                 <p>Hành động này sẽ không thể hoàn tác.</p>
-                <p className='text-danger'>Bạn chỉ được phép xoá khi không có người dùng nào sử dụng role này!!!</p>
+                <p className='text-danger'>Bạn chỉ được phép xoá khi không có người dùng nào sử dụng vai trò này!!!</p>
                 {errorDelete && (
                     <div className="alert alert-danger mt-3" style={{ whiteSpace: 'pre-wrap' }}>
                         {errorDelete}

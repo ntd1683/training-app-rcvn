@@ -201,7 +201,6 @@ export const useCreateOrEditProduct = () => {
             }
 
             setShowDeleteModal(false);
-            toast.success('Xoá sản phẩm thành công');
             navigate('/products', { state: { success: 'Xoá sản phẩm thành công' } });
         } catch (error) {
             console.error('Error deleting user:', error);

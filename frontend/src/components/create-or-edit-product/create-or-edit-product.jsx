@@ -103,7 +103,7 @@ const CreateOrEditProduct = () => {
                         <div className="text-danger">{errorPrice || errorCurrency}</div>
                     </div>
                     <div className="mb-6">
-                        <label htmlFor="status" className="form-label">Tình trạng</label>
+                        <label htmlFor="status" className="form-label">*Tình trạng</label>
                         <select
                             className={`form-select ${errorStatus ? 'is-invalid' : ''}`}
                             id="status"

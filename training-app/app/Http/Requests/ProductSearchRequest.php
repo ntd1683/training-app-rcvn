@@ -30,6 +30,7 @@ class ProductSearchRequest extends FormRequest
             'name' => 'string|nullable',
             'price_from' => 'integer|nullable',
             'price_to' => 'integer|nullable',
+            'currency' => 'string|nullable|max:10',
             'status' => 'integer|nullable|in:0,1,2',
             'sort_by' => 'string|nullable|in:id,name,description,status,price',
             'sort_order' => 'string|nullable|in:asc,desc',

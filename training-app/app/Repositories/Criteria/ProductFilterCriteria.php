@@ -42,6 +42,10 @@ class ProductFilterCriteria implements CriteriaInterface
             $model->where('price', '<=', $this->filters['price_to']);
         }
 
+        if (isset($this->filters['currency'])) {
+            $model->where('currency', $this->filters['currency']);
+        }
+
         if (isset($this->filters['status'])) {
             $model->where('status', $this->filters['status']);
         }

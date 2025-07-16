@@ -81,7 +81,7 @@ const ManageProducts = () => {
           </div>
           <div className="px-3 py-2">
             <p className="mb-0">
-              Hiển thị từ {pagination.from} ~ {pagination.to} trong tổng số {pagination.total} thành viên
+              Hiển thị từ {pagination.from} ~ {pagination.to} trong tổng số {pagination.total} sản phẩm
             </p>
           </div>
           <div className="table-responsive">
