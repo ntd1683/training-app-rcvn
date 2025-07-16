@@ -50,6 +50,7 @@ export const usePermissionManage = () => {
   }, []);
 
   useEffect(() => {
+    // Search when filterName changes 1.5 seconds after the last change
     const timer = setTimeout(() => {
       loadPermissions(1, pagination.per_page, {
         filterName,
@@ -57,7 +58,8 @@ export const usePermissionManage = () => {
     }, isInitialMount.current ? 0 : 1500);
 
     return () => clearTimeout(timer);
-  }, [filterName, pagination.per_page, loadPermissions]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filterName]);
 
   const handleSearch = (value) => {
     setFilterName(value);

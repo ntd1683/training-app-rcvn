@@ -68,7 +68,6 @@ export const AuthProvider = ({ children }) => {
     try {
       const response = await loginFetch(email, password, remember);
       const data = response.data;
-      console.log('Login response:', data);
       if (response.success && data.token) {
         localStorage.setItem('token', data.token);
         localStorage.setItem('permissions', JSON.stringify(data.permissions || []));
@@ -95,6 +94,7 @@ export const AuthProvider = ({ children }) => {
       clearAuthData();
       throw ('Logout failed:', error);
     } finally {
+      await clearAuthData();
     }
   };
 

@@ -49,7 +49,6 @@ export const useLogin = () => {
         }
 
         const response = await handleLogin(email, password, rememberMe);
-        console.log('success', response.success);
         if (response.success) {
             navigate('/', {state: { success: 'Đăng nhập thành công' } });
         } else {

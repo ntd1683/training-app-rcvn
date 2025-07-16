@@ -25,7 +25,7 @@ class RoleCreateRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required|string|max:50|unique:roles,name',
+            'name' => 'required|string|max:50|unique:roles,name|not_regex:/[\\/]/|not_regex:/<.*?>/',
             'permissions' => 'array|nullable',
             'permissions.*' => 'string|distinct|exists:permissions,name',
         ];
@@ -41,6 +41,7 @@ class RoleCreateRequest extends FormRequest
         return [
             'name.required' => 'Tên vai trò là bắt buộc.',
             'name.unique' => 'Tên vai trò đã tồn tại.',
+            'name.note_regex' => 'Tên vai trò không được chứa ký tự đặc biệt.',
             'name.*' => 'Tên vai trò không hợp lệ.',
             'permissions.*' => 'Quyền không hợp lệ hoặc không tồn tại.',
         ];

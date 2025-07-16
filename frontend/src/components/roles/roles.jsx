@@ -44,7 +44,7 @@ const Roles = () => {
                             </Link>
                         </div>
                     </div>
-                    <div className="col-md-3 px-6 py-3">
+                    <div className="col-md-6 px-6 py-3">
                             <input
                                 type="text"
                                 className="form-control"

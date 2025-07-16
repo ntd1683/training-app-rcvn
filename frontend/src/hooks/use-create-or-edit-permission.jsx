@@ -30,8 +30,6 @@ export const useCreateOrEditPermission = () => {
         if(isEdit && id) {
             try {
                 const response = await fetchPermission(id);
-                console.log(response);
-                
                 if (response) {
                     const name = response.name.split('.');
                     setInputModel(name[0]);

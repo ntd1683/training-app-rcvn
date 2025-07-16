@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '~/contexts/auth-context';
 import { useEffect, useState } from 'react';
 
@@ -12,18 +12,22 @@ const Logout = () => {
   useEffect(() => {
     if (!token) {
       console.error('No token found in local storage');
-      navigate('/login');
+      navigate('/login', { state: { error: 'Bạn chưa đăng nhập' } });
       return;
     }
 
     const performLogout = async () => {
       try {
         await handleLogout();
-        navigate('/login', { state: { success: 'Đăng xuất thành công' } });
+        setTimeout(() => {
+          navigate('/login', { state: { success: 'Đăng xuất thành công' } });
+        }, 100);
       } catch (error) {
         console.error('Logout failed:', error);
         setError('Đăng xuất thất bại. Vui lòng thử lại.');
-        navigate('/login', { state: { error: 'Đăng xuất thất bại. Vui lòng thử lại.' } });
+        setTimeout(() => {
+          navigate('/login', { state: { error: 'Đăng xuất thất bại. Vui lòng thử lại.' } });
+        }, 100);
       } finally {
         setIsLoading(false);
       }

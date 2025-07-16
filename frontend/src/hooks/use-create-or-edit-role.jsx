@@ -29,8 +29,6 @@ export const useCreateOrEditRole = () => {
         if(isEdit && role) {
             try {
                 const response = await fetchRoleByName(role);
-                console.log(response);
-                
                 if (response) {
                     setInputName(response.name);
                     setPermissions(response.permissions);
@@ -60,7 +58,7 @@ export const useCreateOrEditRole = () => {
             setErrorName('Tên vai trò không được vượt quá 50 ký tự');
             setIsLoading(false);
             return;
-        } else if (/<.*?>/.test(inputName)) {
+        } else if (/[\\/]|<.*?>/.test(inputName)) {
             setErrorName('Tên vai trò không được chứa các kí tự đặc biệt');
             setIsLoading(false);
             return;
