@@ -126,7 +126,7 @@ class ProductService
             DB::beginTransaction();
             $configHtml = getHTMLPurifierConfig();
             $purifier = new HTMLPurifier($configHtml);
-            $description = $purifier->purify($validated['description'] ?? '');
+            $description = $purifier->purify($data['description'] ?? '');
 
             $productData = [
                 'name' => strip_tags($data['name']),
@@ -177,9 +177,10 @@ class ProductService
             throw new Exception('Sản phẩm đã bị xóa trước đó', 404);
         }
 
-        if ($product->image) {
-            $this->imageService->deleteImage($product->image->id);
-        }
+//        Todo: Uncomment if you want to delete image when soft delete product
+//        if ($product->image) {
+//            $this->imageService->deleteImage($product->image->id);
+//        }
 
         \Log::info('ProductService: Attempting to delete product', ['product_id' => $id]);
         return $this->productRepository->delete($id);

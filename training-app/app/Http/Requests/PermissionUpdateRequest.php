@@ -25,7 +25,7 @@ class PermissionUpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required|string|max:255|unique:permissions,name,' . $this->route('permission'),
+            'name' => 'required|string|max:255|unique:permissions,name,' . $this->route('id') . '|not_regex:/<.*?>/',
         ];
     }
 
@@ -41,6 +41,7 @@ class PermissionUpdateRequest extends FormRequest
             'name.string' => 'Tên quyền phải là chuỗi.',
             'name.max' => 'Tên quyền không được vượt quá 255 ký tự.',
             'name.unique' => 'Tên quyền đã tồn tại.',
+            'name.not_regex' => 'Tên quyền không được chứa ký tự đặc biệt.',
         ];
     }
 }

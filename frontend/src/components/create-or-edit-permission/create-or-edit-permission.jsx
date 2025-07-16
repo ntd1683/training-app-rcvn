@@ -28,7 +28,7 @@ const CreateOrEditPermission = () => {
     return (
         <div className="card" style={{ margin: '0.5rem' }}>
             <div className="card-header d-flex justify-content-between align-items-center">
-                <h5 className="mb-0">{title} Vai Trò</h5>
+                <h5 className="mb-0">{title} Quyền</h5>
             </div>
             <div className="card-body">
                 <form>
@@ -42,13 +42,13 @@ const CreateOrEditPermission = () => {
 
                             <div className="mb-2">
                                 <small>
-                                    <strong>Models:</strong> Tên model cần xử lý (ví dụ: products, users, roles, ...) và có hậu tố 's'
+                                    <strong>Models:</strong> Tên model cần xử lý (ví dụ: products, users, roles, ...). Viết thường và nên có hậu tố 's' nếu cần
                                 </small>
                             </div>
 
                             <div className="mb-2">
                                 <small>
-                                    <strong>Permission:</strong> Tên quyền cần xử lý, bao gồm:
+                                    <strong>Permission:</strong> Tên chức năng cần xử lý, bao gồm:
                                 </small>
                             </div>
 
@@ -100,22 +100,21 @@ const CreateOrEditPermission = () => {
                             >
                                 <option value="">Chọn nhóm</option>
                                 {!isEdit && (
-                                    <option value="all"> all - Tất cả quyền</option>
-
+                                    <option value="all">all - Tất cả quyền</option>
                                 )}
-                                <option value="index" selected={inputPermission === 'index'} > index - Xem tất cả</option>
-                                <option value="store" selected={inputPermission === 'store'} > store - Tạo mới</option>
-                                <option value="edit" selected={inputPermission === 'edit'} > edit - Xem chi tiết</option>
-                                <option value="update" selected={inputPermission === 'update'} > update - Chỉnh sửa</option>
-                                <option value="delete" selected={inputPermission === 'delete'}> delete - Xoá</option>
-                                <option value="other" selected={inputPermission === 'other'}> Chọn quyền khác</option>
+                                <option value="index">index - Xem tất cả</option>
+                                <option value="store">store - Tạo mới</option>
+                                <option value="edit">edit - Xem chi tiết</option>
+                                <option value="update">update - Chỉnh sửa</option>
+                                <option value="delete">delete - Xoá</option>
+                                <option value="other">Chọn chức năng khác</option>
                             </select>
                         </div>
                         <div className="text-danger">{errorPermission}</div>
                     </div>
                     {inputPermission === 'other' && (
                         <div className="mb-6">
-                            <label className="form-label fs-6" htmlFor="basic-icon-default-permission-other">Tên quyền khác</label>
+                            <label className="form-label fs-6" htmlFor="basic-icon-default-permission-other">Tên chức năng khác</label>
                             <div className="input-group input-group-merge">
                                 <span id="basic-icon-default-permission-other2" className={`input-group-text ${errorPermissionOther ? 'is-invalid' : ''}`}>
                                     <Icon icon="bx:user-voice" className='icon-base bx' />

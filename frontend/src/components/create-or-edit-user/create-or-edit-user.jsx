@@ -155,7 +155,7 @@ const CreateOrEditUser = () => {
                         </div>
                     )}
                     <div className="mb-6">
-                        <label htmlFor="groupRole" className="form-label">Quyền</label>
+                        <label htmlFor="groupRole" className="form-label">Vai trò</label>
                         <select
                             className={`form-select ${errorRole ? 'is-invalid' : ''}`}
                             id="groupRole"

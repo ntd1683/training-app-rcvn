@@ -25,9 +25,9 @@ class PermissionCreateRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required|string|max:255|unique:permissions,name',
-            'model' => 'required|string|max:255',
-            'permission' => 'required|string|nullable|max:255',
+            'name' => 'required|string|max:255|unique:permissions,name|not_regex:/<.*?>/',
+            'model' => 'required|string|max:255|not_regex:/<.*?>/',
+            'permission' => 'required|string|nullable|max:255|not_regex:/<.*?>/',
         ];
     }
 
@@ -43,6 +43,7 @@ class PermissionCreateRequest extends FormRequest
             'name.string' => 'Tên quyền phải là chuỗi.',
             'name.max' => 'Tên quyền không được vượt quá 255 ký tự.',
             'name.unique' => 'Tên quyền đã tồn tại.',
+            'name.not_regex' => 'Tên quyền không được chứa ký tự đặc biệt.',
             'model.required' => 'Model là bắt buộc.',
             'permission.required' => 'Quyền là bắt buộc.',
             'model.*' => 'Model không hợp lệ.',

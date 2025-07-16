@@ -70,28 +70,37 @@ export const useCreateOrEditPermission = () => {
             setErrorModel('Tên quyền không được chứa các kí tự đặc biệt');
             setIsLoading(false);
             return;
+        } else {
+            setErrorModel('');
         }
 
         if (inputPermission === '') {
             setErrorPermission('Chức năng không được để trống');
             setIsLoading(false);
             return;
+        } else {
+            setErrorPermission('');
         }
 
         if (inputPermission === 'other' && inputPermissionOther.trim() === '') {
-            setErrorPermissionOther('Tên quyền khác không được để trống');
+            setErrorPermissionOther('Tên chức năng khác không được để trống');
             setIsLoading(false);
             return;
         } else if (inputPermissionOther.length > 255) {
-            setErrorPermissionOther('Tên quyền khác không được vượt quá 255 ký tự');
+            setErrorPermissionOther('Tên chức năng khác không được vượt quá 255 ký tự');
             setIsLoading(false);
             return;
         } else if (/<.*?>/.test(inputPermissionOther)) {
-            setErrorPermissionOther('Tên quyền khác không được chứa các kí tự đặc biệt');
+            setErrorPermissionOther('Tên chức năng khác không được chứa các kí tự đặc biệt');
             setIsLoading(false);
             return;
+        } else {
+            setErrorPermissionOther('');
         }
 
+        setInputModel(inputModel.trim().toLowerCase());
+        console.log('inputModel:', inputModel);
+        
         const permission = inputPermission === 'other' ? inputPermissionOther : inputPermission;
         const name = inputModel + '.' + permission;
         if (name.length > 255) {
@@ -130,7 +139,7 @@ export const useCreateOrEditPermission = () => {
                 })
 
                 if(response.success) {
-                    toast.success('Chỉnh sửa quyền thành công!');
+                    navigate('/permissions', {state: {success: "Chỉnh sửa quyền thành công!"}});
                 } else {
                     console.error('Permission Updated failed', response.error);
                     toast.error('Chỉnh sửa quyền thất bại: ' + response.message);

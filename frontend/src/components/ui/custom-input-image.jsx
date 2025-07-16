@@ -86,14 +86,15 @@ const CustomInputImage = ({
 
     return (
         <div className="mb-5">
+            <label htmlFor="inputImage" className="form-label">Hình ảnh sản phẩm</label>
             <div className="input-group input-group-merge">
-                <span id="basic-icon-default-name2" className="input-group-text">
+                <span id="basic-icon-image" className="input-group-text">
                     <Icon icon="bx:cloud-upload" className="icon-base bx" />
                 </span>
                 <input
                     type="file"
                     className={`form-control ${errorImage ? 'is-invalid' : ''}`}
-                    id="inputGroupFile04"
+                    id="inputImage"
                     aria-describedby="inputGroupFileAddon04"
                     aria-label="Upload"
                     onChange={handleFileChange}
@@ -103,7 +104,7 @@ const CustomInputImage = ({
                 />
                 <label
                     className="form-control"
-                    htmlFor="inputGroupFile04"
+                    htmlFor="inputImage"
                     style={{ cursor: 'pointer' }}
                 >
                     {value ? value.name : 'Choose an image...'}
