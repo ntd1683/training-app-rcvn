@@ -51,6 +51,7 @@ const CreateOrEditRole = () => {
                             />
                         </div>
                         <div className="text-danger">{errorName}</div>
+                        <div className="form-text fw-bold fst-italic">*Tên không được chứa các ký tự &apos;/&apos;, &apos;\&apos;, hoặc thẻ HTML như &lt;tag&gt;</div>
                     </div>
                     <MultiSelectInput
                         selectedItems={selectedItems}

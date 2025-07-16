@@ -39,8 +39,8 @@ class RoleFilterCriteria implements CriteriaInterface
                 $query->whereIn('name', $this->filters['permissions']);
             });
         }
-        $sortBy = $validated['sort_by'] ?? 'created_at';
-        $sortOrder = $validated['sort_order'] ?? 'desc';
+        $sortBy = $this->filters['sort_by'] ?? 'created_at';
+        $sortOrder = $this->filters['sort_order'] ?? 'desc';
         $model->orderBy($sortBy, $sortOrder);
 
         return $model;

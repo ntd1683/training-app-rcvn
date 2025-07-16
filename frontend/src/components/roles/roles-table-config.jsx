@@ -97,6 +97,8 @@ export const columns = (navigate, pagination) => [
             );
         },
         center: true,
+        minWidth: '300px',
+        wrap: true, 
     },
     {
         name: 'Số lượng người dùng',

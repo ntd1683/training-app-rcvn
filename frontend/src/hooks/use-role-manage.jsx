@@ -54,6 +54,7 @@ export const useRoleManage = () => {
 
   useEffect(() => {
     const timer = setTimeout(() => {
+    // Search when filterName changes 1.5 seconds after the last change
         loadRoles(1, pagination.per_page, { 
           filterName, 
           filterPermissions, 
@@ -61,7 +62,8 @@ export const useRoleManage = () => {
     }, isInitialMount.current ? 0 : 1500);
 
     return () => clearTimeout(timer);
-  }, [filterName, pagination.per_page, filterPermissions, loadRoles]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filterName, filterPermissions]);
 
   const handleSearch = (value) => {
     setFilterName(value);
