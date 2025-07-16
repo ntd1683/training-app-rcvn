@@ -150,8 +150,6 @@ export const useCreateOrEditProduct = () => {
             description: sanitizeContent(product.description)
         });
 
-        console.log('image', image);
-        
         if (!isEdit) {
             try {
                 await createProduct({
