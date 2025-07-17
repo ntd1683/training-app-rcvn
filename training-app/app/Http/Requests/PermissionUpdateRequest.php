@@ -13,7 +13,9 @@ class PermissionUpdateRequest extends FormRequest
      */
     public function authorize()
     {
-        $checkPermission = $this->user()->hasRole('Admin') || $this->user()->can('permissions.update');
+        $checkPermission = $this->user()->hasRole('Admin')
+            || $this->user()->hasRole('SuperAdmin')
+            || $this->user()->can('permissions.update');
         return auth('sanctum')->check() && $checkPermission;
     }
 

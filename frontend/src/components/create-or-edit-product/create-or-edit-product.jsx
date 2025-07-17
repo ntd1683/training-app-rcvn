@@ -1,11 +1,12 @@
 import React from 'react';
 import { Icon } from '@iconify/react';
 import { useCreateOrEditProduct } from '~/hooks/use-create-or-edit-product';
-import { DeleteProductModal } from './delete-product-modal';
 import ProductStatus from '~/constants/product-status';
 import CustomInputImage from '~/components/ui/custom-input-image';
 import CustomTextEditor from '~/components/ui/custom-text-editor';
 import { Link } from 'react-router-dom';
+import CustomShowGroupButtonCreateOrEdit from '~/components/ui/custom-show-group-button-create-or-edit';
+import CustomModalDelete from '~/components/ui/custom-modal-delete';
 
 const CreateOrEditProduct = () => {
     const {
@@ -132,24 +133,20 @@ const CreateOrEditProduct = () => {
                     </div>
                     <div className="mb-6 w-100 d-flex justify-content-center">
                         <Link to="/products" className="btn btn-secondary me-2">Quay Lại</Link>
-                        <button
-                            type="submit"
-                            className="btn btn-primary"
-                            disabled={isLoading}
-                            onClick={handleSubmit}
-                        >{`${title} sản phẩm`}</button>
-                        {isEdit && (
-                            <button
-                                type="button"
-                                className="btn btn-danger ms-2"
-                                disabled={isLoading}
-                                onClick={() => setShowDeleteModal(true)}
-                            >Xoá sản Phẩm</button>
-                        )}
+                        <CustomShowGroupButtonCreateOrEdit
+                            isEdit={isEdit}
+                            isLoading={isLoading}
+                            handleSubmit={handleSubmit}
+                            title={title}
+                            titleModel="Sản Phẩm"
+                            page="products"
+                            setShowModal={setShowDeleteModal}
+                        />
                     </div>
                 </form>
             </div>
-            <DeleteProductModal
+            <CustomModalDelete
+                title="Sản Phẩm"
                 showDeleteModal={showDeleteModal}
                 setShowDeleteModal={setShowDeleteModal}
                 isDeleting={isDeleting}

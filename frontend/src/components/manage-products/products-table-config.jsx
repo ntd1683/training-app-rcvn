@@ -1,6 +1,7 @@
 import { Icon } from '@iconify/react';
 import ProductStatus from '~/constants/product-status';
-import '../../assets/css/image-tooltip.css';
+import '~/assets/css/image-tooltip.css';
+import { checkRoleAndPermission } from '~/utils/common';
 
 const stripHtmlAndTruncate = (html, maxLength = 50) => {
     if (!html) return 'Không có mô tả';
@@ -69,7 +70,7 @@ export const columns = (navigate, pagination, setSelectedProduct, setShowDeleteM
         selector: row => stripHtmlAndTruncate(row.description, 50),
         cell: row => (
             <span
-                title={stripHtmlAndTruncate(row.description, 200)} // Tooltip với text đầy đủ hơn
+                title={stripHtmlAndTruncate(row.description, 200)}
                 style={{ cursor: 'help' }}
             >
                 {stripHtmlAndTruncate(row.description, 50)}
@@ -135,17 +136,21 @@ export const columns = (navigate, pagination, setSelectedProduct, setShowDeleteM
         name: '',
         cell: (row) => (
             <div className="d-flex gap-2">
-                <button type="button" className="btn p-0" onClick={() => {
-                    navigate(`/products/edit/${row.id}`);
-                }}>
-                    <Icon icon="bx:pen" className="text-primary fs-4" />
-                </button>
-                <button type="button" className="btn p-0" onClick={() => {
-                    setSelectedProduct(row);
-                    setShowDeleteModal(true);
-                }}>
-                    <Icon icon="bx:trash" className="text-danger fs-4" />
-                </button>
+                { checkRoleAndPermission('products.edit') && (
+                    <button type="button" className="btn p-0" onClick={() => {
+                        navigate(`/products/edit/${row.id}`);
+                    }}>
+                        <Icon icon="bx:pen" className="text-primary fs-4" />
+                    </button>
+                )}
+                { checkRoleAndPermission('products.delete') && (
+                    <button type="button" className="btn p-0" onClick={() => {
+                        setSelectedProduct(row);
+                        setShowDeleteModal(true);
+                    }}>
+                        <Icon icon="bx:trash" className="text-danger fs-4" />
+                    </button>
+                )}
             </div>
         ),
         allowOverflow: true,

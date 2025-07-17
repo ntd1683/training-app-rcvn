@@ -11,6 +11,7 @@
   import 'perfect-scrollbar/css/perfect-scrollbar.css';
   import './assets/css/core.css';
   import 'react-toastify/dist/ReactToastify.css';
+  import './assets/css/custom-toast.css';
 
   import 'jquery';
   import 'popper.js';

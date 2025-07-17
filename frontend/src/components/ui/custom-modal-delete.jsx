@@ -1,11 +1,15 @@
+import { Children } from 'react';
 import Modal from '~/components/ui/modal';
+import { capitalizeEachWord } from '~/utils/common';
 
-export const DeletePermissionModal = ({ showDeleteModal, setShowDeleteModal, isDeleting, errorDelete, handleDelete }) => {
+const CustomModalDelete = ({title, showDeleteModal, setShowDeleteModal, isDeleting, errorDelete, handleDelete, children }) => {
+    const titleLower = title.toLowerCase();
+    const titleCapitalized = capitalizeEachWord(title);
     return (
         <Modal
             isOpen={showDeleteModal}
             onClose={() => (false)}
-            title="Xoá Quyền"
+            title={`Xoá ${titleCapitalized}`}
             showCloseButton={true}
             backdrop={true}
             keyboard={true}
@@ -26,18 +30,19 @@ export const DeletePermissionModal = ({ showDeleteModal, setShowDeleteModal, isD
                         {isDeleting ? (
                             <>
                                 <span className="spinner-border spinner-border-sm me-2"></span>
-                                Đang Xoá Quyền
+                                Đang Xoá {titleCapitalized}
                             </>
                         ) : (
-                            "Xoá Quyền"
+                            "Xoá " + titleCapitalized
                         )}
                     </button>
                 </div>
             }
         >
             <div className="p-4">
-                <p>Bạn có chắc chắn muốn xoá quyền này không?</p>
+                <p>{`Bạn có chắc chắn muốn xoá ${titleLower} này không?`}</p>
                 <p>Hành động này sẽ không thể hoàn tác.</p>
+                { children }
                 {errorDelete && (
                     <div className="alert alert-danger mt-3" style={{ whiteSpace: 'pre-wrap' }}>
                         {errorDelete}
@@ -47,3 +52,5 @@ export const DeletePermissionModal = ({ showDeleteModal, setShowDeleteModal, isD
         </Modal>
     )
 }
+
+export default CustomModalDelete;

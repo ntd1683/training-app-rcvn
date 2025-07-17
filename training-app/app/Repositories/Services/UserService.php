@@ -165,7 +165,7 @@ class UserService
      */
     public function deleteUser($id, $currentUser = null)
     {
-        if ($currentUser && $currentUser->id == $id) {
+        if ($currentUser && $currentUser->id === $id) {
             throw new Exception('Bạn không thể xóa chính mình', 403);
         }
 

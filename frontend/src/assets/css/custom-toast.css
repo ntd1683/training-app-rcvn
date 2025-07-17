@@ -1,0 +1,8 @@
+@media only screen and (max-width: 480px) {
+    .Toastify__toast-container--top-right {
+        top: 20px;
+    }
+    .Toastify__toast {
+        width: 90vw !important;
+    }
+}

@@ -31,7 +31,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('roles/all', [RoleController::class, 'getAll'])->name('roles.index');
     Route::get('permissions/all', [PermissionController::class, 'getAll'])->name('permissions.index');
 
-    Route::middleware(['role:Admin','permission'])->group(function () {
+    Route::middleware(['permission'])->group(function () {
         Route::prefix('users')->group(function () {
             Route::get('/', [UserController::class, 'index'])->name('users.index');
             Route::get('/{id}', [UserController::class, 'edit'])->name('users.edit');

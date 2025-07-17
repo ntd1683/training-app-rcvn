@@ -1,7 +1,8 @@
 import React from 'react';
 import { Icon } from '@iconify/react';
 import { useCreateOrEditPermission } from '~/hooks/use-create-or-edit-permission';
-import { DeletePermissionModal } from './delete-permission-modal';
+import CustomShowGroupButtonCreateOrEdit from '~/components/ui/custom-show-group-button-create-or-edit';
+import CustomModalDelete from '~/components/ui/custom-modal-delete';
 
 const CreateOrEditPermission = () => {
     const {
@@ -134,23 +135,20 @@ const CreateOrEditPermission = () => {
                         </div>
                     )}
                     <div className="mb-6 w-100 d-flex justify-content-center">
-                        <button
-                            type="submit"
-                            className="btn btn-primary"
-                            disabled={isLoading}
-                            onClick={handleSubmit}
-                        >{title} Quyền</button>
-                        {isEdit && (
-                            <button
-                                type="button"
-                                className="btn btn-danger ms-2"
-                                onClick={() => setShowDeleteModal(true)}
-                            >Xoá Quyền</button>
-                        )}
+                        <CustomShowGroupButtonCreateOrEdit
+                            isEdit={isEdit}
+                            isLoading={isLoading}
+                            handleSubmit={handleSubmit}
+                            title={title}
+                            titleModel="Quyền"
+                            page="permissions"
+                            setShowModal={setShowDeleteModal}
+                        />
                     </div>
                 </form>
             </div>
-            <DeletePermissionModal
+            <CustomModalDelete
+                title="Quyền"
                 showDeleteModal={showDeleteModal}
                 setShowDeleteModal={setShowDeleteModal}
                 isDeleting={isDeleting}

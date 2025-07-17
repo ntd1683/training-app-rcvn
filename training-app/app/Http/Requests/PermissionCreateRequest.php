@@ -13,7 +13,9 @@ class PermissionCreateRequest extends FormRequest
      */
     public function authorize()
     {
-        $checkPermission = $this->user()->hasRole('Admin') || $this->user()->can('permissions.store');
+        $checkPermission = $this->user()->hasRole('Admin')
+            || $this->user()->hasRole('SuperAdmin')
+            || $this->user()->can('permissions.store');
         return auth('sanctum')->check() && $checkPermission;
     }
 

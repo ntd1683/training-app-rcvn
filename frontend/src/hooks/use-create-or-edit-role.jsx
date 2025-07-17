@@ -50,20 +50,26 @@ export const useCreateOrEditRole = () => {
         setErrorPermissions('');
         setIsLoading(true);
 
+        let isSubmitForm = true;
+
         if (inputName.trim() === '') {
             setErrorName('Tên vai trò không được để trống');
             setIsLoading(false);
-            return;
+            isSubmitForm = false;
         } else if (inputName.length > 50) {
             setErrorName('Tên vai trò không được vượt quá 50 ký tự');
             setIsLoading(false);
-            return;
+            isSubmitForm = false;
         } else if (/[\\/]|<.*?>/.test(inputName)) {
             setErrorName('Tên vai trò không được chứa các kí tự đặc biệt');
             setIsLoading(false);
-            return;
+            isSubmitForm = false;
         } else {
             setErrorName('');
+        }
+
+        if (!isSubmitForm) {
+            return;
         }
 
         if(!isEdit) {

@@ -58,18 +58,20 @@ export const useCreateOrEditPermission = () => {
         setErrorPermissionOther('');
         setIsLoading(true);
 
+        let isSubmitForm = true;
+
         if (inputModel.trim() === '') {
             setErrorModel('Tên quyền không được để trống');
             setIsLoading(false);
-            return;
+            isSubmitForm = false;
         } else if (inputModel.length > 255) {
             setErrorModel('Tên quyền không được vượt quá 255 ký tự');
             setIsLoading(false);
-            return;
+            isSubmitForm = false;
         } else if (/<.*?>/.test(inputModel)) {
             setErrorModel('Tên quyền không được chứa các kí tự đặc biệt');
             setIsLoading(false);
-            return;
+            isSubmitForm = false;
         } else {
             setErrorModel('');
         }
@@ -77,7 +79,7 @@ export const useCreateOrEditPermission = () => {
         if (inputPermission === '') {
             setErrorPermission('Chức năng không được để trống');
             setIsLoading(false);
-            return;
+            isSubmitForm = false;
         } else {
             setErrorPermission('');
         }
@@ -85,27 +87,30 @@ export const useCreateOrEditPermission = () => {
         if (inputPermission === 'other' && inputPermissionOther.trim() === '') {
             setErrorPermissionOther('Tên chức năng khác không được để trống');
             setIsLoading(false);
-            return;
+            isSubmitForm = false;
         } else if (inputPermissionOther.length > 255) {
             setErrorPermissionOther('Tên chức năng khác không được vượt quá 255 ký tự');
             setIsLoading(false);
-            return;
+            isSubmitForm = false;
         } else if (/<.*?>/.test(inputPermissionOther)) {
             setErrorPermissionOther('Tên chức năng khác không được chứa các kí tự đặc biệt');
             setIsLoading(false);
-            return;
+            isSubmitForm = false;
         } else {
             setErrorPermissionOther('');
         }
 
         setInputModel(inputModel.trim().toLowerCase());
-        console.log('inputModel:', inputModel);
         
         const permission = inputPermission === 'other' ? inputPermissionOther : inputPermission;
         const name = inputModel + '.' + permission;
         if (name.length > 255) {
             setErrorModel('Tên quyền quá dài');
             setIsLoading(false);
+            isSubmitForm = false;
+        }
+
+        if (!isSubmitForm) {
             return;
         }
 

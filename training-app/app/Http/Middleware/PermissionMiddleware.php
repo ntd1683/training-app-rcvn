@@ -23,7 +23,7 @@ class PermissionMiddleware
             throw UnauthorizedException::notLoggedIn();
         }
 
-        if ($authGuard->user()->hasRole('Admin')) {
+        if ($authGuard->user()->hasRole('Admin') || $authGuard->user()->hasRole('SuperAdmin')) {
             return $next($request);
         }
 
