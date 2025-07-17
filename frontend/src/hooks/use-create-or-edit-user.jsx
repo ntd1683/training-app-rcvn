@@ -95,14 +95,17 @@ export const useCreateOrEdit = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setIsLoading(true);
+
+        let isSubmitForm = true;
+
         if (!user.name) {
             setErrorName('Vui lòng nhập tên đầy đủ');
             setIsLoading(false);
-            return;
+            isSubmitForm = false;
         } else if (user.name.length < 3 || user.name.length > 50) {
             setErrorName('Tên không hợp lệ, phải từ 3 đến 50 ký tự');
             setIsLoading(false);
-            return;
+            isSubmitForm = false;
         } else {
             setErrorName('');
         }
@@ -110,11 +113,11 @@ export const useCreateOrEdit = () => {
         if (!user.email) {
             setErrorEmail('Vui lòng nhập email');
             setIsLoading(false);
-            return;
+            isSubmitForm = false;
         } else if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(user.email)) {
             setErrorEmail('Email không hợp lệ');
             setIsLoading(false);
-            return;
+            isSubmitForm = false;
         } else {
             setErrorEmail('');
         }
@@ -122,11 +125,11 @@ export const useCreateOrEdit = () => {
         if (checkPassword && !user.password) {
             setErrorPassword('Vui lòng nhập mật khẩu');
             setIsLoading(false);
-            return;
+            isSubmitForm = false;
         } else if (checkPassword && user.password.length > 100) {
             setErrorPassword('Mật khẩu không hợp lệ');
             setIsLoading(false);
-            return;
+            isSubmitForm = false;
         } else {
             setErrorPassword('');
         }
@@ -134,6 +137,10 @@ export const useCreateOrEdit = () => {
         if (RoleMain.getValue(user.groupRole) >= RoleMain.getValue(groupRoleLocal)) {
             setErrorRole('Bạn không có quyền chỉnh sửa hoặc vai trò cao hơn của bạn');
             setIsLoading(false);
+            isSubmitForm = false;
+        }
+
+        if (!isSubmitForm) {
             return;
         }
 

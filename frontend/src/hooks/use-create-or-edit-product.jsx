@@ -29,7 +29,7 @@ export const useCreateOrEditProduct = () => {
     const navigate = useNavigate();
 
     const path = window.location.pathname;
-    const isEdit = path.split('/')[2] === 'edit' ? true : false;
+    const isEdit = path.split('/')[2] === 'edit';
     const { id } = useParams();
     const title = isEdit ? 'Chỉnh Sửa' : 'Thêm';
 
@@ -73,14 +73,16 @@ export const useCreateOrEditProduct = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setIsLoading(true);
+
+        let isSubmitForm = true;
         if (!product.name) {
             setErrorName('Vui lòng nhập tên sản phẩm đầy đủ');
             setIsLoading(false);
-            return;
+            isSubmitForm = false;
         } else if (product.name.length < 5 || product.name.length > 255) {
             setErrorName('Tên không hợp lệ, phải từ 5 đến 255 ký tự');
             setIsLoading(false);
-            return;
+            isSubmitForm = false;
         } else {
             setErrorName('');
         }
@@ -88,7 +90,7 @@ export const useCreateOrEditProduct = () => {
         if (!product.description) {
             setErrorDescription('Vui lòng nhập mô tả sản phẩm');
             setIsLoading(false);
-            return;
+            isSubmitForm = false;
         } else {
             setErrorDescription('');
         }
@@ -96,15 +98,15 @@ export const useCreateOrEditProduct = () => {
         if (!product.price) {
             setErrorPrice('Vui lòng nhập giá sản phẩm');
             setIsLoading(false);
-            return;
+            isSubmitForm = false;
         } else if (product.price <= 0) {
             setErrorPrice('Vui lòng nhập giá sản phẩm lớn hơn 0');
             setIsLoading(false);
-            return;
+            isSubmitForm = false;
         } else if (isNaN(product.price)) {
             setErrorPrice('Vui lòng nhập giá sản phẩm là số');
             setIsLoading(false);
-            return;
+            isSubmitForm = false;
         } else {
             setErrorPrice('');
         }
@@ -112,19 +114,19 @@ export const useCreateOrEditProduct = () => {
         if (product.currency < 1 || product.currency > 3) {
             setErrorCurrency('Vui lòng chọn loại tiền tệ hợp lệ');
             setIsLoading(false);
-            return;
+            isSubmitForm = false;
         } else {
             setErrorCurrency('');
         }
 
-        if (!product.status) {
+        if (product.status === '') {
             setErrorStatus('Vui lòng chọn trạng thái sản phẩm');
             setIsLoading(false);
-            return;
+            isSubmitForm = false;
         } else if (product.status < 0 || product.status > 2) {
             setErrorStatus('Vui lòng chọn trạng thái hợp lệ');
             setIsLoading(false);
-            return;
+            isSubmitForm = false;
         } else {
             setErrorStatus('');
         }
@@ -132,17 +134,21 @@ export const useCreateOrEditProduct = () => {
         if (image && image.size > 2 * 1024 * 1024) {
             setErrorImage('Kích thước ảnh không được vượt quá 2MB');
             setIsLoading(false);
-            return;
+            isSubmitForm = false;
         } else if (image && image.type !== 'image/jpeg' && image.type !== 'image/png' && image.type !== 'image/jpg') {
             setErrorImage('Vui lòng chọn ảnh có định dạng jpg, jpeg hoặc png');
             setIsLoading(false);
-            return;
+            isSubmitForm = false;
         } else if (image && (image.width > 1024 || image.height > 1024)) {
             setErrorImage('Kích thước ảnh không được vượt quá 1024x1024 pixels');
             setIsLoading(false);
-            return;
+            isSubmitForm = false;
         } else {
             setErrorImage('');
+        }
+
+        if (!isSubmitForm) {
+            return;
         }
 
         setProduct({
