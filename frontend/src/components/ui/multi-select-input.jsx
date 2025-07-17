@@ -93,9 +93,31 @@ const MultiSelectInput = ({
     selectedAll(selectedItems, setSelectedItems, setLoading);
   }, [selectedAll, selectedItems, setSelectedItems]);
 
+  const handleClearAll = useCallback(() => {
+    setSelectedItems([]);
+    setInputValue('');
+    setShowDropdown(false);
+  }, [setSelectedItems]);
+
+  const handleSelectDropdownAll = useCallback(() => {
+    if (filteredOptions.length > 0) {
+      const newSelectedItems = filteredOptions.filter(option => !selectedItems.find(item => item.id === option.id));
+      setSelectedItems([...selectedItems, ...newSelectedItems]);
+      setInputValue('');
+      setShowDropdown(false);
+      inputRef.current?.focus();
+    }
+  }, [filteredOptions, selectedItems, setSelectedItems]);
+
   return (
     <div className="mb-3">
-      <label className="form-label fw-bold">{label}</label>
+      <div className="d-flex justify-content-between align-items-center mb-3">
+        <label className="form-label fs-6 fw-bold">{label}</label>
+        <button type="button"
+          className="btn btn-outline-danger p-1"
+          onClick={() => handleClearAll()}
+        >Xoá tất cả</button>
+      </div>
       <div className="position-relative" ref={dropdownRef}>
         <div className="form-control min-height-input min-height-input-multi-select d-flex flex-wrap align-items-center gap-2 p-2">
           {selectedItems.map((item, index) => (
@@ -139,14 +161,17 @@ const MultiSelectInput = ({
               style={{ cursor: 'pointer' }}
               role="button"
               tabIndex={0}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                  e.preventDefault();
-                  handleSelectAll();
-                }
-              }}
             >
-              Chọn tất cả
+              Chọn tất cả quyền có trong dữ liệu
+            </li>
+            <li
+              className="list-group-item list-group-item-action cursor-pointer cursor-pointer-input-multi-select"
+              onClick={handleSelectDropdownAll}
+              style={{ cursor: 'pointer' }}
+              role="button"
+              tabIndex={0}
+            >
+              Chọn tất cả quyền hiện có trong danh sách
             </li>
             {loading ? (
               <li className="list-group-item text-center">

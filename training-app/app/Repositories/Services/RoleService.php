@@ -95,6 +95,8 @@ class RoleService
             $role = $this->roleRepository->update(['name' => $data['name']], $role->id);
             if (!empty($data['permissions'])) {
                 $role->syncPermissions($data['permissions']);
+            } else {
+                $role->permissions()->detach();
             }
             DB::commit();
             return $role;

@@ -2,7 +2,6 @@ import React from 'react';
 import MultiSelectInput from '~/components/ui/multi-select-input';
 import { Icon } from '@iconify/react';
 import { useCreateOrEditRole } from '~/hooks/use-create-or-edit-role';
-import { DeleteRoleModal } from './delete-role-modal';
 import CustomShowGroupButtonCreateOrEdit from '~/components/ui/custom-show-group-button-create-or-edit';
 import CustomModalDelete from '~/components/ui/custom-modal-delete';
 
@@ -68,17 +67,15 @@ const CreateOrEditRole = () => {
                     <div className="mt-3">
                     </div>
 
-                    <div className="mb-6 w-100 d-flex justify-content-center">
-                        <CustomShowGroupButtonCreateOrEdit
-                            isEdit={isEdit}
-                            isLoading={isLoading}
-                            handleSubmit={handleSubmit}
-                            title={title}
-                            titleModel="Vai Trò"
-                            page="roles"
-                            setShowModal={setShowDeleteModal}
-                        />
-                    </div>
+                    <CustomShowGroupButtonCreateOrEdit
+                        isEdit={isEdit}
+                        isLoading={isLoading}
+                        handleSubmit={handleSubmit}
+                        title={title}
+                        titleModel="Vai Trò"
+                        page="roles"
+                        setShowModal={setShowDeleteModal}
+                    />
                 </form>
             </div>
             <CustomModalDelete

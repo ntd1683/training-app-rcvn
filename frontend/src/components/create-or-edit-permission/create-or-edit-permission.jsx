@@ -134,17 +134,15 @@ const CreateOrEditPermission = () => {
                             <div className="text-danger">{errorPermissionOther}</div>
                         </div>
                     )}
-                    <div className="mb-6 w-100 d-flex justify-content-center">
-                        <CustomShowGroupButtonCreateOrEdit
-                            isEdit={isEdit}
-                            isLoading={isLoading}
-                            handleSubmit={handleSubmit}
-                            title={title}
-                            titleModel="Quyền"
-                            page="permissions"
-                            setShowModal={setShowDeleteModal}
-                        />
-                    </div>
+                    <CustomShowGroupButtonCreateOrEdit
+                        isEdit={isEdit}
+                        isLoading={isLoading}
+                        handleSubmit={handleSubmit}
+                        title={title}
+                        titleModel="Quyền"
+                        page="permissions"
+                        setShowModal={setShowDeleteModal}
+                    />
                 </form>
             </div>
             <CustomModalDelete
