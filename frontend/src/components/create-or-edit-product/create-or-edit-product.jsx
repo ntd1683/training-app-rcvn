@@ -4,7 +4,6 @@ import { useCreateOrEditProduct } from '~/hooks/use-create-or-edit-product';
 import ProductStatus from '~/constants/product-status';
 import CustomInputImage from '~/components/ui/custom-input-image';
 import CustomTextEditor from '~/components/ui/custom-text-editor';
-import { Link } from 'react-router-dom';
 import CustomShowGroupButtonCreateOrEdit from '~/components/ui/custom-show-group-button-create-or-edit';
 import CustomModalDelete from '~/components/ui/custom-modal-delete';
 
@@ -131,18 +130,15 @@ const CreateOrEditProduct = () => {
                             setPreviewImage={(preview) => setProduct({ ...product, image: preview })}
                         />
                     </div>
-                    <div className="mb-6 w-100 d-flex justify-content-center">
-                        <Link to="/products" className="btn btn-secondary me-2">Quay Lại</Link>
-                        <CustomShowGroupButtonCreateOrEdit
-                            isEdit={isEdit}
-                            isLoading={isLoading}
-                            handleSubmit={handleSubmit}
-                            title={title}
-                            titleModel="Sản Phẩm"
-                            page="products"
-                            setShowModal={setShowDeleteModal}
-                        />
-                    </div>
+                    <CustomShowGroupButtonCreateOrEdit
+                        isEdit={isEdit}
+                        isLoading={isLoading}
+                        handleSubmit={handleSubmit}
+                        title={title}
+                        titleModel="Sản Phẩm"
+                        page="products"
+                        setShowModal={setShowDeleteModal}
+                    />
                 </form>
             </div>
             <CustomModalDelete

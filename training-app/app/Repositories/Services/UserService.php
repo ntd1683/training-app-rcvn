@@ -178,7 +178,7 @@ class UserService
             throw new Exception('User đã bị xóa trước đó', 404);
         }
 
-        \Log::info("UserService: Attempting to soft delete user with ID: $id");
+        \Log::info("UserService: User $currentUser->id Attempting to soft delete user with ID: $id");
         return $this->userRepository->softDelete($id);
     }
 

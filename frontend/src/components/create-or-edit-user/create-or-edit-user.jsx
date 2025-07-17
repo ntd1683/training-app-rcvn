@@ -172,17 +172,15 @@ const CreateOrEditUser = () => {
                         </select>
                         <div className="text-danger">{errorRole}</div>
                     </div>
-                    <div className="mb-6 w-100 d-flex justify-content-center">
-                        <CustomShowGroupButtonCreateOrEdit
-                            isEdit={isEdit}
-                            isLoading={isLoading}
-                            handleSubmit={handleSubmit}
-                            title={title}
-                            titleModel="Thành Viên"
-                            page="users"
-                            setShowModal={setShowDeleteModal}
-                        />
-                    </div>
+                    <CustomShowGroupButtonCreateOrEdit
+                        isEdit={isEdit}
+                        isLoading={isLoading}
+                        handleSubmit={handleSubmit}
+                        title={title}
+                        titleModel="Thành Viên"
+                        page="users"
+                        setShowModal={setShowDeleteModal}
+                    />
                 </form>
             </div>
             <CustomModalDelete

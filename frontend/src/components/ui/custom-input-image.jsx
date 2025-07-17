@@ -98,7 +98,7 @@ const CustomInputImage = ({
                     aria-describedby="inputGroupFileAddon04"
                     aria-label="Upload"
                     onChange={handleFileChange}
-                    accept="image/jpeg,image/png,image/gif"
+                    accept="image/jpeg,image/png,image/jpg"
                     ref={fileInputRef}
                     style={{ display: 'none' }}
                 />

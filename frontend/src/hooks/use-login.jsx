@@ -49,7 +49,6 @@ export const useLogin = () => {
             setErrorPassword('Mật khẩu không được bỏ trống');
             isSubmitForm = false;
         } else {
-            console.log('Password is valid');
             setErrorPassword('');
         }
 

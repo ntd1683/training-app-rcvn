@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, Outlet, useLocation } from 'react-router-dom';
 import { Icon } from "@iconify/react/dist/iconify.js";
 import "~/assets/css/layout.css";
@@ -6,25 +6,41 @@ import { checkRoleAndPermission } from '~/utils/common.jsx';
 
 const Layout = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
   const location = useLocation();
-
-  const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen);
-  };
 
   const isActive = (path) => location.pathname === path ? "active" : "";
   const user = JSON.parse(localStorage.getItem('user') || '{}');
 
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      setIsScrolled(true);
+      if (currentScrollY > 100) {
+        setIsScrolled(true);
+      } else {
+        setIsScrolled(false);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  });
+
   return (
-    <div className="layout-wrapper layout-content-navbar">
+    <div className={`layout-wrapper layout-content-navbar ${isMenuOpen ? "menu-open" : ""}`}>
       <div className="layout-container">
         <aside id="layout-menu" className={`layout-menu menu-vertical menu bg-menu-theme d-sm-none ${isMenuOpen ? "menu-open" : ""}`}>
-          <div className="app-brand demo">
-            <a href="index.html" className="app-brand-link">
+          <div className="app-brand demo position-relative">
+            <Link to="/" className="app-brand-link">
               <img src="/logo192.png" alt="logo" className="img-fluid" />
-            </a>
-            <button className="layout-menu-toggle menu-link text-large ms-auto" onClick={toggleMenu}>
-              <Icon icon="bx:bx-chevron-left-circle" className="d-block align-middle" />
+              <p className="mb-0 ms-3 fw-bold fs-3">Website</p>
+            </Link>
+            <button className="layout-menu-toggle menu-link text-large ms-auto position-absolute end-0" onClick={() => setIsMenuOpen(false)}>
+              <Icon icon="bx:bx-chevron-left-circle" className="d-block align-middle rounded-circle bg-white" />
             </button>
           </div>
           <div className="menu-divider mt-0"></div>
@@ -47,11 +63,22 @@ const Layout = () => {
 
         <div className="layout-page">
           <nav
-            className="layout-navbar container-xxl navbar-detached navbar navbar-expand-xl align-items-center bg-navbar-theme"
+            className={`layout-navbar container-xxl navbar-detached navbar navbar-expand-xl align-items-center bg-navbar-theme ${isScrolled ? 'navbar-scrolled' : ''}`}
             id="layout-navbar"
+            style={{
+              position: 'fixed',
+              top: 0,
+              left: 0,
+              right: 0,
+              zIndex: 1040,
+              transition: 'all 0.1s ease-in-out',
+              boxShadow: isScrolled ? '0 2px 10px rgba(0,0,0,0.1)' : 'none',
+              backdropFilter: isScrolled ? 'blur(10px)' : 'none',
+              backgroundColor: isScrolled ? 'rgba(255,255,255,0.95)' : 'var(--bs-navbar-bg, #fff)'
+            }}
           >
             <div className="layout-menu-toggle navbar-nav align-items-xl-center me-4 me-xl-0 d-sm-none">
-              <button className="nav-item nav-link px-0 me-xl-6" onClick={toggleMenu}>
+              <button className="nav-item nav-link px-0 me-xl-6" onClick={() => setIsMenuOpen(true)}>
                 <Icon icon="bx:menu" className="icon-base bx icon-md" />
               </button>
             </div>
@@ -109,7 +136,7 @@ const Layout = () => {
             </div>
           </nav>
 
-          <div className="content-wrapper">
+          <div className="content-wrapper" style={{ marginTop: '70px' }}>
             <div className="container-xxl flex-grow-1 container-p-y">
               <Outlet></Outlet>
             </div>
@@ -117,7 +144,7 @@ const Layout = () => {
           </div>
         </div>
       </div>
-      <div className="layout-overlay layout-menu-toggle" onClick={toggleMenu}></div>
+      <div className="layout-overlay layout-menu-toggle" onClick={() => setIsMenuOpen(false)}></div>
     </div>
   );
 };

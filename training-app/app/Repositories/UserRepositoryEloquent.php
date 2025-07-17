@@ -52,6 +52,7 @@ class UserRepositoryEloquent extends BaseRepository implements UserRepository
         $user = $this->find($id);
         if ($user && !$user->is_delete) {
             $user->is_delete = true;
+            $user->tokens()->delete();
             return $user->save();
         }
         return false;
