@@ -7,6 +7,7 @@ import isPropValid from '@emotion/is-prop-valid';
 import CustomPagination from '~/components/ui/custom-pagination';
 import { columns, customStyles } from './permissions-table-config';
 import { usePermissionManage } from '~/hooks/use-permission-manage';
+import { checkRoleAndPermission } from '~/utils/common';
 
 const Permissions = () => {
     const {
@@ -33,12 +34,12 @@ const Permissions = () => {
                 <div className="card pb-4">
                     <div className="card-header d-block d-sm-flex justify-content-between align-items-center">
                         <h5 className="mb-0">Quản lý Quyền</h5>
-                        <div>
+                        {checkRoleAndPermission('permissions.store') && (
                             <Link to="/permissions/add" className="btn btn-primary mt-sm-0 mt-3 ms-sm-3 d-flex d-sm-inline-flex align-items-center">
                                 <Icon icon="bx:plus" className="me-1" />
                                 Thêm mới
                             </Link>
-                        </div>
+                        )}
                     </div>
                     <div className="col-md-6 px-6 py-3">
                             <input
@@ -49,7 +50,7 @@ const Permissions = () => {
                                 onChange={e => handleSearch(e.target.value)}
                             />
                         </div>
-                    <div className="px-3 py-2">
+                    <div className="px-6 py-2">
                         <p className="mb-0">
                             Hiển thị từ {pagination.from} ~ {pagination.to} trong tổng số {pagination.total} Quyền
                         </p>

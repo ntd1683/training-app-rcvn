@@ -7,6 +7,7 @@ import isPropValid from '@emotion/is-prop-valid';
 import CustomPagination from '~/components/ui/custom-pagination';
 import { columns, customStyles } from './roles-table-config';
 import { useRoleManage } from '~/hooks/use-role-manage';
+import { checkRoleAndPermission } from '~/utils/common';
 
 const Roles = () => {
     const {
@@ -34,14 +35,18 @@ const Roles = () => {
                     <div className="card-header d-block d-sm-flex justify-content-between align-items-center">
                         <h5 className="mb-0">Quản lý vai trò</h5>
                         <div>
-                            <Link to="/permissions" className="btn btn-primary mt-sm-0 mt-3 d-flex d-sm-inline-flex align-items-center">
-                                <Icon icon="bx:blanket" className="me-1" />
-                                Quản Lý Quyền
-                            </Link>
-                            <Link to="/roles/add" className="btn btn-primary mt-sm-0 mt-3 ms-sm-3 d-flex d-sm-inline-flex align-items-center">
-                                <Icon icon="bx:plus" className="me-1" />
-                                Thêm mới
-                            </Link>
+                            {checkRoleAndPermission('roles.store') && (
+                                <Link to="/permissions" className="btn btn-primary mt-sm-0 mt-3 d-flex d-sm-inline-flex align-items-center">
+                                    <Icon icon="bx:blanket" className="me-1" />
+                                    Quản Lý Quyền
+                                </Link>
+                            )}
+                            {checkRoleAndPermission('roles.store') && (
+                                <Link to="/roles/add" className="btn btn-primary mt-sm-0 ms-sm-3 mt-3 d-flex d-sm-inline-flex align-items-center">
+                                    <Icon icon="mdi:plus" className="me-1" />
+                                    Thêm Vai Trò
+                                </Link>
+                            )}
                         </div>
                     </div>
                     <div className="col-md-6 px-6 py-3">
@@ -53,7 +58,7 @@ const Roles = () => {
                                 onChange={e => handleSearch(e.target.value)}
                             />
                         </div>
-                    <div className="px-3 py-2">
+                    <div className="px-6 py-2">
                         <p className="mb-0">
                             Hiển thị từ {pagination.from} ~ {pagination.to} trong tổng số {pagination.total} Vai Trò
                         </p>

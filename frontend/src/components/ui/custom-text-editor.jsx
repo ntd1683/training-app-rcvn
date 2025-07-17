@@ -25,7 +25,7 @@ const TinyMCEEditor = ({
     return (
         <div className="tinymce-editor-container">
             <Editor
-                apiKey="tv87nnf8wb2mgxzdey4hewlmg7okli3kybf9xnrge0x4yibe" // Todo: .env
+                apiKey={import.meta.env.VITE_KEY_SECRET_TINYMCE}
                 onInit={(evt, editor) => {
                     editorRef.current = editor;
                 }}

@@ -9,6 +9,7 @@ import { useUserManage } from '~/hooks/use-user-manage';
 import { UsersFilter } from './users-filter';
 import { columns, customStyles } from './user-table-config';
 import { DeleteUserModal, LockUserModal } from './manage-users-modal';
+import { checkRoleAndPermission } from '~/utils/common.jsx';
 
 const ManageUsers = () => {
   const {
@@ -61,10 +62,12 @@ const ManageUsers = () => {
         <div className="card pb-4">
           <div className="card-header d-flex justify-content-between align-items-center">
             <h5 className="mb-0">Quản lý Users</h5>
-            <Link to="/users/add" className="btn btn-primary">
-              <Icon icon="bx:plus" className="me-1" />
-              Thêm mới
-            </Link>
+            {checkRoleAndPermission('create_user') && (
+              <Link to="/users/add" className="btn btn-primary">
+                <Icon icon="bx:plus" className="me-1" />
+                Thêm mới
+              </Link>
+            )}
           </div>
           <div>
             <UsersFilter

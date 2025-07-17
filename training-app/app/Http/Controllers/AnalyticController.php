@@ -3,11 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\AnalyticsResource;
-use App\Models\Product;
-use App\Models\User;
 use App\Repositories\Services\ProductService;
 use App\Repositories\Services\UserService;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class AnalyticController extends Controller

@@ -9,11 +9,11 @@ import { useProductManage } from '~/hooks/use-product-manage';
 import { ProductsFilter } from './products-filter';
 import { columns, customStyles } from './products-table-config';
 import { DeleteProductsModal } from './manage-products-modal';
+import { checkRoleAndPermission } from '~/utils/common';
 
 const ManageProducts = () => {
   const {
     data,
-    roles,
     isLoading,
     pagination,
     filterText,
@@ -53,10 +53,12 @@ const ManageProducts = () => {
         <div className="card pb-4">
           <div className="card-header d-flex justify-content-between align-items-center">
             <h5 className="mb-0">Quản lý Sản Phẩm</h5>
-            <Link to="/products/add" className="btn btn-primary">
-              <Icon icon="bx:plus" className="me-1" />
-              Thêm mới
-            </Link>
+            {checkRoleAndPermission('products.store') && (
+              <Link to="/products/add" className="btn btn-primary">
+                <Icon icon="mdi:plus" className="me-2" />
+                Thêm Sản Phẩm
+              </Link>
+            )}
           </div>
           <div>
             <ProductsFilter

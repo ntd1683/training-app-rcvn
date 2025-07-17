@@ -2,11 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Image;
 use App\Repositories\Services\ImageService;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Storage;
 
 class ImageController extends Controller
 {

@@ -1,7 +1,8 @@
 import React from 'react';
 import { Icon } from '@iconify/react';
 import { useCreateOrEdit } from '~/hooks/use-create-or-edit-user';
-import { DeleteUserModal } from './delete-user-modal';
+import CustomShowGroupButtonCreateOrEdit from '~/components/ui/custom-show-group-button-create-or-edit';
+import CustomModalDelete from '~/components/ui/custom-modal-delete';
 
 const CreateOrEditUser = () => {
     const {
@@ -27,7 +28,7 @@ const CreateOrEditUser = () => {
         errorRole,
         roles,
     } = useCreateOrEdit();
-    
+
     return (
         <div className="card" style={{ margin: '0.5rem' }}>
             <div className="card-header d-flex justify-content-between align-items-center">
@@ -172,24 +173,20 @@ const CreateOrEditUser = () => {
                         <div className="text-danger">{errorRole}</div>
                     </div>
                     <div className="mb-6 w-100 d-flex justify-content-center">
-                        <button
-                            type="submit"
-                            className="btn btn-primary"
-                            disabled={isLoading}
-                            onClick={handleSubmit}
-                        >{`${title} thành viên`}</button>
-                        {isEdit && (
-                            <button
-                                type="button"
-                                className="btn btn-danger ms-2"
-                                disabled={isLoading}
-                                onClick={() => setShowDeleteModal(true)}
-                            >Xoá Thành Viên</button>
-                        )}
+                        <CustomShowGroupButtonCreateOrEdit
+                            isEdit={isEdit}
+                            isLoading={isLoading}
+                            handleSubmit={handleSubmit}
+                            title={title}
+                            titleModel="Thành Viên"
+                            page="users"
+                            setShowModal={setShowDeleteModal}
+                        />
                     </div>
                 </form>
             </div>
-            <DeleteUserModal
+            <CustomModalDelete
+                title="Thành Viên"
                 showDeleteModal={showDeleteModal}
                 setShowDeleteModal={setShowDeleteModal}
                 isDeleting={isDeleting}

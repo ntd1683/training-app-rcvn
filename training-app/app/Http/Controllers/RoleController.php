@@ -10,7 +10,6 @@ use App\Http\Resources\RoleResource;
 use App\Http\Resources\UserResource;
 use App\Repositories\Services\RoleService;
 use Exception;
-use Spatie\Permission\Models\Role;
 
 /**
  * Class RoleController

@@ -3,6 +3,8 @@ import MultiSelectInput from '~/components/ui/multi-select-input';
 import { Icon } from '@iconify/react';
 import { useCreateOrEditRole } from '~/hooks/use-create-or-edit-role';
 import { DeleteRoleModal } from './delete-role-modal';
+import CustomShowGroupButtonCreateOrEdit from '~/components/ui/custom-show-group-button-create-or-edit';
+import CustomModalDelete from '~/components/ui/custom-modal-delete';
 
 const CreateOrEditRole = () => {
     const {
@@ -67,29 +69,28 @@ const CreateOrEditRole = () => {
                     </div>
 
                     <div className="mb-6 w-100 d-flex justify-content-center">
-                        <button
-                            type="submit"
-                            className="btn btn-primary"
-                            disabled={isLoading}
-                            onClick={handleSubmit}
-                        >{title} Vai Trò</button>
-                        {isEdit && (
-                            <button
-                                type="button"
-                                className="btn btn-danger ms-2"
-                                onClick={() => setShowDeleteModal(true)}
-                            >Xoá Vai Trò</button>
-                        )}
+                        <CustomShowGroupButtonCreateOrEdit
+                            isEdit={isEdit}
+                            isLoading={isLoading}
+                            handleSubmit={handleSubmit}
+                            title={title}
+                            titleModel="Vai Trò"
+                            page="roles"
+                            setShowModal={setShowDeleteModal}
+                        />
                     </div>
                 </form>
             </div>
-            <DeleteRoleModal
+            <CustomModalDelete
+                title="Vai Trò"
                 showDeleteModal={showDeleteModal}
                 setShowDeleteModal={setShowDeleteModal}
                 isDeleting={isDeleting}
                 errorDelete={errorDelete}
                 handleDelete={handleDelete}
-            />
+            >
+                <p className='text-danger'>Bạn chỉ được phép xoá khi không có người dùng nào sử dụng vai trò này!!!</p>
+            </CustomModalDelete>
         </div>
     );
 }

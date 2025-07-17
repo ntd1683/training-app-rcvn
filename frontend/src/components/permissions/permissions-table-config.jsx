@@ -1,4 +1,5 @@
 import { Icon } from '@iconify/react';
+import { checkRoleAndPermission } from '~/utils/common';
 
 export const columns = (navigate, pagination) => [
     {
@@ -23,12 +24,14 @@ export const columns = (navigate, pagination) => [
         name: 'Hành động',
         cell: (row) => (
             <div className="d-flex gap-2">
-                <button type="button" className="btn p-0" onClick={() => {
-                    navigate(`/permissions/edit/${row.id}`);
-                }}>
-                    <Icon icon="bx:pen" className="text-primary" width="20px"/>
-                    <span className="ms-1 d-none d-sm-inline">Chỉnh Sửa</span>
-                </button>
+                { checkRoleAndPermission('permissions.edit') && (
+                    <button type="button" className="btn p-0" onClick={() => {
+                        navigate(`/permissions/edit/${row.id}`);
+                    }}>
+                        <Icon icon="bx:pen" className="text-primary" width="20px"/>
+                        <span className="ms-1 d-none d-sm-inline">Chỉnh Sửa</span>
+                    </button>
+                )}
             </div>
         ),
         allowOverflow: true,

@@ -32,19 +32,28 @@ export const useLogin = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setErrorEmail('');
-        setErrorPassword('');
+
+        let isSubmitForm = true;
 
         if (!email) {
             setErrorEmail('Email không được bỏ trống');
-            return;
+            isSubmitForm = false;
         } else if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email)) {
             setErrorEmail('Email không hợp lệ');
-            return;
+            isSubmitForm = false;
+        } else {
+            setErrorEmail('');
         }
 
         if (!password) {
             setErrorPassword('Mật khẩu không được bỏ trống');
+            isSubmitForm = false;
+        } else {
+            console.log('Password is valid');
+            setErrorPassword('');
+        }
+
+        if (!isSubmitForm) {
             return;
         }
 
@@ -52,7 +61,7 @@ export const useLogin = () => {
         if (response.success) {
             navigate('/', {state: { success: 'Đăng nhập thành công' } });
         } else {
-            setErrorPassword('Invalid username or password');
+            setErrorPassword('Email hoặc mật khẩu không đúng!');
             toast.error('Đăng nhập không thành công. Vui lòng kiểm tra lại email và mật khẩu.', {toastId: 'login-error'});
         }
     };

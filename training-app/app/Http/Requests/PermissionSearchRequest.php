@@ -13,7 +13,9 @@ class PermissionSearchRequest extends FormRequest
      */
     public function authorize()
     {
-        $checkPermission = $this->user()->hasRole('Admin') || $this->user()->can('permissions.index');
+        $checkPermission = $this->user()->hasRole('Admin')
+            || $this->user()->hasRole('SuperAdmin')
+            || $this->user()->can('permissions.index');
         return auth('sanctum')->check() && $checkPermission;
     }
 

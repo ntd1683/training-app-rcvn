@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, Outlet, useLocation } from 'react-router-dom';
 import { Icon } from "@iconify/react/dist/iconify.js";
 import "~/assets/css/layout.css";
+import { checkRoleAndPermission } from '~/utils/common.jsx';
 
 const Layout = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -29,38 +30,18 @@ const Layout = () => {
           <div className="menu-divider mt-0"></div>
           <div className="menu-inner-shadow"></div>
           <ul className="menu-inner py-1">
-            <li className={`menu-item ${isActive('/users')}`}>
-              <Link to="/users" className="menu-link">
-                <Icon icon="bx:user-voice" className="menu-icon bx" />
-                <div className="text-truncate">
-                  Users
-                </div>
-              </Link>
-            </li>
-            <li className={`menu-item ${isActive('/roles')}`}>
-              <Link to="/roles" className="menu-link">
-                <Icon icon="bx:lock-open" className="menu-icon bx" />
-                <div className="text-truncate">
-                  Quản lý Vai Trò
-                </div>
-              </Link>
-            </li>
-            <li className={`menu-item ${isActive('/permissions')}`}>
-              <Link to="/permissions" className="menu-link">
-                <Icon icon="bx:book-reader" className="menu-icon bx" />
-                <div className="text-truncate">
-                  Quản lý Quyền
-                </div>
-              </Link>
-            </li>
-            <li className={`menu-item ${isActive('/products')}`}>
-              <Link to="/products" className={`menu-link`}>
-                  <Icon icon="bx:cart-alt" className="menu-icon bx" />
-                  <div className="text-truncate">
-                    Sản Phẩm
-                  </div>
-              </Link>
-            </li>
+            {listNav.map((navItem) => (
+              checkRoleAndPermission(navItem.permission) && (
+                <li key={navItem.path} className={`menu-item ${isActive(navItem.path)}`}>
+                  <Link to={navItem.path} className="menu-link">
+                    <Icon icon={navItem.icon} className="menu-icon bx" />
+                    <div className="text-truncate">
+                      {navItem.label}
+                    </div>
+                  </Link>
+                </li>
+              )
+            ))}
           </ul>
         </aside>
 
@@ -76,49 +57,35 @@ const Layout = () => {
             </div>
             <div className="navbar-nav-right d-flex align-items-center justify-content-end" id="navbar-collapse">
               <ul className="navbar-nav d-none d-sm-flex flex-sm-row justify-content-evenly w-100">
-                <li className={`nav-item ${isActive('/users')}`}>
-                  <Link to="/users" className="nav-link d-flex align-items-center">
-                    <Icon icon="bx:user-voice" className="me-2" style={{ fontSize: '1.5rem' }}/>
-                    <span>Users</span>
-                  </Link>
-                </li>
-                <li className={`nav-item ${isActive('/roles')}`}>
-                  <Link to="/roles" className="nav-link d-flex align-items-center">
-                    <Icon icon="bx:lock-open" className="me-2" style={{ fontSize: '1.5rem' }}/>
-                    <span>Quản lý vai trò</span>
-                  </Link>
-                </li>
-                <li className={`nav-item ${isActive('/permissions')}`}>
-                  <Link to="/permissions" className="nav-link d-flex align-items-center">
-                    <Icon icon="bx:book-reader" className="me-2" style={{ fontSize: '1.5rem' }}/>
-                    <span>Quản lý quyền</span>
-                  </Link>
-                </li>
-                <li className={`nav-item ${isActive('/products')}`}>
-                  <Link to="/products" className="nav-link d-flex align-items-center">
-                    <Icon icon="bx:cart-alt" className="me-2" style={{ fontSize: '1.5rem' }}/>
-                    <span>Sản Phẩm</span>
-                  </Link>
-                </li>
+                {listNav.map((navItem) => (
+                  checkRoleAndPermission(navItem.permission) && (
+                    <li key={navItem.path} className={`nav-item ${isActive(navItem.path)}`}>
+                      <Link to={navItem.path} className="nav-link d-flex align-items-center">
+                        <Icon icon={navItem.icon} className="me-2" style={{ fontSize: '1.5rem' }} />
+                        <span>{navItem.label}</span>
+                      </Link>
+                    </li>
+                  )
+                ))}
               </ul>
 
               <ul className="navbar-nav flex-row align-items-center ms-md-auto">
                 <li className="nav-item navbar-dropdown dropdown-user dropdown">
-                    <Link to="/test" className="nav-link dropdown-toggle hide-arrow p-0" data-bs-toggle="dropdown" aria-expanded="false">
-                        <div className="avatar avatar-online">
-                        <Icon icon="bx:user-circle" className="w-px-40 h-auto" />
-                        </div>
-                    </Link>
-                    <ul className="dropdown-menu dropdown-menu-end">
-                      <li>
-                        <Link to="" className="dropdown-item">
-                          <div className="d-flex">
-                            <div className="flex-grow-1">
-                              <h6 className="mb-0">{user.name}</h6>
-                              <small className="text-body-secondary">{user.group_role}</small>
-                            </div>
+                  <Link to="/test" className="nav-link dropdown-toggle hide-arrow p-0" data-bs-toggle="dropdown" aria-expanded="false">
+                    <div className="avatar avatar-online">
+                      <Icon icon="bx:user-circle" className="w-px-40 h-auto" />
+                    </div>
+                  </Link>
+                  <ul className="dropdown-menu dropdown-menu-end">
+                    <li>
+                      <Link to="" className="dropdown-item">
+                        <div className="d-flex">
+                          <div className="flex-grow-1">
+                            <h6 className="mb-0">{user.name}</h6>
+                            <small className="text-body-secondary">{user.group_role}</small>
                           </div>
-                        </Link>
+                        </div>
+                      </Link>
                     </li>
                     <li>
                       <div className="dropdown-divider my-1"></div>
@@ -154,5 +121,32 @@ const Layout = () => {
     </div>
   );
 };
+
+const listNav = [
+  {
+    permission: 'users.index',
+    path: '/users',
+    icon: 'bx:user-voice',
+    label: 'Users'
+  },
+  {
+    permission: 'roles.index',
+    path: '/roles',
+    icon: 'bx:lock-open',
+    label: 'Quản lý Vai Trò'
+  },
+  {
+    permission: 'permissions.index',
+    path: '/permissions',
+    icon: 'bx:book-reader',
+    label: 'Quản lý Quyền'
+  },
+  {
+    permission: 'products.index',
+    path: '/products',
+    icon: 'bx:cart-alt',
+    label: 'Sản Phẩm'
+  }
+];
 
 export default Layout;
