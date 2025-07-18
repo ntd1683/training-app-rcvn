@@ -17,8 +17,8 @@ const ManageUsers = () => {
     roles,
     isLoading,
     pagination,
-    filterText,
-    setFilterText,
+    filterName,
+    setFilterName,
     filterEmail,
     setFilterEmail,
     filterGroup,
@@ -71,8 +71,8 @@ const ManageUsers = () => {
           </div>
           <div>
             <UsersFilter
-              filterText={filterText}
-              setFilterText={setFilterText}
+              filterName={filterName}
+              setFilterName={setFilterName}
               filterEmail={filterEmail}
               setFilterEmail={setFilterEmail}
               roles={roles}

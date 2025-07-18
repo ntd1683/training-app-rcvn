@@ -2,6 +2,7 @@
 
 namespace App\Repositories\Services;
 
+use App\Repositories\Criteria\PermissionFilterCriteria;
 use App\Repositories\PermissionRepository;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
@@ -48,7 +49,7 @@ class PermissionService
             DB::raw('(SELECT COUNT(*) FROM role_has_permissions WHERE permission_id = permissions.id) as roles_count')
         ]);
 
-        $criteria = new \App\Repositories\Criteria\PermissionFilterCriteria($filters);
+        $criteria = new PermissionFilterCriteria($filters);
         $query = $criteria->apply($query, $this->permissionRepository);
 
         $count = $query->count();
