@@ -1,4 +1,5 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { fetchProducts, deleteProduct } from '~/services/api';
 
@@ -29,27 +30,86 @@ export const useProductManage = () => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [deleteError, setDeleteError] = useState(null);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const isInitialMount = useRef(true);
 
-  const loadProducts = async (page = 1, perPage = 10, filters = {}) => {
+  const loadProducts = useCallback(async (page = 1, perPage = 10, filters = {}) => {
     setIsLoading(true);
     try {
       const response = await fetchProducts(page, perPage, filters);
       if (response.success) {
         setData(response.data);
-        setPagination(response.pagination);
+        if (!isInitialMount.current) {
+          setPagination(response.pagination);
+        } else {
+          setPagination({
+            current_page: page,
+            per_page: perPage,
+            total: response.pagination.total,
+            last_page: response.pagination.last_page,
+            from: response.pagination.from,
+            to: response.pagination.to,
+          });
+        }
       }
     } catch (error) {
       setData([]);
     } finally {
       setIsLoading(false);
+      if (isInitialMount.current) {
+        isInitialMount.current = false;
+      }
     }
-  };
-
-  useEffect(() => {
-    loadProducts();
   }, []);
 
-  // Handlers
+  useEffect(() => {
+    if (isInitialMount.current) {
+      const page = parseInt(searchParams.get('page')) || 1;
+      const perPage = parseInt(searchParams.get('per_page')) || 10;
+      const filterTitleFromUrl = searchParams.get('title') || '';
+      const filterStatusFromUrl = searchParams.get('status') || '';
+      const filterPriceToFromUrl = searchParams.get('price_to') || '';
+      const FilterPriceFromFromUrl = searchParams.get('price_from') || '';
+      const sortByFromUrl = searchParams.get('sort_by') || '';
+      const sortOrderFromUrl = searchParams.get('sort_order') || '';
+
+      setFilterText(filterTitleFromUrl);
+      setFilterStatus(filterStatusFromUrl);
+      setFilterPriceTo(filterPriceToFromUrl);
+      setFilterPriceFrom(FilterPriceFromFromUrl);
+      setSortBy(sortByFromUrl);
+      setSortOrder(sortOrderFromUrl);
+
+      loadProducts(page, perPage, {
+        filterText: filterTitleFromUrl,
+        filterStatus: filterStatusFromUrl,
+        filterPriceFrom: FilterPriceFromFromUrl,
+        filterPriceTo: filterPriceToFromUrl,
+        sortBy: sortByFromUrl,
+        sortOrder: sortOrderFromUrl,
+      });
+    }
+  }, [searchParams, loadProducts]);
+
+  const updateSearchParams = useCallback(() => {
+    const params = {};
+    if (filterText) params.title = filterText;
+    if (filterStatus) params.status = filterStatus;
+    if (filterPriceFrom) params.price_from = filterPriceFrom;
+    if (filterPriceTo) params.price_to = filterPriceTo;
+    if (pagination.current_page !== 1) params.page = pagination.current_page.toString();
+    if (pagination.per_page !== 10) params.per_page = pagination.per_page.toString();
+    if (sortBy) params.sort_by = sortBy;
+    if (sortOrder) params.sort_order = sortOrder;
+    setSearchParams(params, { replace: true });
+  }, [pagination.current_page, pagination.per_page, filterText, filterStatus, filterPriceFrom, filterPriceTo, sortBy, sortOrder, setSearchParams]);
+
+  useEffect(() => {
+    if (!isInitialMount.current) {
+      updateSearchParams();
+    }
+  }, [pagination.current_page, pagination.per_page, filterText, filterStatus, filterPriceFrom, filterPriceTo, sortBy, sortOrder, updateSearchParams]);
+
   const handleSearch = () => {
     if(filterPriceFrom && filterPriceTo && filterPriceFrom > filterPriceTo) {
       toast.error('Giá từ không thể lớn hơn giá đến.', { toastId: 'price-error-toast' });
@@ -58,6 +118,18 @@ export const useProductManage = () => {
     } else {
       setErrorFilterPrice('');
     }
+
+    const params = {};
+
+    if (filterText) params.title = filterText;
+    if (filterStatus) params.status = filterStatus;
+    if (filterPriceFrom) params.price_from = filterPriceFrom;
+    if (filterPriceTo) params.price_to = filterPriceTo;
+    if (sortBy) params.sort_by = sortBy;
+    if (sortOrder) params.sort_order = sortOrder;
+    if (pagination.per_page !== 10) params.per_page = pagination.per_page.toString
+
+    setSearchParams(params, { replace: true });
     loadProducts(1, pagination.per_page, { filterText, filterStatus, filterPriceTo, filterPriceFrom, sortBy, sortOrder });
   };
 
@@ -71,7 +143,8 @@ export const useProductManage = () => {
     setSortOrder('');
     setSortClickCount({});
     setLastSortedColumn('');
-    setTableKey(prev => prev + 1);
+    setTableKey((prev) => prev + 1);
+    setSearchParams({}, { replace: true });
     loadProducts(1, pagination.per_page, {});
   };
 
@@ -102,9 +175,13 @@ export const useProductManage = () => {
           setSortOrder('');
           setSortClickCount({});
           setLastSortedColumn('');
-          setTableKey(prev => prev + 1);
-          
-          loadProducts(pagination.current_page, pagination.per_page, {});
+          setTableKey((prev) => prev + 1);
+          loadProducts(pagination.current_page, pagination.per_page, {
+            filterText,
+            filterStatus,
+            filterPriceFrom,
+            filterPriceTo,
+          });
           return;
         }
       }

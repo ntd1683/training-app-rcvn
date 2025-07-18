@@ -1,4 +1,5 @@
-import { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
+import { useState, useEffect, useCallback, useRef, use } from 'react';
 import { toast } from 'react-toastify';
 import { fetchUsers, deleteUser, toggleUserStatus, fetchAllRoles } from '~/services/api';
 
@@ -15,7 +16,7 @@ export const useUserManage = () => {
     from: 0,
     to: 0,
   });
-  const [filterText, setFilterText] = useState('');
+  const [filterName, setFilterName] = useState('');
   const [filterEmail, setFilterEmail] = useState('');
   const [filterGroup, setFilterGroup] = useState('');
   const [filterStatus, setFilterStatus] = useState('');
@@ -33,23 +34,39 @@ export const useUserManage = () => {
   const [lockError, setLockError] = useState(null);
   const [roles, setRoles] = useState([]);
 
-  // Load users
-  const loadUsers = async (page = 1, perPage = 10, filters = {}) => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const isInitialMount = useRef(true);
+
+  const loadUsers = useCallback(async (page = 1, perPage = 10, filters = {}) => {
     setIsLoading(true);
     try {
       const response = await fetchUsers(page, perPage, filters);
       if (response.success) {
         setData(response.data);
-        setPagination(response.pagination);
+        if (!isInitialMount.current) {
+          setPagination(response.pagination);
+        } else {
+          setPagination({
+            current_page: page,
+            per_page: perPage,
+            total: response.pagination.total,
+            last_page: response.pagination.last_page,
+            from: response.pagination.from,
+            to: response.pagination.to,
+          });
+        }
       }
     } catch (error) {
       setData([]);
     } finally {
       setIsLoading(false);
+      if (isInitialMount.current) {
+        isInitialMount.current = false;
+      }
     }
-  };
+  }, []);
 
-  const loadRoles = async () => {
+  const loadRoles = useCallback(async () => {
     try {
       const response = await fetchAllRoles();
       if (response.success) {
@@ -61,20 +78,78 @@ export const useUserManage = () => {
       console.error('Error fetching roles:', error);
       toast.error('Có lỗi xảy ra khi tải danh sách nhóm người dùng.', { toastId: 'fetch-roles-error-toast' });
     }
-  };
-
-  useEffect(() => {
-    loadUsers();
-    loadRoles();
   }, []);
 
-  // Handlers
+  useEffect(() => {
+    loadRoles();
+  }, [loadRoles]);
+
+  useEffect(() => {
+    if (isInitialMount.current) {
+      const page = parseInt(searchParams.get('page')) || 1;
+      const perPage = parseInt(searchParams.get('per_page')) || 10;
+      const filterNameUrl = searchParams.get('name') || '';
+      const filterEmailFromUrl = searchParams.get('email') || '';
+      const filterGroupRoleFromUrl = searchParams.get('role') || '';
+      const filterStatusFromUrl = searchParams.get('status') || '';
+      const sortByFromUrl = searchParams.get('sort_by') || '';
+      const sortOrderFromUrl = searchParams.get('sort_order') || '';
+
+      setFilterName(filterNameUrl);
+      setFilterEmail(filterEmailFromUrl);
+      setFilterGroup(filterGroupRoleFromUrl);
+      setFilterStatus(filterStatusFromUrl);
+      setSortBy(sortByFromUrl);
+      setSortOrder(sortOrderFromUrl);
+
+      loadUsers(page, perPage, {
+        filterName: filterNameUrl,
+        filterEmail: filterEmailFromUrl,
+        filterGroup: filterGroupRoleFromUrl,
+        filterStatus: filterStatusFromUrl,
+        sortBy: sortByFromUrl,
+        sortOrder: sortOrderFromUrl,
+      });
+    }
+  }, [searchParams, loadUsers]);
+
+  const updateSearchParams = useCallback(() => {
+    const params = {};
+    if (filterName) params.name = filterName;
+    if (filterEmail) params.email = filterEmail;
+    if (filterGroup) params.role = filterGroup;
+    if (filterStatus) params.status = filterStatus;
+    if (sortBy) params.sort_by = sortBy;
+    if (sortOrder) params.sort_order = sortOrder;
+    if (pagination.current_page !== 1) params.page = pagination.current_page.toString();
+    if (pagination.per_page !== 10) params.per_page = pagination.per_page.toString();
+
+    setSearchParams(params, { replace: true });
+  }, [pagination.current_page, pagination.per_page, filterName, filterEmail, filterGroup, filterStatus, sortBy, sortOrder, setSearchParams]);
+
+  useEffect(() => {
+    if (!isInitialMount.current) {
+      updateSearchParams();
+    }
+  }, [pagination.current_page, pagination.per_page, sortBy, sortOrder, updateSearchParams]);
+
   const handleSearch = () => {
-    loadUsers(1, pagination.per_page, { filterText, filterEmail, filterGroup, filterStatus, sortBy, sortOrder });
+    const params = {};
+
+    if (filterName) params.name = filterName;
+    if (filterEmail) params.email = filterEmail;
+    if (filterGroup) params.role = filterGroup;
+    if (filterStatus) params.status = filterStatus;
+    if (sortBy) params.sort_by = sortBy;
+    if (sortOrder) params.sort_order = sortOrder;
+    if (pagination.per_page !== 10) params.per_page = pagination.per_page.toString();
+
+    setSearchParams(params, { replace: true });
+    loadUsers(1, pagination.per_page, { filterName, filterEmail, filterGroup, filterStatus, sortBy, sortOrder });
   };
 
   const handleReset = () => {
-    setFilterText('');
+    setFilterName('');
     setFilterEmail('');
     setFilterGroup('');
     setFilterStatus('');
@@ -82,24 +157,25 @@ export const useUserManage = () => {
     setSortOrder('');
     setSortClickCount({});
     setLastSortedColumn('');
-    setTableKey(prev => prev + 1);
+    setTableKey((prev) => prev + 1);
+    setSearchParams({}, { replace: true });
     loadUsers(1, pagination.per_page, {});
   };
 
   const handlePageChange = (page) => {
-    loadUsers(page, pagination.per_page, { filterText, filterEmail, filterGroup, filterStatus, sortBy, sortOrder });
+    loadUsers(page, pagination.per_page, { filterName, filterEmail, filterGroup, filterStatus, sortBy, sortOrder });
   };
 
   const handleRowsPerPageChange = (newRowsPerPage) => {
-    loadUsers(1, newRowsPerPage, { filterText, filterEmail, filterGroup, filterStatus, sortBy, sortOrder });
+    loadUsers(1, newRowsPerPage, { filterName, filterEmail, filterGroup, filterStatus, sortBy, sortOrder });
   };
 
   const handleSort = (column, sortDirection) => {
     if (column.selector && column.sortable) {
-      const selector = typeof column.selector === 'function' 
+      const selector = typeof column.selector === 'function'
         ? column.selector.toString().split('.').pop() || column.name.toLowerCase()
         : column.selector;
-      
+
       if (lastSortedColumn !== selector) {
         setSortClickCount({ [selector]: 1 });
         setLastSortedColumn(selector);
@@ -107,23 +183,27 @@ export const useUserManage = () => {
         const currentCount = sortClickCount[selector] || 0;
         const nextCount = currentCount + 1;
         setSortClickCount({ [selector]: nextCount });
-        
+
         if (nextCount >= 3) {
           setSortBy('');
           setSortOrder('');
           setSortClickCount({});
           setLastSortedColumn('');
-          setTableKey(prev => prev + 1);
-          
-          loadUsers(pagination.current_page, pagination.per_page, {});
+          setTableKey((prev) => prev + 1);
+          loadUsers(pagination.current_page, pagination.per_page, {
+            filterName,
+            filterEmail,
+            filterGroup,
+            filterStatus,
+          });
           return;
         }
       }
-      
+
       setSortBy(selector);
       setSortOrder(sortDirection);
       loadUsers(pagination.current_page, pagination.per_page, {
-        filterText,
+        filterName,
         filterEmail,
         filterGroup,
         filterStatus,
@@ -132,7 +212,6 @@ export const useUserManage = () => {
       });
     }
   };
-
 
   const handleDelete = async (userId) => {
     if (!userId) return;
@@ -160,7 +239,7 @@ export const useUserManage = () => {
       setLockError(null);
       const response = await toggleUserStatus(userId);
       if (!response) throw new Error(`${textLock} không thành công`);
-      setData(data.map(user => 
+      setData(data.map(user =>
         user.id === userId ? { ...user, is_active: selectedUser.is_active === 1 ? 0 : 1 } : user
       ));
       setShowLockModal(false);
@@ -178,8 +257,8 @@ export const useUserManage = () => {
     roles,
     isLoading,
     pagination,
-    filterText,
-    setFilterText,
+    filterName,
+    setFilterName,
     filterEmail,
     setFilterEmail,
     filterGroup,

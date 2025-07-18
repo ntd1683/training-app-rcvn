@@ -84,7 +84,7 @@ export const fetchUsers = async (page = 1, perPage = 10, filters = {}) => {
     const params = {
       page,
       per_page: perPage,
-      search_name: filters.filterText || undefined,
+      search_name: filters.filterName || undefined,
       search_email: filters.filterEmail || undefined,
       filter_group: filters.filterGroup || undefined,
       filter_status: filters.filterStatus || undefined,

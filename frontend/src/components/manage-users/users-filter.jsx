@@ -1,4 +1,4 @@
-export const UsersFilter = ({ filterText, setFilterText, filterEmail, setFilterEmail,roles,filterGroup, setFilterGroup, filterStatus, setFilterStatus }) => {
+export const UsersFilter = ({ filterName, setFilterName, filterEmail, setFilterEmail,roles,filterGroup, setFilterGroup, filterStatus, setFilterStatus }) => {
     return (
         <div className="row g-3 px-3">
             <div className="col-md-3">
@@ -6,8 +6,8 @@ export const UsersFilter = ({ filterText, setFilterText, filterEmail, setFilterE
                     type="text"
                     className="form-control"
                     placeholder="Tìm kiếm họ tên..."
-                    value={filterText}
-                    onChange={e => setFilterText(e.target.value)}
+                    value={filterName}
+                    onChange={e => setFilterName(e.target.value)}
                 />
             </div>
             <div className="col-md-3">
