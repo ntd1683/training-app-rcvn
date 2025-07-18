@@ -1,5 +1,5 @@
 import { useSearchParams } from 'react-router-dom';
-import { useState, useEffect, useCallback, useRef, use } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { toast } from 'react-toastify';
 import { fetchUsers, deleteUser, toggleUserStatus, fetchAllRoles } from '~/services/api';
 
@@ -43,18 +43,18 @@ export const useUserManage = () => {
       const response = await fetchUsers(page, perPage, filters);
       if (response.success) {
         setData(response.data);
-        if (!isInitialMount.current) {
-          setPagination(response.pagination);
-        } else {
-          setPagination({
-            current_page: page,
-            per_page: perPage,
-            total: response.pagination.total,
-            last_page: response.pagination.last_page,
-            from: response.pagination.from,
-            to: response.pagination.to,
-          });
-        }
+        const paginationData = response.pagination || {};
+        const total = paginationData.total || 0;
+        let perPageTmp = total > 20 ? paginationData.per_page : perPage;
+        
+        setPagination({
+          current_page: page,
+          per_page: perPageTmp,
+          total: paginationData.total,
+          last_page: paginationData.last_page,
+          from: paginationData.from,
+          to: paginationData.to,
+        });
       }
     } catch (error) {
       setData([]);
@@ -115,17 +115,19 @@ export const useUserManage = () => {
 
   const updateSearchParams = useCallback(() => {
     const params = {};
-    if (filterName) params.name = filterName;
-    if (filterEmail) params.email = filterEmail;
-    if (filterGroup) params.role = filterGroup;
-    if (filterStatus) params.status = filterStatus;
+
+    if (searchParams.get('name')) params.name = searchParams.get('name');
+    if (searchParams.get('email')) params.email = searchParams.get('email');
+    if (searchParams.get('role')) params.role = searchParams.get('role');
+    if (searchParams.get('status')) params.status = searchParams.get('status');
+    
     if (sortBy) params.sort_by = sortBy;
     if (sortOrder) params.sort_order = sortOrder;
     if (pagination.current_page !== 1) params.page = pagination.current_page.toString();
     if (pagination.per_page !== 10) params.per_page = pagination.per_page.toString();
 
     setSearchParams(params, { replace: true });
-  }, [pagination.current_page, pagination.per_page, filterName, filterEmail, filterGroup, filterStatus, sortBy, sortOrder, setSearchParams]);
+  }, [searchParams, sortBy, sortOrder, pagination.current_page, pagination.per_page, setSearchParams]);
 
   useEffect(() => {
     if (!isInitialMount.current) {

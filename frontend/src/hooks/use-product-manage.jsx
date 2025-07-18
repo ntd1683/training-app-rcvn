@@ -39,18 +39,18 @@ export const useProductManage = () => {
       const response = await fetchProducts(page, perPage, filters);
       if (response.success) {
         setData(response.data);
-        if (!isInitialMount.current) {
-          setPagination(response.pagination);
-        } else {
-          setPagination({
-            current_page: page,
-            per_page: perPage,
-            total: response.pagination.total,
-            last_page: response.pagination.last_page,
-            from: response.pagination.from,
-            to: response.pagination.to,
-          });
-        }
+        const paginationData = response.pagination || {};
+        const total = paginationData.total || 0;
+        let perPageTmp = total > 20 ? paginationData.per_page : perPage;
+
+        setPagination({
+          current_page: page,
+          per_page: perPageTmp,
+          total: paginationData.total,
+          last_page: paginationData.last_page,
+          from: paginationData.from,
+          to: paginationData.to,
+        });
       }
     } catch (error) {
       setData([]);
@@ -93,16 +93,18 @@ export const useProductManage = () => {
 
   const updateSearchParams = useCallback(() => {
     const params = {};
-    if (filterText) params.title = filterText;
-    if (filterStatus) params.status = filterStatus;
-    if (filterPriceFrom) params.price_from = filterPriceFrom;
-    if (filterPriceTo) params.price_to = filterPriceTo;
+    
+    if (searchParams.get('title')) params.title = searchParams.get('title');
+    if (searchParams.get('status')) params.status = searchParams.get('status');
+    if (searchParams.get('price_from')) params.price_from = searchParams.get('price_from');
+    if (searchParams.get('price_to')) params.price_to = searchParams.get('price_to');
+
     if (pagination.current_page !== 1) params.page = pagination.current_page.toString();
     if (pagination.per_page !== 10) params.per_page = pagination.per_page.toString();
     if (sortBy) params.sort_by = sortBy;
     if (sortOrder) params.sort_order = sortOrder;
     setSearchParams(params, { replace: true });
-  }, [pagination.current_page, pagination.per_page, filterText, filterStatus, filterPriceFrom, filterPriceTo, sortBy, sortOrder, setSearchParams]);
+  }, [searchParams, pagination.current_page, pagination.per_page, sortBy, sortOrder, setSearchParams]);
 
   useEffect(() => {
     if (!isInitialMount.current) {
