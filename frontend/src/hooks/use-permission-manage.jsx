@@ -29,16 +29,18 @@ export const usePermissionManage = () => {
       const response = await fetchPermissions(page, perPage, filters);
       if (response.success) {
         setData(response.data);
-        if (!isInitialMount.current) {
-          setPagination(response.pagination);
-        } else {
-          setPagination(prev => ({
-            ...prev,
-            total: response.pagination.total,
-            from: response.pagination.from,
-            to: response.pagination.to,
-          }));
-        }
+        const paginationData = response.pagination || {};
+        const total = paginationData.total || 0;
+        let perPageTmp = total > 20 ? paginationData.per_page : perPage;
+        
+        setPagination({
+          current_page: page,
+          per_page: perPageTmp,
+          total: paginationData.total,
+          last_page: paginationData.last_page,
+          from: paginationData.from,
+          to: paginationData.to,
+        });
       }
     } catch (error) {
       setData([]);
