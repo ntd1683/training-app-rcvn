@@ -110,7 +110,7 @@ export const useProductManage = () => {
     if (!isInitialMount.current) {
       updateSearchParams();
     }
-  }, [pagination.current_page, pagination.per_page, filterText, filterStatus, filterPriceFrom, filterPriceTo, sortBy, sortOrder, updateSearchParams]);
+  }, [pagination.current_page, pagination.per_page, sortBy, sortOrder, updateSearchParams]);
 
   const handleSearch = () => {
     if(filterPriceFrom && filterPriceTo && filterPriceFrom > filterPriceTo) {
