@@ -13,10 +13,7 @@ class UserCreateRequest extends FormRequest
      */
     public function authorize()
     {
-        $checkPermission = $this->user()->hasRole('Admin')
-            || $this->user()->hasRole('SuperAdmin')
-            || $this->user()->can('users.store');
-        return auth('sanctum')->check() && $checkPermission;
+        return auth('sanctum')->check();
     }
 
     /**

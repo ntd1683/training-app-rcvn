@@ -13,10 +13,7 @@ class ProductSearchRequest extends FormRequest
      */
     public function authorize()
     {
-        $checkPermission = $this->user()->hasRole('Admin')
-            || $this->user()->hasRole('SuperAdmin')
-            || $this->user()->can('products.index');
-        return auth('sanctum')->check() && $checkPermission;
+        return auth('sanctum')->check();
     }
 
     /**
