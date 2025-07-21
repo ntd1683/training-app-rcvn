@@ -9,7 +9,6 @@ const Test = () => {
                 const response = await getImage('9e0c9e34ca602c36699511e214027e336691b624c8f34b4ba1313d3dc1f7894a.png');
                 setImage(response);
             } catch (error) {
-                console.error('Error fetching user:', error);
             }
         };
 

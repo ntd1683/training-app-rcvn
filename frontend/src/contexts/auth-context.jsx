@@ -25,11 +25,9 @@ export const AuthProvider = ({ children }) => {
             localStorage.setItem('permissions', JSON.stringify(userData.permissions || []));
             localStorage.setItem('user', JSON.stringify(userData));
           } else {
-            console.error('Token verification failed:', response.data.message);
             clearAuthData();
           }
         } catch (error) {
-          console.error('Token verification failed:', error);
           clearAuthData();
         }
       } else {
@@ -44,7 +42,6 @@ export const AuthProvider = ({ children }) => {
             setPermissions(parsedPermissions);
             setIsAuthenticated(true);
           } catch (error) {
-            console.error('Error parsing cached data:', error);
             clearAuthData();
           }
         }
@@ -81,7 +78,6 @@ export const AuthProvider = ({ children }) => {
         throw new Error(data.message || 'Đăng nhập thất bại');
       }
     } catch (error) {
-      console.error('Login error:', error);
       return { success: false, message: error.message };
     }
   };
@@ -90,7 +86,6 @@ export const AuthProvider = ({ children }) => {
     try {
       await logoutFetch();
     } catch (error) {
-      console.error('Logout API failed:', error);
       clearAuthData();
       throw ('Logout failed:', error);
     } finally {

@@ -63,7 +63,6 @@ export const useCreateOrEdit = () => {
                     navigate('/users', { state: { error: 'Không tìm thấy người dùng với ID đã cho' } });
                 }
             } catch (error) {
-                console.error('Error fetching user:', error);
                 navigate('/users', { state: { error: 'Có lỗi xảy ra khi tải thông tin người dùng' } });
             }
         }
@@ -78,7 +77,6 @@ export const useCreateOrEdit = () => {
                 toast.error('Không thể tải danh sách nhóm người dùng.', { toastId: 'fetch-roles-error-toast' });
             }
         } catch (error) {
-            console.error('Error fetching roles:', error);
             toast.error('Có lỗi xảy ra khi tải danh sách nhóm người dùng.', { toastId: 'fetch-roles-error-toast' });
         }
     }, []);
@@ -156,7 +154,6 @@ export const useCreateOrEdit = () => {
                 });
                 navigate('/users', { state: { success: 'Tạo thành viên thành công' } });
             } catch (error) {
-                console.error('Error creating user:', error);
                 toast.error(`Tạo thành viên không thành công: ${error.response.data.message}`);
                 setIsLoading(false);
                 return;
@@ -175,7 +172,6 @@ export const useCreateOrEdit = () => {
                 setValDelete(user.isDelete);
                 navigate('/users', { state: { success: 'Chỉnh sửa thành viên thành công' } });
             } catch (error) {
-                console.error('Error updating user:', error);
                 toast.error('Cập nhật thành viên không thành công');
                 setIsLoading(false);
                 return;
@@ -197,7 +193,6 @@ export const useCreateOrEdit = () => {
             setShowDeleteModal(false);
             navigate('/users', { state: { success: 'Xoá thành viên thành công' } });
         } catch (error) {
-            console.error('Error deleting user:', error);
             setErrorDelete('Xoá thành viên không thành công');
         } finally {
             setIsDeleting(false);

@@ -52,7 +52,6 @@ export const useCreateOrEditProduct = () => {
                     });
                 }
             } catch (error) {
-                console.error('Error fetching user:', error);
             }
         }
     }, [isEdit, id]);
@@ -168,7 +167,6 @@ export const useCreateOrEditProduct = () => {
                 });
                 navigate('/products', { state: { success: 'Tạo sản phẩm thành công' } });
             } catch (error) {
-                console.error('Error creating product:', error);
                 toast.error(`Tạo sản phẩm không thành công: ${error.response.data.message}`);
                 setIsLoading(false);
                 return;
@@ -187,7 +185,6 @@ export const useCreateOrEditProduct = () => {
                 });
                 navigate('/products', { state: { success: 'Chỉnh sửa sản phẩm thành công' } });
             } catch (error) {
-                console.error('Error updating product:', error);
                 toast.error('Cập nhật sản phẩm không thành công');
                 setIsLoading(false);
                 return;
@@ -209,7 +206,6 @@ export const useCreateOrEditProduct = () => {
             setShowDeleteModal(false);
             navigate('/products', { state: { success: 'Xoá sản phẩm thành công' } });
         } catch (error) {
-            console.error('Error deleting user:', error);
             setErrorDelete('Xoá sản phẩm không thành công');
         } finally {
             setIsDeleting(false);

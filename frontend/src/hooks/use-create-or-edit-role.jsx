@@ -35,7 +35,6 @@ export const useCreateOrEditRole = () => {
                     setSelectedItems(response.permissions);
                 }
             } catch (error) {
-                console.error('Error fetching user:', error);
             }
         }
     },[isEdit, role])
@@ -85,11 +84,9 @@ export const useCreateOrEditRole = () => {
                     setPermissions([]);
                     setSelectedItems([]);
                 } else {
-                    console.error('Role creation failed:', response.error);
                     toast.error('Tạo vai trò thất bại: ' + response.message);
                 }
             } catch (error) {
-                console.error('Error during role creation:', error);
                 toast.error('Đã có lỗi xảy ra trong quá trình tạo vai trò. Vui lòng thử lại sau.');
             } finally {
                 setIsLoading(false);
@@ -104,11 +101,9 @@ export const useCreateOrEditRole = () => {
                 if(response.success) {
                     navigate('/roles', {state: {success: "Chỉnh sửa vai trò thành công!"}});
                 } else {
-                    console.error('Role Updated failed', response.error);
                     toast.error('Chỉnh sửa vai trò thất bại: ' + response.message);
                 }
             } catch (error) {
-                console.error('Error during role creation:', error);
                 toast.error('Đã có lỗi xảy ra trong quá trình chỉnh sửa vai trò. Vui lòng thử lại sau.');
             } finally {
                 setIsLoading(false);
@@ -149,7 +144,6 @@ export const useCreateOrEditRole = () => {
                 });
             }
         } catch (error) {
-            console.error('Init load all error:', error);
         } finally {
             setLoading(false);
         }
@@ -168,7 +162,6 @@ export const useCreateOrEditRole = () => {
                 setErrorDelete('Xoá vai trò thất bại. Vui lòng thử lại sau.');
             }
         } catch (error) {
-            console.error('Error deleting role:', error);
             setErrorDelete('Đã có lỗi xảy ra trong quá trình xoá vai trò.\n' + error.response.data.message + '\nVui lòng thử lại sau.');
         } finally {
             setIsDeleting(false);
