@@ -1,83 +1,106 @@
-import { useEffect, useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '~/contexts/auth-context';
-import { toast } from 'react-toastify';
+import { useAuth } from '~/hooks/use-auth';
+import '~/assets/css/page-auth.css';
 
 export const useLogin = () => {
-    // state
-    const [showPassword, setShowPassword] = useState(false);
-    const [errorEmail, setErrorEmail] = useState('');
-    const [errorPassword, setErrorPassword] = useState('');
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [rememberMe, setRememberMe] = useState(false);
-    const { handleLogin } = useAuth();
+    const [formData, setFormData] = useState({
+        email: '',
+        password: '',
+        rememberMe: false,
+        showPassword: false,
+    });
+
+    const [errors, setErrors] = useState({
+        email: '',
+        password: '',
+    });
+
+    // Chỉ lấy những state cần thiết từ Redux
+    const { isAuthenticated, isLoginLoading, handleLogin } = useAuth();
     const navigate = useNavigate();
 
-    const togglePassword = () => setShowPassword((prev) => !prev);
-    
     useEffect(() => {
-        setErrorEmail('');
-        setErrorPassword('');
-        setEmail('');
-        setPassword('');
-        setRememberMe(false);
-
-        const user = JSON.parse(localStorage.getItem('user') || '{}');
-        const token = localStorage.getItem('token');
-        if (user && token) {
-            navigate('/', { state: { success: 'Bạn đã đăng nhập' } });
+        if (isAuthenticated) {
+            navigate('/', { state: { success: 'Bạn đang đăng nhập' } });
         }
-    }, [navigate]);
+    }, [isAuthenticated, navigate]);
+
+    // Handlers cho form local state
+    const handleInputChange = (field, value) => {
+        setFormData(prev => ({
+            ...prev,
+            [field]: value
+        }));
+
+        // Clear error khi user bắt đầu nhập
+        if (errors[field]) {
+            setErrors(prev => ({
+                ...prev,
+                [field]: ''
+            }));
+        }
+    };
+
+    const togglePassword = () => {
+        setFormData(prev => ({
+            ...prev,
+            showPassword: !prev.showPassword
+        }));
+    };
+
+    const validateForm = () => {
+        const newErrors = {};
+        let isValid = true;
+
+        if (!formData.email) {
+            newErrors.email = 'Email không được bỏ trống';
+            isValid = false;
+        } else if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(formData.email)) {
+            newErrors.email = 'Email không hợp lệ';
+            isValid = false;
+        }
+
+        if (!formData.password) {
+            newErrors.password = 'Mật khẩu không được bỏ trống';
+            isValid = false;
+        }
+
+        setErrors(newErrors);
+        return isValid;
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        let isSubmitForm = true;
-
-        if (!email) {
-            setErrorEmail('Email không được bỏ trống');
-            isSubmitForm = false;
-        } else if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email)) {
-            setErrorEmail('Email không hợp lệ');
-            isSubmitForm = false;
-        } else {
-            setErrorEmail('');
-        }
-
-        if (!password) {
-            setErrorPassword('Mật khẩu không được bỏ trống');
-            isSubmitForm = false;
-        } else {
-            setErrorPassword('');
-        }
-
-        if (!isSubmitForm) {
+        if (!validateForm()) {
             return;
         }
 
-        const response = await handleLogin(email, password, rememberMe);
-        if (response.success) {
-            navigate('/', {state: { success: 'Đăng nhập thành công' } });
-        } else {
-            setErrorPassword('Email hoặc mật khẩu không đúng!');
-            toast.error('Đăng nhập không thành công. Vui lòng kiểm tra lại email và mật khẩu.', {toastId: 'login-error'});
+        try {
+            const response = await handleLogin(formData.email, formData.password, formData.rememberMe);
+            if (response.success) {
+                navigate('/', { state: { success: 'Đăng nhập thành công' } });
+            } else {
+                setErrors(prev => ({
+                    ...prev,
+                    password: 'Email hoặc mật khẩu không đúng!'
+                }));
+            }
+        } catch (error) {
+            setErrors(prev => ({
+                ...prev,
+                password: 'Có lỗi xảy ra, vui lòng thử lại!'
+            }));
         }
     };
 
     return {
-        showPassword,
+        formData,
+        errors,
+        isLoginLoading,
+        handleInputChange,
         togglePassword,
-        errorEmail,
-        setErrorEmail,
-        errorPassword,
-        setErrorPassword,
-        email,
-        setEmail,
-        password,
-        setPassword,
-        rememberMe,
-        setRememberMe,
-        handleSubmit
+        handleSubmit,
     };
-}
+};

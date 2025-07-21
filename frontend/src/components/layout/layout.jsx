@@ -1,16 +1,17 @@
 import { useState, useEffect } from "react";
-import { Link, Outlet, useLocation } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { Icon } from "@iconify/react/dist/iconify.js";
 import "~/assets/css/layout.css";
 import { checkRoleAndPermission } from '~/utils/common.jsx';
+import { useUserInfo } from '~/hooks/use-auth.jsx';
 
-const Layout = () => {
+const Layout = ({children}) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const location = useLocation();
 
   const isActive = (path) => location.pathname === path ? "active" : "";
-  const user = JSON.parse(localStorage.getItem('user') || '{}');
+  const user = useUserInfo().user;
 
   useEffect(() => {
     const handleScroll = () => {
@@ -138,7 +139,7 @@ const Layout = () => {
 
           <div className="content-wrapper" style={{ marginTop: '70px' }}>
             <div className="container-xxl flex-grow-1 container-p-y">
-              <Outlet></Outlet>
+              {children}
             </div>
             <div className="content-backdrop fade"></div>
           </div>

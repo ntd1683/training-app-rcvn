@@ -1,44 +1,70 @@
-  import React from 'react';
-  import { BrowserRouter, Routes } from 'react-router-dom';
+import React from 'react';
+import { BrowserRouter } from 'react-router-dom';
+import { Provider } from 'react-redux';
+import { useEffect } from 'react';
+import { useAuth } from './hooks/use-auth';
+import LoadingSpinner from './components/ui/loading-spinner';
 
-  import routes from './routes';
-  import { AuthProvider } from './contexts/auth-context';
-  import { ToastContainer } from 'react-toastify';
-  import ToastHandler from './components/ui/toast-handler';
+import AppRoutes from './routes';
+import { ToastContainer } from 'react-toastify';
+import ToastHandler from './components/ui/toast-handler';
 
-  import './app.css';
-  import 'bootstrap/dist/css/bootstrap.min.css';
-  import 'perfect-scrollbar/css/perfect-scrollbar.css';
-  import './assets/css/core.css';
-  import 'react-toastify/dist/ReactToastify.css';
-  import './assets/css/custom-toast.css';
+import { store } from './redux/store';
 
-  import 'jquery';
-  import 'popper.js';
-  import 'bootstrap/dist/js/bootstrap.bundle.min';
+import './app.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'perfect-scrollbar/css/perfect-scrollbar.css';
+import './assets/css/core.css';
+import 'react-toastify/dist/ReactToastify.css';
+import './assets/css/custom-toast.css';
 
+import 'jquery';
+import 'popper.js';
+import 'bootstrap/dist/js/bootstrap.bundle.min';
 
-  function App() {
+const AppContent = () => {
+  const { initialize, isLoading } = useAuth();
+
+  useEffect(() => {
+    initialize();
+  }, [initialize]);
+
+  if (isLoading) {
     return (
-      <AuthProvider>
-        <BrowserRouter>
-          <ToastHandler />
-          <ToastContainer
-            position="top-right"
-            autoClose={3000}
-            hideProgressBar={false}
-            newestOnTop={false}
-            closeOnClick
-            rtl={false}
-            pauseOnFocusLoss
-            draggable
-            pauseOnHover
-            theme="light"
-          />
-          <Routes>{routes}</Routes>
-        </BrowserRouter>
-      </AuthProvider>
+      <div className="d-flex justify-content-center align-items-center vh-100">
+        <LoadingSpinner text="Đang khởi tạo ứng dụng..." />
+      </div>
     );
   }
 
-  export default App;
+  return (
+    <>
+      <ToastHandler />
+      <AppRoutes />
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
+    </>
+  );
+};
+
+function App() {
+  return (
+    <Provider store={store}>
+      <BrowserRouter>
+        <AppContent />
+      </BrowserRouter>
+    </Provider>
+  );
+}
+
+export default App;
