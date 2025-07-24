@@ -1,16 +1,15 @@
 import LoadingSpinner from './ui/loading-spinner'
 
 const Test = () => {
-    // const [image, setImage] = React.useState(null);
-    // useEffect(() => {
-    //     const fetchImage = async () => {
-    //         try {
-    //             const response = await getImage('9e0c9e34ca602c36699511e214027e336691b624c8f34b4ba1313d3dc1f7894a.png');
-    //             setImage(response);
-    //         } catch (error) {
-    //             console.error('Error fetching user:', error);
-    //         }
-    //     };
+    const [image, setImage] = React.useState(null);
+    useEffect(() => {
+        const fetchImage = async () => {
+            try {
+                const response = await getImage('9e0c9e34ca602c36699511e214027e336691b624c8f34b4ba1313d3dc1f7894a.png');
+                setImage(response);
+            } catch (error) {
+            }
+        };
 
     //     fetchImage();
     // }, []);

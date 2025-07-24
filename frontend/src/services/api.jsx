@@ -18,7 +18,6 @@ export const getAnalytics = async () => {
     });
     return response.data;
   } catch (error) {
-    console.error('Error get analytics:', error);
     throw error;
   }
 }
@@ -56,7 +55,6 @@ export const verifyToken = async () => {
     });
     return response.data;
   } catch (error) {
-    console.error('Error verifying token:', error);
     throw error;
   }
 };
@@ -70,7 +68,6 @@ export const getUser = async () => {
     });
     return response.data.data;
   } catch (error) {
-    console.error('Error fetching user:', error);
     throw error;
   }
 };
@@ -105,7 +102,6 @@ export const fetchUsers = async (page = 1, perPage = 10, filters = {}) => {
 
     return response.data;
   } catch (error) {
-    console.error('Error fetching users:', error);
     throw error;
   }
 };
@@ -119,7 +115,6 @@ export const fetchUserById = async (id) => {
     });
     return response.data.data;
   } catch (error) {
-    console.error('Error fetching user by ID:', error);
     throw error;
   }
 }
@@ -136,7 +131,6 @@ export const createUser = async (userData) => {
     });
     return response.data;
   } catch (error) {
-    console.error('Error creating user:', error);
     throw error;
   }
 }
@@ -153,7 +147,6 @@ export const updateUser = async (id, userData) => {
     });
     return response.data;
   } catch (error) {
-    console.error('Error updating user:', error);
     throw error;
   }
 }
@@ -168,7 +161,6 @@ export const deleteUser = async (id) => {
 
     return true;
   } catch (error) {
-    console.error('Error deleting user:', error);
     throw error;
   }
 };
@@ -182,7 +174,6 @@ export const toggleUserStatus = async (id) => {
     });
     return true;
   } catch (error) {
-    console.error('Error toggling status:', error);
     throw error;
   }
 };
@@ -215,7 +206,6 @@ export const fetchRoles = async (page = 1, perPage = 10, filters = {}) => {
 
     return response.data;
   } catch (error) {
-    console.error('Error fetching roles:', error);
     throw error;
   }
 };
@@ -229,7 +219,6 @@ export const fetchRoleByName = async (name) => {
     });
     return response.data.data;
   } catch (error) {
-    console.error('Error fetching role by name:', error);
     throw error;
   }
 };
@@ -245,7 +234,6 @@ export const fetchAllRoles = async () => {
 
     return response.data;
   } catch (error) {
-    console.error('Error fetching all roles:', error);
     throw error;
   }
 };
@@ -259,7 +247,6 @@ export const createRole = async (roleData) => {
     });
     return response.data;
   } catch (error) {
-    console.error('Error creating role:', error);
     throw error;
   }
 };
@@ -273,7 +260,6 @@ export const updateRole = async (roleName, roleData) => {
     });
     return response.data;
   } catch (error) {
-    console.error('Error updating role:', error);
     throw error;
   }
 }
@@ -288,7 +274,6 @@ export const deleteRole = async (roleName) => {
 
     return true;
   } catch (error) {
-    console.error('Error deleting role:', error);
     throw error;
   }
 };
@@ -321,7 +306,6 @@ export const fetchPermissions = async (page = 1, perPage = 10, filters = {}) => 
 
     return response.data;
   } catch (error) {
-    console.error('Error fetching roles:', error);
     throw error;
   }
 };
@@ -337,7 +321,6 @@ export const fetchAllPermissions = async () => {
 
     return response.data;
   } catch (error) {
-    console.error('Error fetching roles:', error);
     throw error;
   }
 };
@@ -351,7 +334,6 @@ export const fetchPermission = async (id) => {
     });
     return response.data.data;
   } catch (error) {
-    console.error('Error fetching permission:', error);
     throw error;
   }
 }
@@ -365,7 +347,6 @@ export const createPermission = async (permissionData) => {
     });
     return response.data;
   } catch (error) {
-    console.error('Error creating permission:', error);
     throw error;
   }
 };
@@ -379,7 +360,6 @@ export const updatePermission = async (id, permissionData) => {
     });
     return response.data;
   } catch (error) {
-    console.error('Error updating permission:', error);
     throw error;
   }
 };
@@ -394,7 +374,6 @@ export const deletePermission = async (id) => {
 
     return true;
   } catch (error) {
-    console.error('Error deleting permission:', error);
     throw error;
   }
 };
@@ -429,7 +408,6 @@ export const fetchProducts = async (page = 1, perPage = 10, filters = {}) => {
 
     return response.data;
   } catch (error) {
-    console.error('Error fetching products:', error);
     throw error;
   }
 };
@@ -443,7 +421,6 @@ export const fetchProductById = async (id) => {
     });
     return response.data.data;
   } catch (error) {
-    console.error('Error fetching product by ID:', error);
     throw error;
   }
 }
@@ -473,7 +450,6 @@ export const createProduct = async (productData) => {
     });
     return response.data;
   } catch (error) {
-    console.error('Error creating product:', error);
     throw error;
   }
 }
@@ -504,7 +480,6 @@ export const updateProduct = async (id, productData) => {
     });
     return response.data;
   } catch (error) {
-    console.error('Error creating product:', error);
     throw error;
   }
 }
@@ -519,7 +494,6 @@ export const deleteProduct = async (id) => {
 
     return true;
   } catch (error) {
-    console.error('Error deleting product:', error);
     throw error;
   }
 };
@@ -533,7 +507,6 @@ export const getImage = async (imageFile) => {
 
     return URL.createObjectURL(new Blob([response.data]));
   } catch (error) {
-    console.error('Error fetching image:', error);
     throw error;
   }
 }
