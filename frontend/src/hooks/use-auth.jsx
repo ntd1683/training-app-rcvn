@@ -77,14 +77,14 @@ export const useAuth = () => {
 };
 
 export const usePermissions = () => {
-const permissions = useSelector(selectPermissions);
+    const permissions = useSelector(selectPermissions);
 
-return useMemo(() => ({
-  permissions,
-  hasPermission: (permission) => permissions.includes(permission),
-  hasAnyPermission: (permissionList) => permissionList.some(permission => permissions.includes(permission)),
-  hasAllPermissions: (permissionList) => permissionList.every(permission => permissions.includes(permission)),
-}), [permissions]);
+    return useMemo(() => ({
+        permissions,
+        hasPermission: (permission) => permissions.includes(permission),
+        hasAnyPermission: (permissionList) => permissionList.some(permission => permissions.includes(permission)),
+        hasAllPermissions: (permissionList) => permissionList.every(permission => permissions.includes(permission)),
+    }), [permissions]);
 };
 
 export const useUserInfo = () => {

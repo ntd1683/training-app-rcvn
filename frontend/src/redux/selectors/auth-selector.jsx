@@ -1,5 +1,5 @@
 import { createSelector } from '@reduxjs/toolkit';
-import RoleMain from '../../constants/role-main';
+import RoleMain from '~/constants/role-main';
 
 const selectAuthState = (state) => state.auth;
 

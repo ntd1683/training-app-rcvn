@@ -20,8 +20,6 @@ const ProtectedRoute = ({
     } = useAuth();
     const location = useLocation();
 
-    console.log('ProtectedRoute rendered');
-    
     if (isLoading) {
         return (
             <div className="d-flex justify-content-center align-items-center vh-100">
