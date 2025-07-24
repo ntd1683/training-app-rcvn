@@ -26,11 +26,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/verify-token', [AuthController::class, 'verifyToken'])->name('verify.token');
     Route::get('/user', [AuthController::class, 'profile'])->name('profile.update');
 
-    Route::get('roles', [RoleController::class, 'index'])->name('roles.index');
-    Route::get('permissions', [PermissionController::class, 'index'])->name('permissions.index');
-    Route::get('roles/all', [RoleController::class, 'getAll'])->name('roles.index');
-    Route::get('permissions/all', [PermissionController::class, 'getAll'])->name('permissions.index');
-
     Route::middleware(['permission'])->group(function () {
         Route::prefix('users')->group(function () {
             Route::get('/', [UserController::class, 'index'])->name('users.index');
@@ -42,6 +37,8 @@ Route::middleware('auth:sanctum')->group(function () {
         });
 
         Route::prefix('roles')->group(function () {
+            Route::get('/', [RoleController::class, 'index'])->name('roles.index');
+            Route::get('/all', [RoleController::class, 'getAll'])->name('roles.index');
             Route::get('/{role}', [RoleController::class, 'edit'])->name('roles.edit');
             Route::post('/', [RoleController::class, 'store'])->name('roles.store');
             Route::put('/{role}', [RoleController::class, 'update'])->name('roles.update');
@@ -49,6 +46,8 @@ Route::middleware('auth:sanctum')->group(function () {
         });
 
         Route::prefix('permissions')->group(function () {
+            Route::get('/', [PermissionController::class, 'index'])->name('permissions.index');
+            Route::get('/all', [PermissionController::class, 'getAll'])->name('permissions.all');
             Route::get('/{id}', [PermissionController::class, 'edit'])->name('permissions.edit');
             Route::post('/', [PermissionController::class, 'store'])->name('permissions.store');
             Route::put('/{id}', [PermissionController::class, 'update'])->name('permissions.update');

@@ -1,21 +1,16 @@
 import React from 'react';
+import { useLogin } from '~/hooks/use-login';
 import { Link } from 'react-router-dom';
 import { Icon } from "@iconify/react";
 import '~/assets/css/page-auth.css';
-import { useLogin } from '~/hooks/use-login';
 
 const Login = () => {
   const {
-    showPassword,
+    formData,
+    errors,
+    isLoginLoading,
+    handleInputChange,
     togglePassword,
-    errorEmail,
-    errorPassword,
-    email,
-    setEmail,
-    password,
-    setPassword,
-    rememberMe,
-    setRememberMe,
     handleSubmit
   } = useLogin();
 
@@ -41,53 +36,73 @@ const Login = () => {
               <h4 className="mb-1">Chào mừng bạn đến với Training - Website! 👋</h4>
               <p className="mb-5">Vui lòng đăng nhập để bắt đầu</p>
 
-              <form id="formAuthentication" className="mb-5" action="index.html">
+              <form id="formAuthentication" className="mb-5" onSubmit={handleSubmit}>
                 <div className="mb-5">
                   <label htmlFor="email" className="form-label">Email</label>
                   <input
                     type="text"
-                    className={`form-control ${errorEmail ? 'is-invalid' : ''}`}
+                    className={`form-control ${errors.email ? 'is-invalid' : ''}`}
                     id="email"
                     name="email"
                     placeholder="Vui lòng nhập email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    autoFocus />
-                  {errorEmail && <p className='text-danger error-email mb-0 mt-1'>{errorEmail}</p>}
+                    value={formData.email}
+                    onChange={(e) => handleInputChange('email', e.target.value)}
+                    disabled={isLoginLoading}
+                    autoFocus
+                  />
+                  {errors.email && <p className='text-danger error-email mb-0 mt-1'>{errors.email}</p>}
                 </div>
+
                 <div className="mb-5 form-password-toggle">
                   <label className="form-label" htmlFor="password">Mật Khẩu</label>
                   <div className="input-group input-group-merge">
                     <input
-                      type={showPassword ? 'text' : 'password'}
+                      type={formData.showPassword ? 'text' : 'password'}
                       id="password"
-                      className={`form-control ${errorPassword ? 'is-invalid' : ''}`}
+                      className={`form-control ${errors.password ? 'is-invalid' : ''}`}
                       name="password"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
+                      value={formData.password}
+                      onChange={(e) => handleInputChange('password', e.target.value)}
                       placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;"
-                      aria-describedby="password" />
-                    <span className={`input-group-text cursor-pointer ${errorPassword ? 'is-invalid' : ''}`} onClick={togglePassword} style={{ zIndex: 10 }}>
-                      <Icon icon={showPassword ? 'bx:show' : 'bx:hide'} className='icon-base' />
+                      disabled={isLoginLoading}
+                    />
+                    <span
+                      className={`input-group-text cursor-pointer ${errors.password ? 'is-invalid' : ''}`}
+                      onClick={togglePassword}
+                      style={{ zIndex: 10 }}
+                    >
+                      <Icon icon={formData.showPassword ? 'bx:show' : 'bx:hide'} className='icon-base' />
                     </span>
                   </div>
-                  {errorPassword && <p className='text-danger error-password mb-0 mt-1'>{errorPassword}</p>}
+                  {errors.password && <p className='text-danger error-password mb-0 mt-1'>{errors.password}</p>}
                 </div>
+
                 <div className="mb-8">
                   <div className="d-flex justify-content-between">
                     <div className="form-check mb-0">
-                      <input className="form-check-input"
+                      <input
+                        className="form-check-input"
                         type="checkbox"
                         id="remember-me"
-                        value={rememberMe}
-                        onChange={(e) => setRememberMe(e.target.checked)}
+                        checked={formData.rememberMe}
+                        onChange={(e) => handleInputChange('rememberMe', e.target.checked)}
+                        disabled={isLoginLoading}
                       />
-                      <label className="form-check-label" htmlFor="remember-me"> Ghi nhớ đăng nhập </label>
+                      <label className="form-check-label" htmlFor="remember-me">
+                        Ghi nhớ đăng nhập
+                      </label>
                     </div>
                   </div>
                 </div>
+
                 <div className="mb-5">
-                  <button className="btn btn-primary d-grid w-100" type="submit" onClick={handleSubmit}>Đăng Nhập</button>
+                  <button
+                    className="btn btn-primary d-grid w-100"
+                    type="submit"
+                    disabled={isLoginLoading}
+                  >
+                    {isLoginLoading ? 'Đang đăng nhập...' : 'Đăng Nhập'}
+                  </button>
                 </div>
               </form>
             </div>
@@ -96,6 +111,6 @@ const Login = () => {
       </div>
     </div>
   );
-}
+};
 
 export default Login;

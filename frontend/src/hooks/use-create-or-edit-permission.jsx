@@ -42,7 +42,6 @@ export const useCreateOrEditPermission = () => {
                     }
                 }
             } catch (error) {
-                console.error('Error fetching user:', error);
             }
         }
     },[isEdit, id])
@@ -128,11 +127,9 @@ export const useCreateOrEditPermission = () => {
                     setInputPermission('');
                     setInputPermissionOther('');
                 } else {
-                    console.error('Permission creation failed:', response.error);
                     toast.error('Tạo quyền  thất bại: ' + response.message);
                 }
             } catch (error) {
-                console.error('Error during permission creation:', error);
                 toast.error(error.response?.data?.message || 'Đã có lỗi xảy ra trong quá trình tạo quyền. Vui lòng thử lại sau.');
             } finally {
                 setIsLoading(false);
@@ -146,11 +143,9 @@ export const useCreateOrEditPermission = () => {
                 if(response.success) {
                     navigate('/permissions', {state: {success: "Chỉnh sửa quyền thành công!"}});
                 } else {
-                    console.error('Permission Updated failed', response.error);
                     toast.error('Chỉnh sửa quyền thất bại: ' + response.message);
                 }
             } catch (error) {
-                console.error('Error during permission creation:', error);
                 toast.error('Đã có lỗi xảy ra trong quá trình chỉnh sửa quyền. Vui lòng thử lại sau.');
             } finally {
                 setIsLoading(false);
@@ -171,7 +166,6 @@ export const useCreateOrEditPermission = () => {
                 setErrorDelete('Xoá quyền thất bại. Vui lòng thử lại sau.');
             }
         } catch (error) {
-            console.error('Error deleting permission:', error);
             setErrorDelete('Đã có lỗi xảy ra trong quá trình xoá quyền.\n' + error.response.data.message + '\nVui lòng thử lại sau.');
         } finally {
             setIsDeleting(false);

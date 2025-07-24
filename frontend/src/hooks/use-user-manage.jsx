@@ -75,7 +75,6 @@ export const useUserManage = () => {
         toast.error('Không thể tải danh sách nhóm người dùng.', { toastId: 'fetch-roles-error-toast' });
       }
     } catch (error) {
-      console.error('Error fetching roles:', error);
       toast.error('Có lỗi xảy ra khi tải danh sách nhóm người dùng.', { toastId: 'fetch-roles-error-toast' });
     }
   }, []);
