@@ -9,7 +9,6 @@ const Permissions = lazy(() => import('../components/permissions/permissions'));
 const CreateOrEditPermission = lazy(() => import('../components/create-or-edit-permission/create-or-edit-permission'));
 const ManageProducts = lazy(() => import('../components/manage-products/manage-products'));
 const CreateOrEditProduct = lazy(() => import('../components/create-or-edit-product/create-or-edit-product'));
-const Test = lazy(() => import('../components/test'));
 const NoPermission = lazy(() => import('../components/no-permission'));
 
 export const routeConfig = [
@@ -126,13 +125,6 @@ export const routeConfig = [
     },
 
     // Other routes
-    {
-        path: '/test',
-        element: Test,
-        requireAuth: true,
-        layout: true,
-        title: 'Test',
-    },
     {
         path: '/no-permission',
         element: NoPermission,
