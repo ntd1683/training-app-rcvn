@@ -34,4 +34,26 @@ class ProductUpdateRequest extends FormRequest
             'is_delete' => 'nullable|integer|in:0',
         ];
     }
+
+    public function messages()
+    {
+        return [
+            'name.required' => 'Tên sản phẩm là bắt buộc.',
+            'name.string' => 'Tên sản phẩm phải là chuỗi.',
+            'name.max' => 'Tên sản phẩm không được vượt quá 255 ký tự.',
+            'description.string' => 'Mô tả sản phẩm phải là chuỗi.',
+            'price.required' => 'Giá sản phẩm là bắt buộc.',
+            'price.numeric' => 'Giá sản phẩm phải là số.',
+            'price.min' => 'Giá sản phẩm phải lớn hơn hoặc bằng 0.',
+            'currency.required' => 'Tiền tệ là bắt buộc.',
+            'currency.string' => 'Tiền tệ phải là chuỗi.',
+            'currency.max' => 'Tiền tệ không được vượt quá 10 ký tự.',
+            'status.required' => 'Trạng thái sản phẩm là bắt buộc.',
+            'status.integer' => 'Trạng thái sản phẩm phải là số nguyên.',
+            'status.in' => 'Trạng thái sản phẩm không hợp lệ. Giá trị hợp lệ là 0, 1 hoặc 2.',
+            'image.image' => 'Ảnh sản phẩm phải là một tệp hình ảnh.',
+            'image.mimes' => 'Ảnh sản phẩm phải có định dạng jpeg, png hoặc jpg.',
+            'image.max' => 'Ảnh sản phẩm không được vượt quá 2mb.',
+        ];
+    }
 }

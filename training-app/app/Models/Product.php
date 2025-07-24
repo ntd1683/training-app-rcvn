@@ -66,8 +66,8 @@ class Product extends Model
      */
     public function getImageUrlAttribute()
     {
-        if ($this->image_id) {
-            return route('images.show', ['image' => $this->image->filename]);
+        if ($this->image_id && $this->image) {
+            return asset('storage/' . $this->image->path);
         }
         return null;
     }
