@@ -38,7 +38,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
         Route::prefix('roles')->group(function () {
             Route::get('/', [RoleController::class, 'index'])->name('roles.index');
-            Route::get('/all', [RoleController::class, 'all'])->name('roles.index');
+            Route::get('/all', [RoleController::class, 'getAll'])->name('roles.index');
             Route::get('/{role}', [RoleController::class, 'edit'])->name('roles.edit');
             Route::post('/', [RoleController::class, 'store'])->name('roles.store');
             Route::put('/{role}', [RoleController::class, 'update'])->name('roles.update');
@@ -47,7 +47,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
         Route::prefix('permissions')->group(function () {
             Route::get('/', [PermissionController::class, 'index'])->name('permissions.index');
-            Route::get('/all', [PermissionController::class, 'all'])->name('permissions.all');
+            Route::get('/all', [PermissionController::class, 'getAll'])->name('permissions.all');
             Route::get('/{id}', [PermissionController::class, 'edit'])->name('permissions.edit');
             Route::post('/', [PermissionController::class, 'store'])->name('permissions.store');
             Route::put('/{id}', [PermissionController::class, 'update'])->name('permissions.update');
