@@ -39,7 +39,9 @@ const CreateOrEditProduct = () => {
             <div className="card-body">
                 <form>
                     <div className="mb-6">
-                        <label className="form-label" htmlFor="basic-icon-default-name">*Tên sản phẩm</label>
+                        <label className="form-label" htmlFor="basic-icon-default-name">
+                            Tên sản phẩm <span className="text-danger fw-bold fs-6">*</span>
+                        </label>
                         <div className="input-group input-group-merge">
                             <span id="basic-icon-default-name2" className={`input-group-text ${errorName ? 'is-invalid' : ''}`}>
                                 <Icon icon="bx:user" className='icon-base bx' />
@@ -58,7 +60,9 @@ const CreateOrEditProduct = () => {
                         <div className="text-danger">{errorName}</div>
                     </div>
                     <div className="mb-6">
-                        <label htmlFor="description" className="form-label">*Mô tả sản phẩm</label>
+                        <label htmlFor="description" className="form-label">
+                            Mô tả sản phẩm
+                        </label>
                         <CustomTextEditor value={product.description}
                             onChange={(content) => setProduct({ ...product, description: content })}
                             placeholder="Nhập mô tả sản phẩm..."
@@ -69,7 +73,9 @@ const CreateOrEditProduct = () => {
                         />
                     </div>
                     <div className="mb-6">
-                        <label className="form-label" htmlFor="basic-icon-default-price">*Giá sản phẩm</label>
+                        <label className="form-label" htmlFor="basic-icon-default-price">
+                            Giá sản phẩm <span className="text-danger fw-bold fs-6">*</span>
+                        </label>
                         <div className="input-group input-group-merge">
                             <span id="basic-icon-default-price2" className={`input-group-text ${errorPrice ? 'is-invalid' : ''}`}>
                                 <Icon icon="bx:money" className='icon-base bx' />
@@ -103,7 +109,9 @@ const CreateOrEditProduct = () => {
                         <div className="text-danger">{errorPrice || errorCurrency}</div>
                     </div>
                     <div className="mb-6">
-                        <label htmlFor="status" className="form-label">*Tình trạng</label>
+                        <label htmlFor="status" className="form-label">
+                            Tình trạng <span className="text-danger fw-bold fs-6">*</span>
+                        </label>
                         <select
                             className={`form-select ${errorStatus ? 'is-invalid' : ''}`}
                             id="status"

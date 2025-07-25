@@ -119,11 +119,6 @@ const Layout = ({children}) => {
                       <div className="dropdown-divider my-1"></div>
                     </li>
                     <li>
-                      <Link to="/profile" className="dropdown-item">
-                        <Icon icon="bx:user" className="icon-base bx icon-md me-3"></Icon><span>My Profile</span>
-                      </Link>
-                    </li>
-                    <li>
                       <div className="dropdown-divider my-1"></div>
                     </li>
                     <li>

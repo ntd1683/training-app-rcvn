@@ -86,14 +86,6 @@ export const useCreateOrEditProduct = () => {
             setErrorName('');
         }
 
-        if (!product.description) {
-            setErrorDescription('Vui lòng nhập mô tả sản phẩm');
-            setIsLoading(false);
-            isSubmitForm = false;
-        } else {
-            setErrorDescription('');
-        }
-
         if (!product.price) {
             setErrorPrice('Vui lòng nhập giá sản phẩm');
             setIsLoading(false);
@@ -149,6 +141,10 @@ export const useCreateOrEditProduct = () => {
         if (!isSubmitForm) {
             return;
         }
+        const tmp = product.description;
+        const tmpSanitized = sanitizeContent(tmp);
+        console.log('content: ', tmp);
+        console.log('sanitizeContent:', tmpSanitized);
 
         setProduct({
             ...product,

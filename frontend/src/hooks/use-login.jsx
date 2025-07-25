@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '~/hooks/use-auth';
 import '~/assets/css/page-auth.css';
+import { toast } from 'react-toastify';
 
 export const useLogin = () => {
     const [formData, setFormData] = useState({
@@ -80,18 +81,20 @@ export const useLogin = () => {
         try {
             const response = await handleLogin(formData.email, formData.password, formData.rememberMe);
             if (response.success) {
-                navigate('/', { state: { success: 'Đăng nhập thành công' } });
+                navigate('/products', { state: { success: 'Đăng nhập thành công' } });
             } else {
-                setErrors(prev => ({
-                    ...prev,
+                setErrors({
+                    email: ' ',
                     password: 'Email hoặc mật khẩu không đúng!'
-                }));
+                });
+                toast.error('Email hoặc mật khẩu không đúng!');
             }
         } catch (error) {
-            setErrors(prev => ({
-                ...prev,
+            setErrors({
+                email: ' ',
                 password: 'Có lỗi xảy ra, vui lòng thử lại!'
-            }));
+            })
+            toast.error('Có lỗi xảy ra, vui lòng thử lại!');
         }
     };
 

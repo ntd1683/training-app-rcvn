@@ -28,16 +28,16 @@ const ProtectedRoute = ({
         );
     }
 
-    if (requireAuth && !isAuthenticated) {
-        return <Navigate to="/login" state={{ from: location }} replace />;
+    if (location.pathname !== '/logout' && requireAuth && !isAuthenticated) {
+        return <Navigate to="/login" state={{ from: location, error: "Bạn chưa đăng nhập." }} replace />;
     }
 
     if (!requireAuth && isAuthenticated && location.pathname === '/login') {
-        return <Navigate to="/" replace />;
+        return <Navigate to="/" state={{ error: "Bạn đang đăng nhập rồi." }} replace />;
     }
 
     if (adminOnly && !isAdmin) {
-        return <Navigate to="/no-permission" replace />;
+        return <Navigate to="/no-permission" state={{ error: "Bạn không có quyền vô trang này." }} replace />;
     }
 
     if (requiredPermissions.length > 0) {
@@ -46,7 +46,7 @@ const ProtectedRoute = ({
             : hasAnyPermission(requiredPermissions);
 
         if (!hasRequiredPermissions && !isAdmin) {
-            return <Navigate to="/no-permission" replace />;
+            return <Navigate to="/no-permission" state={{ error: "Bạn không có quyền vô trang này." }} replace />;
         }
     }
 

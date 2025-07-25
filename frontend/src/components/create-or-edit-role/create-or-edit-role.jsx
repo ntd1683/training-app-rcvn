@@ -35,7 +35,9 @@ const CreateOrEditRole = () => {
             <div className="card-body">
                 <form>
                     <div className="mb-6">
-                        <label className="form-label fs-6" htmlFor="basic-icon-default-name">*Tên vai trò mới</label>
+                        <label className="form-label fs-6" htmlFor="basic-icon-default-name">
+                            Tên vai trò mới <span className="text-danger fw-bold fs-6">*</span>
+                        </label>
                         <div className="input-group input-group-merge">
                             <span id="basic-icon-default-name2" className={`input-group-text ${errorName ? 'is-invalid' : ''}`}>
                                 <Icon icon="bx:user" className='icon-base bx' />

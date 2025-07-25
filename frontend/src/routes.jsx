@@ -35,9 +35,7 @@ return (
       <Route 
         path="/logout" 
         element={
-          <ProtectedRoute>
-            <Logout />
-          </ProtectedRoute>
+          <Logout />
         } 
       />
 

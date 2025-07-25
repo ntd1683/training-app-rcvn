@@ -63,7 +63,11 @@ export const columns = (navigate, pagination, currentUserId, currentUserRole, se
                             setSelectedUser(row);
                             setShowLockModal(true);
                         }}>
-                            <Icon icon="bx:user-x" className="fs-4" />
+                            {row.is_active === 1 ? (
+                                <Icon icon="bx:user-x" className="fs-4" />
+                            ) : (
+                                <Icon icon="bx:lock-open" className="fs-4" />
+                            )}
                         </button>
                     )}
                 </div>

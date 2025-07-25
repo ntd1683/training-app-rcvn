@@ -62,9 +62,6 @@ Route::middleware('auth:sanctum')->group(function () {
             Route::delete('/{id}', [ProductController::class, 'destroy'])->name('products.delete');
         });
     });
-});
+})->middleware('throttle:60,1');
 
 Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:10,1');
-
-Route::get('/images/products/{image}', [ImageController::class, 'show'])
-    ->name('images.show')->middleware(['throttle:100,1', 'check.file.allow.domain']);
