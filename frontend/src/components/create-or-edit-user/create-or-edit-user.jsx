@@ -37,7 +37,9 @@ const CreateOrEditUser = () => {
             <div className="card-body">
                 <form>
                     <div className="mb-6">
-                        <label className="form-label" htmlFor="basic-icon-default-name">*Tên của bạn</label>
+                        <label className="form-label" htmlFor="basic-icon-default-name">
+                            Tên của bạn <span className="text-danger fw-bold fs-6">*</span>
+                        </label>
                         <div className="input-group input-group-merge">
                             <span id="basic-icon-default-name2" className={`input-group-text ${errorName ? 'is-invalid' : ''}`}>
                                 <Icon icon="bx:user" className='icon-base bx' />
@@ -56,7 +58,9 @@ const CreateOrEditUser = () => {
                         <div className="text-danger">{errorName}</div>
                     </div>
                     <div className="mb-6">
-                        <label className="form-label" htmlFor="basic-icon-default-email">*Email</label>
+                        <label className="form-label" htmlFor="basic-icon-default-email">
+                            Email <span className="text-danger fw-bold fs-6">*</span>
+                        </label>
                         <div className="input-group input-group-merge">
                             <span id="basic-icon-default-email2" className={`input-group-text ${errorEmail ? 'is-invalid' : ''}`}>
                                 <Icon icon="bx:mail-send" className='icon-base bx' />
@@ -89,7 +93,9 @@ const CreateOrEditUser = () => {
                         )}
                         {checkPassword && (
                             <>
-                                <label className="form-label" htmlFor="basic-icon-default-password">*Mật khẩu</label>
+                                <label className="form-label" htmlFor="basic-icon-default-password">
+                                    Mật khẩu <span className="text-danger fw-bold fs-6">*</span>
+                                </label>
                                 <div className="input-group input-group-merge">
                                     <span id="basic-icon-default-password2" className={`input-group-text ${errorPassword ? 'is-invalid' : ''}`}>
                                         <Icon icon="bx:lock-alt" className='icon-base bx' />

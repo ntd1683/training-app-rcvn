@@ -3,15 +3,14 @@ import { useAuth } from '~/hooks/use-auth';
 import { useEffect, useState } from 'react';
 
 const Logout = () => {
-  const token = localStorage.getItem('token');
   const navigate = useNavigate();
-  const { handleLogout } = useAuth();
+  const { handleLogout, isAuthenticated } = useAuth();
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    if (!token) {
-      navigate('/login', { state: { error: 'Bạn chưa đăng nhập' } });
+    if (!isAuthenticated) {
+      navigate('/login', { state: { error: 'Bạn chưa đăng nhập.' } });
       return;
     }
 
@@ -32,7 +31,8 @@ const Logout = () => {
     };
 
     performLogout();
-  }, [navigate, handleLogout, token]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [navigate, handleLogout]);
 
   if (isLoading) {
     return <div>Đang đăng xuất...</div>;

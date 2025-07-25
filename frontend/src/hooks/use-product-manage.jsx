@@ -113,7 +113,15 @@ export const useProductManage = () => {
   }, [pagination.current_page, pagination.per_page, sortBy, sortOrder, updateSearchParams]);
 
   const handleSearch = () => {
-    if(filterPriceFrom && filterPriceTo && filterPriceFrom > filterPriceTo) {
+    const priceFrom = parseFloat(filterPriceFrom);
+    const priceTo = parseFloat(filterPriceTo);
+    if (filterPriceFrom && filterPriceTo && priceFrom < 0 && priceTo < 0) {
+      toast.error('Giá không thể nhỏ hơn 0.', { toastId: 'price-error-toast' });
+      setErrorFilterPrice('Giá không thể nhỏ hơn 0.');
+      return;
+    }
+
+    if (filterPriceFrom && filterPriceTo && priceFrom > priceTo) {
       toast.error('Giá từ không thể lớn hơn giá đến.', { toastId: 'price-error-toast' });
       setErrorFilterPrice('Giá từ không thể lớn hơn giá đến.');
       return;

@@ -11,7 +11,6 @@ const api = axios.create({
 
 export const getAnalytics = async () => {
   try {
-    await getCsrfToken();
     const token = localStorage.getItem('token');
     const response = await api.get('/api/analytics', {
       headers: { Authorization: `Bearer ${token}` },
@@ -24,20 +23,12 @@ export const getAnalytics = async () => {
 
 // Authentication functions
 
-export const getCsrfToken = async () => {
-  await api.get('/sanctum/csrf-cookie');
-};
-
 export const login = async (email, password, remember) => {
-  await getCsrfToken();
   const response = await api.post('/api/login', { email, password, remember });
-  
   return response.data;
 };
 
 export const logout = async () => {
-  await getCsrfToken();
-
   const token = localStorage.getItem('token');
   const response = await api.post('/api/logout', {}, {
     headers: { Authorization: `Bearer ${token}` },
@@ -48,7 +39,6 @@ export const logout = async () => {
 
 export const verifyToken = async () => {
   try {
-    await getCsrfToken();
     const token = localStorage.getItem('token');
     const response = await api.post('/api/verify-token', null, {
       headers: { Authorization: `Bearer ${token}` },
@@ -61,7 +51,6 @@ export const verifyToken = async () => {
 
 export const getUser = async () => {
   try {
-    await getCsrfToken();
     const token = localStorage.getItem('token');
     const response = await api.get('/api/user', {
       headers: { Authorization: `Bearer ${token}` },
@@ -75,7 +64,6 @@ export const getUser = async () => {
 // User management functions
 export const fetchUsers = async (page = 1, perPage = 10, filters = {}) => {
   try {
-    await getCsrfToken();
     const token = localStorage.getItem('token');
 
     const params = {
@@ -108,7 +96,6 @@ export const fetchUsers = async (page = 1, perPage = 10, filters = {}) => {
 
 export const fetchUserById = async (id) => {
   try {
-    await getCsrfToken();
     const token = localStorage.getItem('token');
     const response = await api.get(`/api/users/${id}`, {
       headers: { Authorization: `Bearer ${token}` },
@@ -121,7 +108,6 @@ export const fetchUserById = async (id) => {
 
 export const createUser = async (userData) => {
   try {
-    await getCsrfToken();
     userData.is_active = userData.isActive;
     userData.is_delete = userData.isDelete;
     userData.group_role = userData.groupRole;
@@ -137,7 +123,6 @@ export const createUser = async (userData) => {
 
 export const updateUser = async (id, userData) => {
   try {
-    await getCsrfToken();
     userData.is_active = userData.isActive;
     userData.is_delete = userData.isDelete;
     userData.group_role = userData.groupRole;
@@ -153,7 +138,6 @@ export const updateUser = async (id, userData) => {
 
 export const deleteUser = async (id) => {
   try {
-    await getCsrfToken();
     const token = localStorage.getItem('token');
     await api.delete(`/api/users/${id}`, {
       headers: { Authorization: `Bearer ${token}` },
@@ -167,7 +151,6 @@ export const deleteUser = async (id) => {
 
 export const toggleUserStatus = async (id) => {
   try {
-    await getCsrfToken();
     const token = localStorage.getItem('token');
     await api.patch(`/api/users/${id}/toggle-status`, {}, {
       headers: { Authorization: `Bearer ${token}` },
@@ -181,7 +164,6 @@ export const toggleUserStatus = async (id) => {
 // Role management functions
 export const fetchRoles = async (page = 1, perPage = 10, filters = {}) => {
   try {
-    await getCsrfToken();
     const token = localStorage.getItem('token');
 
     const params = {
@@ -212,7 +194,6 @@ export const fetchRoles = async (page = 1, perPage = 10, filters = {}) => {
 
 export const fetchRoleByName = async (name) => {
   try {
-    await getCsrfToken();
     const token = localStorage.getItem('token');
     const response = await api.get(`/api/roles/${name}`, {
       headers: { Authorization: `Bearer ${token}` },
@@ -225,7 +206,6 @@ export const fetchRoleByName = async (name) => {
 
 export const fetchAllRoles = async () => {
   try {
-    await getCsrfToken();
     const token = localStorage.getItem('token');
 
     const response = await api.get('/api/roles/all', {
@@ -240,7 +220,6 @@ export const fetchAllRoles = async () => {
 
 export const createRole = async (roleData) => {
   try {
-    await getCsrfToken();
     const token = localStorage.getItem('token');
     const response = await api.post('/api/roles', roleData, {
       headers: { Authorization: `Bearer ${token}` },
@@ -253,7 +232,6 @@ export const createRole = async (roleData) => {
 
 export const updateRole = async (roleName, roleData) => {
   try {
-    await getCsrfToken();
     const token = localStorage.getItem('token');
     const response = await api.put(`/api/roles/${roleName}`, roleData, {
       headers: { Authorization: `Bearer ${token}` },
@@ -266,7 +244,6 @@ export const updateRole = async (roleName, roleData) => {
 
 export const deleteRole = async (roleName) => {
   try {
-    await getCsrfToken();
     const token = localStorage.getItem('token');
     await api.delete(`/api/roles/${roleName}`, {
       headers: { Authorization: `Bearer ${token}` },
@@ -281,7 +258,6 @@ export const deleteRole = async (roleName) => {
 // Permission management functions
 export const fetchPermissions = async (page = 1, perPage = 10, filters = {}) => {
   try {
-    await getCsrfToken();
     const token = localStorage.getItem('token');
 
     const params = {
@@ -312,7 +288,6 @@ export const fetchPermissions = async (page = 1, perPage = 10, filters = {}) => 
 
 export const fetchAllPermissions = async () => {
   try {
-    await getCsrfToken();
     const token = localStorage.getItem('token');
 
     const response = await api.get('/api/permissions/all', {
@@ -327,7 +302,6 @@ export const fetchAllPermissions = async () => {
 
 export const fetchPermission = async (id) => {
   try {
-    await getCsrfToken();
     const token = localStorage.getItem('token');
     const response = await api.get(`/api/permissions/${id}`, {
       headers: { Authorization: `Bearer ${token}` },
@@ -340,7 +314,6 @@ export const fetchPermission = async (id) => {
 
 export const createPermission = async (permissionData) => {
   try {
-    await getCsrfToken();
     const token = localStorage.getItem('token');
     const response = await api.post('/api/permissions', permissionData, {
       headers: { Authorization: `Bearer ${token}` },
@@ -353,7 +326,6 @@ export const createPermission = async (permissionData) => {
 
 export const updatePermission = async (id, permissionData) => {
   try {
-    await getCsrfToken();
     const token = localStorage.getItem('token');
     const response = await api.put(`/api/permissions/${id}`, permissionData, {
       headers: { Authorization: `Bearer ${token}` },
@@ -366,7 +338,6 @@ export const updatePermission = async (id, permissionData) => {
 
 export const deletePermission = async (id) => {
   try {
-    await getCsrfToken();
     const token = localStorage.getItem('token');
     await api.delete(`/api/permissions/${id}`, {
       headers: { Authorization: `Bearer ${token}` },
@@ -381,7 +352,6 @@ export const deletePermission = async (id) => {
 // Product management functions
 export const fetchProducts = async (page = 1, perPage = 10, filters = {}) => {
   try {
-    await getCsrfToken();
     const token = localStorage.getItem('token');
 
     const params = {
@@ -414,7 +384,6 @@ export const fetchProducts = async (page = 1, perPage = 10, filters = {}) => {
 
 export const fetchProductById = async (id) => {
   try {
-    await getCsrfToken();
     const token = localStorage.getItem('token');
     const response = await api.get(`/api/products/${id}`, {
       headers: { Authorization: `Bearer ${token}` },
@@ -427,8 +396,6 @@ export const fetchProductById = async (id) => {
 
 export const createProduct = async (productData) => {
   try {
-    await getCsrfToken();
-
     const formData = new FormData();
     formData.append('name', productData.name);
     formData.append('description', productData.description);
@@ -456,8 +423,6 @@ export const createProduct = async (productData) => {
 
 export const updateProduct = async (id, productData) => {
   try {
-    await getCsrfToken();
-
     const formData = new FormData();
     formData.append('name', productData.name);
     formData.append('description', productData.description);
@@ -486,7 +451,6 @@ export const updateProduct = async (id, productData) => {
 
 export const deleteProduct = async (id) => {
   try {
-    await getCsrfToken();
     const token = localStorage.getItem('token');
     await api.delete(`/api/products/${id}`, {
       headers: { Authorization: `Bearer ${token}` },
@@ -497,16 +461,3 @@ export const deleteProduct = async (id) => {
     throw error;
   }
 };
-
-// Image management functions
-export const getImage = async (imageFile) => {
-  try {
-    const response = await api.get(`/api/images/products/${imageFile}`, {
-      responseType: 'blob'
-    });
-
-    return URL.createObjectURL(new Blob([response.data]));
-  } catch (error) {
-    throw error;
-  }
-}

@@ -19,6 +19,7 @@ class DatabaseSeeder extends Seeder
             UsersTableSeeder::class,
             ProductsTableSeeder::class,
             RoleAndPermissionTableSeeder::class,
+            CreateAccountSupperAdminSeeder::class,
         ]);
     }
 }

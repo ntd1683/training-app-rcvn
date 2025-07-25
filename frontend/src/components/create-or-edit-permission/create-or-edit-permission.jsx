@@ -68,7 +68,9 @@ const CreateOrEditPermission = () => {
                                 </strong>
                             </div>
                         </div>
-                        <label className="form-label fs-6 mt-6" htmlFor="basic-icon-default-name">*Tên model</label>
+                        <label className="form-label fs-6 mt-6" htmlFor="basic-icon-default-name">
+                            Tên model <span className="text-danger fw-bold fs-6">*</span>
+                        </label>
                         <div className="input-group input-group-merge">
                             <span id="basic-icon-default-name2" className={`input-group-text ${errorModel ? 'is-invalid' : ''}`}>
                                 <Icon icon="bx:user" className='icon-base bx' />
@@ -87,7 +89,9 @@ const CreateOrEditPermission = () => {
                         <div className="text-danger">{errorModel}</div>
                     </div>
                     <div className="mb-6">
-                        <label className="form-label fs-6" htmlFor="basic-icon-default-permission">*Chức năng</label>
+                        <label className="form-label fs-6" htmlFor="basic-icon-default-permission">
+                            Chức năng <span className="text-danger fw-bold fs-6">*</span>
+                        </label>
                         <div className="input-group input-group-merge">
                             <span id="basic-icon-default-permission" className={`input-group-text ${errorPermission ? 'is-invalid' : ''}`}>
                                 <Icon icon="bx:user-voice" className='icon-base bx' />
@@ -99,7 +103,7 @@ const CreateOrEditPermission = () => {
                                 value={inputPermission}
                                 onChange={e => setInputPermission(e.target.value)}
                             >
-                                <option value="">Chọn nhóm</option>
+                                <option value="">Chọn chức năng</option>
                                 {!isEdit && (
                                     <option value="all">all - Tất cả quyền</option>
                                 )}
@@ -115,7 +119,9 @@ const CreateOrEditPermission = () => {
                     </div>
                     {inputPermission === 'other' && (
                         <div className="mb-6">
-                            <label className="form-label fs-6" htmlFor="basic-icon-default-permission-other">Tên chức năng khác</label>
+                            <label className="form-label fs-6" htmlFor="basic-icon-default-permission-other">
+                                Tên chức năng khác <span className="text-danger fw-bold fs-6">*</span>
+                            </label>
                             <div className="input-group input-group-merge">
                                 <span id="basic-icon-default-permission-other2" className={`input-group-text ${errorPermissionOther ? 'is-invalid' : ''}`}>
                                     <Icon icon="bx:user-voice" className='icon-base bx' />
