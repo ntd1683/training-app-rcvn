@@ -219,10 +219,10 @@ export const useProductManage = () => {
       if (!response) throw new Error('Xoá không thành công');
       setData(data.filter(user => user.id !== productId));
       setShowDeleteModal(false);
-      toast.success('Xoá sản phẩm thành công!', { toastId: 'delete-success-toast' });
+      toast.success('Xoá sản phẩm thành công!');
     } catch (error) {
       setDeleteError('Có lỗi xảy ra khi xoá sản phẩm.');
-      toast.error('Xoá không thành công.', { toastId: 'delete-error-toast' });
+      toast.error('Xoá không thành công.');
     } finally {
       setIsDeleting(false);
     }

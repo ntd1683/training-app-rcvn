@@ -223,10 +223,10 @@ export const useUserManage = () => {
       if (!response) throw new Error('Xoá không thành công');
       setData(data.filter(user => user.id !== userId));
       setShowDeleteModal(false);
-      toast.success('Xoá thành viên thành công!', { toastId: 'delete-success-toast' });
+      toast.success('Xoá thành viên thành công!');
     } catch (error) {
       setDeleteError('Có lỗi xảy ra khi xoá thành viên.');
-      toast.error('Xoá không thành công.', { toastId: 'delete-error-toast' });
+      toast.error('Xoá không thành công.');
     } finally {
       setIsDeleting(false);
     }
@@ -234,7 +234,7 @@ export const useUserManage = () => {
 
   const handleLock = async (userId) => {
     if (!userId) return;
-    const textLock = selectedUser.is_active === 1 ? 'khoá' : 'mở khoá';
+    const textLock = selectedUser.is_active === 1 ? 'Khoá' : 'Mở khoá';
     try {
       setIsLocking(true);
       setLockError(null);
@@ -244,10 +244,10 @@ export const useUserManage = () => {
         user.id === userId ? { ...user, is_active: selectedUser.is_active === 1 ? 0 : 1 } : user
       ));
       setShowLockModal(false);
-      toast.success(`${textLock} thành viên thành công!`, { toastId: 'lock-success-toast' });
+      toast.success(`${textLock} thành viên thành công!`);
     } catch (error) {
-      setLockError(`Có lỗi xảy ra khi ${selectedUser.is_active === 1 ? 'khoá' : 'mở khoá'}.`);
-      toast.error(`${textLock} không thành công.`, { toastId: 'lock-error-toast' });
+      setLockError(`Có lỗi xảy ra khi ${selectedUser.is_active === 1 ? 'Khoá' : 'Mở khoá'}.`);
+      toast.error(`${textLock} không thành công.`);
     } finally {
       setIsLocking(false);
     }
