@@ -33,10 +33,13 @@ class AuthController extends Controller
     public function login(LoginRequest $request)
     {
         try {
+            \Log::info('headers', $request->headers->all());
+            $clientPath = $request->header('X-Client-Path') ?: '';
             $result = $this->authService->login(
                 $request->only('email', 'password'),
                 $request->input('remember', false),
-                $request->ip()
+                $request->ip(),
+                $clientPath
             );
             return new AuthResource($result, 'Đăng nhập thành công thành công');
         } catch (\Exception $e) {

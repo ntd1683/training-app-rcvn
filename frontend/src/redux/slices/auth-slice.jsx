@@ -49,7 +49,7 @@ export const loginUser = createAsyncThunk(
   'auth/loginUser',
   async ({ email, password, remember }, { rejectWithValue }) => {
     try {
-      const response = await login(email, password, remember);
+      const response = await login(email, password, remember, true);
       const data = response.data;
 
       if (response.success && data.token) {

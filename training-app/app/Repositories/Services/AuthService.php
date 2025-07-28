@@ -33,8 +33,13 @@ class AuthService
      * @return array
      * @throws Exception
      */
-    public function login(array $credentials, bool $remember, string $ip)
+    public function login(array $credentials, bool $remember, string $ip, string $clientPath = '')
     {
+        $fromAdmin = $clientPath === 'admin';
+        \Log::info('User login attempt', [
+            'clientPath' => $clientPath,
+            'from_admin' => $fromAdmin,
+        ]);
         $user = $this->userRepository->findByEmail($credentials['email']);
         if (!$user || $user->is_delete || !$user->is_active) {
             throw new Exception('Email không tồn tại hoặc tài khoản đã bị xóa hoặc không hoạt động');
@@ -42,6 +47,9 @@ class AuthService
 
         if (Auth::attempt($credentials, $remember)) {
             $user = Auth::user();
+            if ($fromAdmin && $user->hasRole('User')) {
+                throw new Exception('Bạn không có quyền truy cập vào trang quản trị');
+            }
             $token = $user->createToken('authToken')->plainTextToken;
 
             $this->userRepository->update([
