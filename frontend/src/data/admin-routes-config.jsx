@@ -11,7 +11,7 @@ const ManageProducts = lazy(() => import('../components/manage-products/manage-p
 const CreateOrEditProduct = lazy(() => import('../components/create-or-edit-product/create-or-edit-product'));
 const NoPermission = lazy(() => import('../components/no-permission'));
 
-export const routeConfig = [
+export const adminRoutesConfig = [
     {
         path: '/',
         element: Dashboard,

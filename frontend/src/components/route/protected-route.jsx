@@ -1,7 +1,8 @@
 import React from 'react';
-import { Navigate, useLocation } from 'react-router-dom';
+import { Navigate, useLocation, useParams } from 'react-router-dom';
 import { useAuth } from '../../hooks/use-auth';
 import LoadingSpinner from '../ui/loading-spinner';
+import { getUrlPrefix } from '../../utils/common';
 
 const ProtectedRoute = ({
     children,
@@ -19,6 +20,7 @@ const ProtectedRoute = ({
         isAdmin
     } = useAuth();
     const location = useLocation();
+    const urlPrefix = getUrlPrefix(location) === 'admin' ? '/admin' : '';
 
     if (isLoading) {
         return (
@@ -28,16 +30,16 @@ const ProtectedRoute = ({
         );
     }
 
-    if (location.pathname !== '/logout' && requireAuth && !isAuthenticated) {
-        return <Navigate to="/login" state={{ from: location, error: "Bạn chưa đăng nhập." }} replace />;
+    if (location.pathname !== `${urlPrefix}/logout` && requireAuth && !isAuthenticated) {
+        return <Navigate to={`${urlPrefix}/login`} state={{ from: location, error: "Bạn chưa đăng nhập." }} replace />;
     }
 
-    if (!requireAuth && isAuthenticated && location.pathname === '/login') {
-        return <Navigate to="/" state={{ error: "Bạn đang đăng nhập rồi." }} replace />;
+    if (!requireAuth && isAuthenticated && location.pathname === `${urlPrefix}/login`) {
+        return <Navigate to={`${urlPrefix}`} state={{ error: "Bạn đang đăng nhập rồi." }} replace />;
     }
 
     if (adminOnly && !isAdmin) {
-        return <Navigate to="/no-permission" state={{ error: "Bạn không có quyền vô trang này." }} replace />;
+        return <Navigate to={`${urlPrefix}/no-permission`} state={{ error: "Bạn không có quyền vô trang này." }} replace />;
     }
 
     if (requiredPermissions.length > 0) {
@@ -46,7 +48,7 @@ const ProtectedRoute = ({
             : hasAnyPermission(requiredPermissions);
 
         if (!hasRequiredPermissions && !isAdmin) {
-            return <Navigate to="/no-permission" state={{ error: "Bạn không có quyền vô trang này." }} replace />;
+            return <Navigate to={`${urlPrefix}/no-permission`} state={{ error: "Bạn không có quyền vô trang này." }} replace />;
         }
     }
 

@@ -32,12 +32,12 @@ export const useCreateOrEdit = () => {
     const groupRoleLocal = userLocal.group_role || 'Reviewer';
 
     const path = window.location.pathname;
-    const isEdit = path.split('/')[2] === 'edit' ? true : false;
+    const isEdit = path.split('/')[3] === 'edit' ? true : false;
     const { id } = useParams();
     const title = isEdit ? 'Chỉnh Sửa' : 'Thêm';
 
     if (isEdit && !id) {
-        navigate('/users', { state: { error: 'Không tìm thấy ID người dùng để chỉnh sửa' } });
+        navigate('/admin/users', { state: { error: 'Không tìm thấy ID người dùng để chỉnh sửa' } });
     }
 
     const fetchUser = useCallback(async () => {
@@ -46,7 +46,7 @@ export const useCreateOrEdit = () => {
                 const response = await fetchUserById(id);
                 if (response) {
                     if (response.group_role && RoleMain.getValue(groupRoleLocal) <= RoleMain.getValue(response.group_role)) {
-                        navigate('/users', { state: { error: 'Bạn không có quyền chỉnh sửa thành viên này' } });
+                        navigate('/admin/users', { state: { error: 'Bạn không có quyền chỉnh sửa thành viên này' } });
                         return;
                     }
 
@@ -60,10 +60,10 @@ export const useCreateOrEdit = () => {
                     setCheckPassword(false);
                     setValDelete(response.is_delete || 0);
                 } else {
-                    navigate('/users', { state: { error: 'Không tìm thấy người dùng với ID đã cho' } });
+                    navigate('/admin/users', { state: { error: 'Không tìm thấy người dùng với ID đã cho' } });
                 }
             } catch (error) {
-                navigate('/users', { state: { error: 'Có lỗi xảy ra khi tải thông tin người dùng' } });
+                navigate('/admin/users', { state: { error: 'Có lỗi xảy ra khi tải thông tin người dùng' } });
             }
         }
     }, [isEdit, id, navigate, groupRoleLocal]);
@@ -152,7 +152,7 @@ export const useCreateOrEdit = () => {
                     isDelete: user.isDelete,
                     groupRole: user.groupRole
                 });
-                navigate('/users', { state: { success: 'Tạo thành viên thành công' } });
+                navigate('/admin/users', { state: { success: 'Tạo thành viên thành công' } });
             } catch (error) {
                 toast.error(`Tạo thành viên không thành công: ${error.response.data.message}`);
                 setIsLoading(false);
@@ -170,7 +170,7 @@ export const useCreateOrEdit = () => {
                     groupRole: user.groupRole
                 });
                 setValDelete(user.isDelete);
-                navigate('/users', { state: { success: 'Chỉnh sửa thành viên thành công' } });
+                navigate('/admin/users', { state: { success: 'Chỉnh sửa thành viên thành công' } });
             } catch (error) {
                 toast.error('Cập nhật thành viên không thành công');
                 setIsLoading(false);
@@ -191,7 +191,7 @@ export const useCreateOrEdit = () => {
             }
 
             setShowDeleteModal(false);
-            navigate('/users', { state: { success: 'Xoá thành viên thành công' } });
+            navigate('/admin/users', { state: { success: 'Xoá thành viên thành công' } });
         } catch (error) {
             setErrorDelete('Xoá thành viên không thành công');
         } finally {

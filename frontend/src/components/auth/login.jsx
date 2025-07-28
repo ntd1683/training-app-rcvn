@@ -25,7 +25,7 @@ const Login = () => {
                   <span className="app-brand-logo demo">
                     <span className="text-primary">
                       <img
-                        src="logo192.png"
+                        src="/logo192.png"
                         alt="logo"
                         className="img-fluid"
                       />

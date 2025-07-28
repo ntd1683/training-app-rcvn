@@ -1,8 +1,12 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import errorImage from '../assets/images/404-not-found.png';
+import { getUrlPrefix } from '../utils/common';
 
 const NotFound = () => {
+  const location = useLocation();
+  const urlPrefix = getUrlPrefix(location) === 'admin' ? '/admin' : '';
+  
   return (
     <div className="container text-center my-5">
       <div>
@@ -10,10 +14,10 @@ const NotFound = () => {
           404
         </h1>
         <h4 className="mb-2">Không Tìm Thấy Trang ⚠️</h4>
-        <Link to="/" className="btn btn-primary">
+        <Link to={`${urlPrefix}`} className="btn btn-primary">
           Về Trang Chủ
         </Link>
-        <Link to="/logout" className="btn btn-secondary ms-3">
+        <Link to={`${urlPrefix}/logout`} className="btn btn-secondary ms-3">
           Đăng Xuất
         </Link>
         <div className="mt-4">

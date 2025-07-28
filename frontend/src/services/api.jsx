@@ -1,5 +1,6 @@
 import axios from 'axios';
 
+const prefixApi = "/api";
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
   withCredentials: true,
@@ -12,7 +13,7 @@ const api = axios.create({
 export const getAnalytics = async () => {
   try {
     const token = localStorage.getItem('token');
-    const response = await api.get('/api/analytics', {
+    const response = await api.get(`${prefixApi}/analytics`, {
       headers: { Authorization: `Bearer ${token}` },
     });
     return response.data;
@@ -23,14 +24,17 @@ export const getAnalytics = async () => {
 
 // Authentication functions
 
-export const login = async (email, password, remember) => {
-  const response = await api.post('/api/login', { email, password, remember });
+export const login = async (email, password, remember, isAdmin) => {
+  const headers = isAdmin ? { 'X-Client-Path': 'admin' } : {};  
+  const response = await api.post(`${prefixApi}/login`, { email, password, remember }, {
+    headers: headers,
+  });
   return response.data;
 };
 
 export const logout = async () => {
   const token = localStorage.getItem('token');
-  const response = await api.post('/api/logout', {}, {
+  const response = await api.post(`${prefixApi}/logout`, {}, {
     headers: { Authorization: `Bearer ${token}` },
   });
 
@@ -40,7 +44,7 @@ export const logout = async () => {
 export const verifyToken = async () => {
   try {
     const token = localStorage.getItem('token');
-    const response = await api.post('/api/verify-token', null, {
+    const response = await api.post(`${prefixApi}/verify-token`, null, {
       headers: { Authorization: `Bearer ${token}` },
     });
     return response.data;
@@ -52,7 +56,7 @@ export const verifyToken = async () => {
 export const getUser = async () => {
   try {
     const token = localStorage.getItem('token');
-    const response = await api.get('/api/user', {
+    const response = await api.get(`${prefixApi}/user`, {
       headers: { Authorization: `Bearer ${token}` },
     });
     return response.data.data;
@@ -83,7 +87,7 @@ export const fetchUsers = async (page = 1, perPage = 10, filters = {}) => {
       }
     });
 
-    const response = await api.get('/api/users', {
+    const response = await api.get(`${prefixApi}/users`, {
       params,
       headers: { Authorization: `Bearer ${token}` }
     });
@@ -97,7 +101,7 @@ export const fetchUsers = async (page = 1, perPage = 10, filters = {}) => {
 export const fetchUserById = async (id) => {
   try {
     const token = localStorage.getItem('token');
-    const response = await api.get(`/api/users/${id}`, {
+    const response = await api.get(`${prefixApi}/users/${id}`, {
       headers: { Authorization: `Bearer ${token}` },
     });
     return response.data.data;
@@ -112,7 +116,7 @@ export const createUser = async (userData) => {
     userData.is_delete = userData.isDelete;
     userData.group_role = userData.groupRole;
     const token = localStorage.getItem('token');
-    const response = await api.post('/api/users', userData, {
+    const response = await api.post(`${prefixApi}/users`, userData, {
       headers: { Authorization: `Bearer ${token}` },
     });
     return response.data;
@@ -127,7 +131,7 @@ export const updateUser = async (id, userData) => {
     userData.is_delete = userData.isDelete;
     userData.group_role = userData.groupRole;
     const token = localStorage.getItem('token');
-    const response = await api.put(`/api/users/${id}`, userData, {
+    const response = await api.put(`${prefixApi}/users/${id}`, userData, {
       headers: { Authorization: `Bearer ${token}` },
     });
     return response.data;
@@ -139,7 +143,7 @@ export const updateUser = async (id, userData) => {
 export const deleteUser = async (id) => {
   try {
     const token = localStorage.getItem('token');
-    await api.delete(`/api/users/${id}`, {
+    await api.delete(`${prefixApi}/users/${id}`, {
       headers: { Authorization: `Bearer ${token}` },
     });
 
@@ -152,7 +156,7 @@ export const deleteUser = async (id) => {
 export const toggleUserStatus = async (id) => {
   try {
     const token = localStorage.getItem('token');
-    await api.patch(`/api/users/${id}/toggle-status`, {}, {
+    await api.patch(`${prefixApi}/users/${id}/toggle-status`, {}, {
       headers: { Authorization: `Bearer ${token}` },
     });
     return true;
@@ -181,7 +185,7 @@ export const fetchRoles = async (page = 1, perPage = 10, filters = {}) => {
       }
     });
 
-    const response = await api.get('/api/roles', {
+    const response = await api.get(`${prefixApi}/roles`, {
       params,
       headers: { Authorization: `Bearer ${token}` }
     });
@@ -195,7 +199,7 @@ export const fetchRoles = async (page = 1, perPage = 10, filters = {}) => {
 export const fetchRoleByName = async (name) => {
   try {
     const token = localStorage.getItem('token');
-    const response = await api.get(`/api/roles/${name}`, {
+    const response = await api.get(`${prefixApi}/roles/${name}`, {
       headers: { Authorization: `Bearer ${token}` },
     });
     return response.data.data;
@@ -208,7 +212,7 @@ export const fetchAllRoles = async () => {
   try {
     const token = localStorage.getItem('token');
 
-    const response = await api.get('/api/roles/all', {
+    const response = await api.get(`${prefixApi}/roles/all`, {
       headers: { Authorization: `Bearer ${token}` }
     });
 
@@ -221,7 +225,7 @@ export const fetchAllRoles = async () => {
 export const createRole = async (roleData) => {
   try {
     const token = localStorage.getItem('token');
-    const response = await api.post('/api/roles', roleData, {
+    const response = await api.post(`${prefixApi}/roles`, roleData, {
       headers: { Authorization: `Bearer ${token}` },
     });
     return response.data;
@@ -233,7 +237,7 @@ export const createRole = async (roleData) => {
 export const updateRole = async (roleName, roleData) => {
   try {
     const token = localStorage.getItem('token');
-    const response = await api.put(`/api/roles/${roleName}`, roleData, {
+    const response = await api.put(`${prefixApi}/roles/${roleName}`, roleData, {
       headers: { Authorization: `Bearer ${token}` },
     });
     return response.data;
@@ -245,7 +249,7 @@ export const updateRole = async (roleName, roleData) => {
 export const deleteRole = async (roleName) => {
   try {
     const token = localStorage.getItem('token');
-    await api.delete(`/api/roles/${roleName}`, {
+    await api.delete(`${prefixApi}/roles/${roleName}`, {
       headers: { Authorization: `Bearer ${token}` },
     });
 
@@ -275,7 +279,7 @@ export const fetchPermissions = async (page = 1, perPage = 10, filters = {}) => 
       }
     });
 
-    const response = await api.get('/api/permissions', {
+    const response = await api.get(`${prefixApi}/permissions`, {
       params,
       headers: { Authorization: `Bearer ${token}` }
     });
@@ -290,7 +294,7 @@ export const fetchAllPermissions = async () => {
   try {
     const token = localStorage.getItem('token');
 
-    const response = await api.get('/api/permissions/all', {
+    const response = await api.get(`${prefixApi}/permissions/all`, {
       headers: { Authorization: `Bearer ${token}` }
     });
 
@@ -303,7 +307,7 @@ export const fetchAllPermissions = async () => {
 export const fetchPermission = async (id) => {
   try {
     const token = localStorage.getItem('token');
-    const response = await api.get(`/api/permissions/${id}`, {
+    const response = await api.get(`${prefixApi}/permissions/${id}`, {
       headers: { Authorization: `Bearer ${token}` },
     });
     return response.data.data;
@@ -315,7 +319,7 @@ export const fetchPermission = async (id) => {
 export const createPermission = async (permissionData) => {
   try {
     const token = localStorage.getItem('token');
-    const response = await api.post('/api/permissions', permissionData, {
+    const response = await api.post(`${prefixApi}/permissions`, permissionData, {
       headers: { Authorization: `Bearer ${token}` },
     });
     return response.data;
@@ -327,7 +331,7 @@ export const createPermission = async (permissionData) => {
 export const updatePermission = async (id, permissionData) => {
   try {
     const token = localStorage.getItem('token');
-    const response = await api.put(`/api/permissions/${id}`, permissionData, {
+    const response = await api.put(`${prefixApi}/permissions/${id}`, permissionData, {
       headers: { Authorization: `Bearer ${token}` },
     });
     return response.data;
@@ -339,7 +343,7 @@ export const updatePermission = async (id, permissionData) => {
 export const deletePermission = async (id) => {
   try {
     const token = localStorage.getItem('token');
-    await api.delete(`/api/permissions/${id}`, {
+    await api.delete(`${prefixApi}/permissions/${id}`, {
       headers: { Authorization: `Bearer ${token}` },
     });
 
@@ -371,7 +375,7 @@ export const fetchProducts = async (page = 1, perPage = 10, filters = {}) => {
       }
     });
 
-    const response = await api.get('/api/products', {
+    const response = await api.get(`${prefixApi}/products`, {
       params,
       headers: { Authorization: `Bearer ${token}` }
     });
@@ -385,7 +389,7 @@ export const fetchProducts = async (page = 1, perPage = 10, filters = {}) => {
 export const fetchProductById = async (id) => {
   try {
     const token = localStorage.getItem('token');
-    const response = await api.get(`/api/products/${id}`, {
+    const response = await api.get(`${prefixApi}/products/${id}`, {
       headers: { Authorization: `Bearer ${token}` },
     });
     return response.data.data;
@@ -409,7 +413,7 @@ export const createProduct = async (productData) => {
     }
 
     const token = localStorage.getItem('token');
-    const response = await api.post('/api/products', formData, {
+    const response = await api.post(`${prefixApi}/products`, formData, {
       headers: {
         Authorization: `Bearer ${token}`,
         'Content-Type': 'multipart/form-data'
@@ -437,7 +441,7 @@ export const updateProduct = async (id, productData) => {
     }
 
     const token = localStorage.getItem('token');
-    const response = await api.post(`/api/products/${id}`, formData, {
+    const response = await api.post(`${prefixApi}/products/${id}`, formData, {
       headers: {
         Authorization: `Bearer ${token}`,
         'Content-Type': 'multipart/form-data'
@@ -452,7 +456,7 @@ export const updateProduct = async (id, productData) => {
 export const deleteProduct = async (id) => {
   try {
     const token = localStorage.getItem('token');
-    await api.delete(`/api/products/${id}`, {
+    await api.delete(`${prefixApi}/products/${id}`, {
       headers: { Authorization: `Bearer ${token}` },
     });
 

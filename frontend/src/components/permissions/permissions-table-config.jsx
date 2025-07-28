@@ -26,7 +26,7 @@ export const columns = (navigate, pagination) => [
             <div className="d-flex gap-2">
                 { checkRoleAndPermission('permissions.edit') && (
                     <button type="button" className="btn p-0" onClick={() => {
-                        navigate(`/permissions/edit/${row.id}`);
+                        navigate(`/admin/permissions/edit/${row.id}`);
                     }}>
                         <Icon icon="bx:pen" className="text-primary" width="20px"/>
                         <span className="ms-1 d-none d-sm-inline">Chỉnh Sửa</span>

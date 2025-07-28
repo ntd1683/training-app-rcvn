@@ -17,3 +17,8 @@ export const capitalizeEachWord = (str) => {
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
     .join(' ');
 };
+
+export const getUrlPrefix = (location) => {
+  const pathSegments = location.pathname.split('/').filter(segment => segment !== '');
+  return pathSegments[0] || '';
+};

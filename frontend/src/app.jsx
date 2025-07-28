@@ -5,7 +5,7 @@ import { useEffect } from 'react';
 import { useAuth } from './hooks/use-auth';
 import LoadingSpinner from './components/ui/loading-spinner';
 
-import AppRoutes from './routes';
+import AppRoutes from './routes/app-routes';
 import { ToastContainer } from 'react-toastify';
 import ToastHandler from './components/ui/toast-handler';
 

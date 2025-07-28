@@ -63,7 +63,7 @@ const ManageUsers = () => {
           <div className="card-header d-flex justify-content-between align-items-center">
             <h5 className="mb-0">Quản lý Users</h5>
             {checkRoleAndPermission('create_user') && (
-              <Link to="/users/add" className="btn btn-primary">
+              <Link to="/admin/users/add" className="btn btn-primary">
                 <Icon icon="bx:plus" className="me-1" />
                 Thêm mới
               </Link>

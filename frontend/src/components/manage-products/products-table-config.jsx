@@ -138,7 +138,7 @@ export const columns = (navigate, pagination, setSelectedProduct, setShowDeleteM
             <div className="d-flex gap-2">
                 { checkRoleAndPermission('products.edit') && (
                     <button type="button" className="btn p-0" onClick={() => {
-                        navigate(`/products/edit/${row.id}`);
+                        navigate(`/admin/products/edit/${row.id}`);
                     }}>
                         <Icon icon="bx:pen" className="text-primary fs-4" />
                     </button>

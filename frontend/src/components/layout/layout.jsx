@@ -36,7 +36,7 @@ const Layout = ({children}) => {
       <div className="layout-container">
         <aside id="layout-menu" className={`layout-menu menu-vertical menu bg-menu-theme d-sm-none ${isMenuOpen ? "menu-open" : ""}`}>
           <div className="app-brand demo position-relative">
-            <Link to="/" className="app-brand-link">
+            <Link to="/admin" className="app-brand-link">
               <img src="/logo192.png" alt="logo" className="img-fluid" />
               <p className="mb-0 ms-3 fw-bold fs-3">Website</p>
             </Link>
@@ -99,14 +99,14 @@ const Layout = ({children}) => {
 
               <ul className="navbar-nav flex-row align-items-center ms-md-auto">
                 <li className="nav-item navbar-dropdown dropdown-user dropdown">
-                  <Link to="/test" className="nav-link dropdown-toggle hide-arrow p-0" data-bs-toggle="dropdown" aria-expanded="false">
+                  <Link to="/admin/test" className="nav-link dropdown-toggle hide-arrow p-0" data-bs-toggle="dropdown" aria-expanded="false">
                     <div className="avatar avatar-online">
                       <Icon icon="bx:user-circle" className="w-px-40 h-auto" />
                     </div>
                   </Link>
                   <ul className="dropdown-menu dropdown-menu-end">
                     <li>
-                      <Link to="" className="dropdown-item">
+                      <Link to="#" className="dropdown-item">
                         <div className="d-flex">
                           <div className="flex-grow-1">
                             <h6 className="mb-0">{user.name}</h6>
@@ -119,10 +119,7 @@ const Layout = ({children}) => {
                       <div className="dropdown-divider my-1"></div>
                     </li>
                     <li>
-                      <div className="dropdown-divider my-1"></div>
-                    </li>
-                    <li>
-                      <Link to="/logout" className="dropdown-item">
+                      <Link to="/admin/logout" className="dropdown-item">
                         <Icon icon="bx:power-off" className="icon-base bx icon-md me-3"></Icon><span>Log Out</span>
                       </Link>
                     </li>
@@ -148,25 +145,25 @@ const Layout = ({children}) => {
 const listNav = [
   {
     permission: 'users.index',
-    path: '/users',
+    path: '/admin/users',
     icon: 'bx:user-voice',
     label: 'Users'
   },
   {
     permission: 'roles.index',
-    path: '/roles',
+    path: '/admin/roles',
     icon: 'bx:lock-open',
     label: 'Quản lý Vai Trò'
   },
   {
     permission: 'permissions.index',
-    path: '/permissions',
+    path: '/admin/permissions',
     icon: 'bx:book-reader',
     label: 'Quản lý Quyền'
   },
   {
     permission: 'products.index',
-    path: '/products',
+    path: '/admin/products',
     icon: 'bx:cart-alt',
     label: 'Sản Phẩm'
   }

@@ -29,12 +29,12 @@ export const useCreateOrEditProduct = () => {
     const navigate = useNavigate();
 
     const path = window.location.pathname;
-    const isEdit = path.split('/')[2] === 'edit';
+    const isEdit = path.split('/')[3] === 'edit';
     const { id } = useParams();
     const title = isEdit ? 'Chỉnh Sửa' : 'Thêm';
 
     if (isEdit && !id) {
-        navigate('/products', { state: { error: 'Không tìm thấy ID sản phẩm để chỉnh sửa' } });
+        navigate('/admin/products', { state: { error: 'Không tìm thấy ID sản phẩm để chỉnh sửa' } });
     }
 
     const fetchUser = useCallback(async () => {
@@ -141,10 +141,6 @@ export const useCreateOrEditProduct = () => {
         if (!isSubmitForm) {
             return;
         }
-        const tmp = product.description;
-        const tmpSanitized = sanitizeContent(tmp);
-        console.log('content: ', tmp);
-        console.log('sanitizeContent:', tmpSanitized);
 
         setProduct({
             ...product,
@@ -161,7 +157,7 @@ export const useCreateOrEditProduct = () => {
                     status: product.status,
                     image: image,
                 });
-                navigate('/products', { state: { success: 'Tạo sản phẩm thành công' } });
+                navigate('/admin/products', { state: { success: 'Tạo sản phẩm thành công' } });
             } catch (error) {
                 toast.error(`Tạo sản phẩm không thành công: ${error.response.data.message}`);
                 setIsLoading(false);
@@ -179,7 +175,7 @@ export const useCreateOrEditProduct = () => {
                     image: image,
                     image_url: product.image,
                 });
-                navigate('/products', { state: { success: 'Chỉnh sửa sản phẩm thành công' } });
+                navigate('/admin/products', { state: { success: 'Chỉnh sửa sản phẩm thành công' } });
             } catch (error) {
                 toast.error('Cập nhật sản phẩm không thành công');
                 setIsLoading(false);
@@ -200,7 +196,7 @@ export const useCreateOrEditProduct = () => {
             }
 
             setShowDeleteModal(false);
-            navigate('/products', { state: { success: 'Xoá sản phẩm thành công' } });
+            navigate('/admin/products', { state: { success: 'Xoá sản phẩm thành công' } });
         } catch (error) {
             setErrorDelete('Xoá sản phẩm không thành công');
         } finally {

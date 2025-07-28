@@ -17,12 +17,12 @@ export const useCreateOrEditRole = () => {
     const navigate = useNavigate();
 
     const path = window.location.pathname;
-    const isEdit = path.split('/')[2] === 'edit' ? true : false;
+    const isEdit = path.split('/')[3] === 'edit' ? true : false;
     const { role } = useParams();
     const title = isEdit ? 'Chỉnh Sửa' : 'Thêm';
 
     if(isEdit && !role) {
-        navigate('/roles', {state: {error: "Không tìm thấy vai trò để chỉnh sửa"}})
+        navigate('/admin/roles', {state: {error: "Không tìm thấy vai trò để chỉnh sửa"}})
     }
 
     const fetchRole = useCallback(async () => {
@@ -99,7 +99,7 @@ export const useCreateOrEditRole = () => {
                 })
 
                 if(response.success) {
-                    navigate('/roles', {state: {success: "Chỉnh sửa vai trò thành công!"}});
+                    navigate('/admin/roles', {state: {success: "Chỉnh sửa vai trò thành công!"}});
                 } else {
                     toast.error('Chỉnh sửa vai trò thất bại: ' + response.message);
                 }
@@ -157,7 +157,7 @@ export const useCreateOrEditRole = () => {
             if (deleteResponse) {
                 toast.success('Xoá vai trò thành công!');
                 setShowDeleteModal(false);
-                navigate('/roles');
+                navigate('/admin/roles');
             } else {
                 setErrorDelete('Xoá vai trò thất bại. Vui lòng thử lại sau.');
             }

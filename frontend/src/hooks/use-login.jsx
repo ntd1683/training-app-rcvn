@@ -23,7 +23,7 @@ export const useLogin = () => {
 
     useEffect(() => {
         if (isAuthenticated) {
-            navigate('/', { state: { success: 'Bạn đang đăng nhập' } });
+            navigate('/admin', { state: { success: 'Bạn đang đăng nhập' } });
         }
     }, [isAuthenticated, navigate]);
 
@@ -81,7 +81,7 @@ export const useLogin = () => {
         try {
             const response = await handleLogin(formData.email, formData.password, formData.rememberMe);
             if (response.success) {
-                navigate('/products', { state: { success: 'Đăng nhập thành công' } });
+                navigate('/admin/products', { state: { success: 'Đăng nhập thành công' } });
             } else {
                 setErrors({
                     email: ' ',

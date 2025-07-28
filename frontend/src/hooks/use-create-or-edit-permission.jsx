@@ -18,12 +18,12 @@ export const useCreateOrEditPermission = () => {
     const navigate = useNavigate();
 
     const path = window.location.pathname;
-    const isEdit = path.split('/')[2] === 'edit' ? true : false;
+    const isEdit = path.split('/')[3] === 'edit' ? true : false;
     const { id } = useParams();
     const title = isEdit ? 'Chỉnh Sửa' : 'Thêm';
 
     if(isEdit && !id) {
-        navigate('/permissions', {state: {error: "Không tìm thấy quyền để chỉnh sửa"}})
+        navigate('/admin/permissions', {state: {error: "Không tìm thấy quyền để chỉnh sửa"}})
     }
 
     const loadPermission = useCallback(async () => {
@@ -141,7 +141,7 @@ export const useCreateOrEditPermission = () => {
                 })
 
                 if(response.success) {
-                    navigate('/permissions', {state: {success: "Chỉnh sửa quyền thành công!"}});
+                    navigate('/admin/permissions', {state: {success: "Chỉnh sửa quyền thành công!"}});
                 } else {
                     toast.error('Chỉnh sửa quyền thất bại: ' + response.message);
                 }
@@ -161,7 +161,7 @@ export const useCreateOrEditPermission = () => {
             if (deleteResponse) {
                 toast.success('Xoá quyền thành công!');
                 setShowDeleteModal(false);
-                navigate('/permissions');
+                navigate('/admin/permissions');
             } else {
                 setErrorDelete('Xoá quyền thất bại. Vui lòng thử lại sau.');
             }

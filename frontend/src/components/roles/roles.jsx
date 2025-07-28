@@ -36,13 +36,13 @@ const Roles = () => {
                         <h5 className="mb-0">Quản lý vai trò</h5>
                         <div>
                             {checkRoleAndPermission('roles.store') && (
-                                <Link to="/permissions" className="btn btn-primary mt-sm-0 mt-3 d-flex d-sm-inline-flex align-items-center">
+                                <Link to="/admin/permissions" className="btn btn-primary mt-sm-0 mt-3 d-flex d-sm-inline-flex align-items-center">
                                     <Icon icon="bx:blanket" className="me-1" />
                                     Quản Lý Quyền
                                 </Link>
                             )}
                             {checkRoleAndPermission('roles.store') && (
-                                <Link to="/roles/add" className="btn btn-primary mt-sm-0 ms-sm-3 mt-3 d-flex d-sm-inline-flex align-items-center">
+                                <Link to="/admin/roles/add" className="btn btn-primary mt-sm-0 ms-sm-3 mt-3 d-flex d-sm-inline-flex align-items-center">
                                     <Icon icon="mdi:plus" className="me-1" />
                                     Thêm Vai Trò
                                 </Link>

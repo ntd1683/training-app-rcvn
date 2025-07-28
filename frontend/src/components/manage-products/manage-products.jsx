@@ -54,7 +54,7 @@ const ManageProducts = () => {
           <div className="card-header d-flex justify-content-between align-items-center">
             <h5 className="mb-0">Quản lý Sản Phẩm</h5>
             {checkRoleAndPermission('products.store') && (
-              <Link to="/products/add" className="btn btn-primary">
+              <Link to="/admin/products/add" className="btn btn-primary">
                 <Icon icon="mdi:plus" className="me-2" />
                 Thêm Sản Phẩm
               </Link>
