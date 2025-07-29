@@ -1,6 +1,6 @@
 import { Icon } from '@iconify/react';
 import ProductStatus from '~/constants/product-status';
-import '~/assets/css/image-tooltip.css';
+import '~/assets/css/admin/image-tooltip.css';
 import { checkRoleAndPermission } from '~/utils/common';
 
 const stripHtmlAndTruncate = (html, maxLength = 50) => {

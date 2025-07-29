@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from 'react-router-dom';
 import { Icon } from "@iconify/react/dist/iconify.js";
-import "~/assets/css/layout.css";
+import "~/assets/css/admin/layout.css";
 import { checkRoleAndPermission } from '~/utils/common.jsx';
 import { useUserInfo } from '~/hooks/use-auth.jsx';
 

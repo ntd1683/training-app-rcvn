@@ -14,9 +14,9 @@ import { store } from './redux/store';
 import './app.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'perfect-scrollbar/css/perfect-scrollbar.css';
-import './assets/css/core.css';
 import 'react-toastify/dist/ReactToastify.css';
-import './assets/css/custom-toast.css';
+import './assets/css/admin/core.css';
+import './assets/css/admin/custom-toast.css';
 
 import 'jquery';
 import 'popper.js';
