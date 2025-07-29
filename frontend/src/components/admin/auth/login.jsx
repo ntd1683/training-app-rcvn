@@ -1,5 +1,5 @@
 import React from 'react';
-import { useLogin } from '~/hooks/use-login';
+import { useLogin } from '~/hooks/admin/use-login';
 import { Link } from 'react-router-dom';
 import { Icon } from "@iconify/react";
 import '~/assets/css/page-auth.css';

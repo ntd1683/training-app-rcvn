@@ -4,53 +4,44 @@ import { Icon } from '@iconify/react';
 import DataTable from 'react-data-table-component';
 import { StyleSheetManager } from 'styled-components';
 import isPropValid from '@emotion/is-prop-valid';
-import CustomPagination from '~/components/ui/custom-pagination';
-import { useUserManage } from '~/hooks/use-user-manage';
-import { UsersFilter } from './users-filter';
-import { columns, customStyles } from './user-table-config';
-import { DeleteUserModal, LockUserModal } from './manage-users-modal';
-import { checkRoleAndPermission } from '~/utils/common.jsx';
+import CustomPagination from '~/components/admin/ui/custom-pagination';
+import { useProductManage } from '~/hooks/admin/use-product-manage';
+import { ProductsFilter } from './products-filter';
+import { columns, customStyles } from './products-table-config';
+import { DeleteProductsModal } from './manage-products-modal';
+import { checkRoleAndPermission } from '~/utils/common';
 
-const ManageUsers = () => {
+const ManageProducts = () => {
   const {
     data,
-    roles,
     isLoading,
     pagination,
-    filterName,
-    setFilterName,
-    filterEmail,
-    setFilterEmail,
-    filterGroup,
-    setFilterGroup,
+    filterText,
+    setFilterText,
     filterStatus,
     setFilterStatus,
-    selectedUser,
-    setSelectedUser,
+    filterPriceTo,
+    setFilterPriceTo,
+    filterPriceFrom,
+    setFilterPriceFrom,
+    errorFilterPrice,
+    selectedProduct,
+    setSelectedProduct,
     showDeleteModal,
     setShowDeleteModal,
-    showLockModal,
-    setShowLockModal,
     isDeleting,
     deleteError,
-    isLocking,
-    lockError,
     handleSearch,
     handleReset,
     handlePageChange,
     handleRowsPerPageChange,
     handleSort,
     handleDelete,
-    handleLock,
     sortBy,
     sortOrder,
     tableKey,
-  } = useUserManage();
+  } = useProductManage();
   const navigate = useNavigate();
-
-  const user = JSON.parse(localStorage.getItem('user') || '{}');
-  const currentUserId = user.id;
-  const currentUserRole = user.group_role || 'Reviewer';
 
   const shouldForwardProp = (prop, defaultValidatorFn) => {
     return !['allowOverflow', 'button'].includes(prop) && isPropValid(prop);
@@ -61,25 +52,25 @@ const ManageUsers = () => {
       <div className="container-fluid flex-grow-1 py-4">
         <div className="card pb-4">
           <div className="card-header d-flex justify-content-between align-items-center">
-            <h5 className="mb-0">Quản lý Users</h5>
-            {checkRoleAndPermission('create_user') && (
-              <Link to="/admin/users/add" className="btn btn-primary">
-                <Icon icon="bx:plus" className="me-1" />
-                Thêm mới
+            <h5 className="mb-0">Quản lý Sản Phẩm</h5>
+            {checkRoleAndPermission('products.store') && (
+              <Link to="/admin/products/add" className="btn btn-primary">
+                <Icon icon="mdi:plus" className="me-2" />
+                Thêm Sản Phẩm
               </Link>
             )}
           </div>
           <div>
-            <UsersFilter
-              filterName={filterName}
-              setFilterName={setFilterName}
-              filterEmail={filterEmail}
-              setFilterEmail={setFilterEmail}
-              roles={roles}
-              filterGroup={filterGroup}
-              setFilterGroup={setFilterGroup}
+            <ProductsFilter
+              filterText={filterText}
+              setFilterText={setFilterText}
+              filterPriceFrom={filterPriceFrom}
+              setFilterPriceFrom={setFilterPriceFrom}
+              filterPriceTo={filterPriceTo}
+              setFilterPriceTo={setFilterPriceTo}
               filterStatus={filterStatus}
               setFilterStatus={setFilterStatus}
+              errorFilterPrice={errorFilterPrice}
             />
             <div className="d-flex row gap-3 py-3 px-6 justify-content-end">
               <button className="btn btn-primary col-md-2" onClick={handleSearch} disabled={isLoading}>
@@ -92,13 +83,13 @@ const ManageUsers = () => {
           </div>
           <div className="px-3 py-2">
             <p className="mb-0">
-              Hiển thị từ {pagination.from} ~ {pagination.to} trong tổng số {pagination.total} thành viên
+              Hiển thị từ {pagination.from} ~ {pagination.to} trong tổng số {pagination.total} sản phẩm
             </p>
           </div>
           <div className="table-responsive">
             <DataTable
               key={tableKey}
-              columns={columns(navigate, pagination, currentUserId, currentUserRole, setSelectedUser, setShowDeleteModal, setShowLockModal)}
+              columns={columns(navigate, pagination, setSelectedProduct, setShowDeleteModal)}
               data={data}
               pagination={false}
               customStyles={customStyles}
@@ -122,25 +113,16 @@ const ManageUsers = () => {
           </div>
         </div>
 
-        <DeleteUserModal
-          selectedUser={selectedUser}
+        <DeleteProductsModal
+          selectedProduct={selectedProduct}
           showDeleteModal={showDeleteModal}
           setShowDeleteModal={setShowDeleteModal}
           isDeleting={isDeleting}
           deleteError={deleteError}
           handleDelete={handleDelete}
         />
-
-        <LockUserModal
-          selectedUser={selectedUser}
-          showLockModal={showLockModal}
-          setShowLockModal={setShowLockModal}
-          isLocking={isLocking}
-          lockError={lockError}
-          handleLock={handleLock}
-        />
       </div>
     </StyleSheetManager>
   );
 };
-export default ManageUsers;
+export default ManageProducts;

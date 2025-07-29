@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { getAnalytics } from '../services/api';
+import { getAnalytics } from '../../services/api';
 
 export const useDashboard = () => {
     const [totalUsers, setTotalUsers] = useState(0);

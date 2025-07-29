@@ -4,12 +4,12 @@ import { Icon } from '@iconify/react';
 import DataTable from 'react-data-table-component';
 import { StyleSheetManager } from 'styled-components';
 import isPropValid from '@emotion/is-prop-valid';
-import CustomPagination from '~/components/ui/custom-pagination';
-import { columns, customStyles } from './roles-table-config';
-import { useRoleManage } from '~/hooks/use-role-manage';
+import CustomPagination from '~/components/admin/ui/custom-pagination';
+import { columns, customStyles } from './permissions-table-config';
+import { usePermissionManage } from '~/hooks/admin/use-permission-manage';
 import { checkRoleAndPermission } from '~/utils/common';
 
-const Roles = () => {
+const Permissions = () => {
     const {
         data,
         isLoading,
@@ -22,7 +22,7 @@ const Roles = () => {
         sortBy,
         sortOrder,
         tableKey,
-    } = useRoleManage();
+    } = usePermissionManage();
     const navigate = useNavigate();
 
     const shouldForwardProp = (prop, defaultValidatorFn) => {
@@ -33,34 +33,26 @@ const Roles = () => {
             <div className="container-fluid flex-grow-1 py-4">
                 <div className="card pb-4">
                     <div className="card-header d-block d-sm-flex justify-content-between align-items-center">
-                        <h5 className="mb-0">Quản lý vai trò</h5>
-                        <div>
-                            {checkRoleAndPermission('roles.store') && (
-                                <Link to="/admin/permissions" className="btn btn-primary mt-sm-0 mt-3 d-flex d-sm-inline-flex align-items-center">
-                                    <Icon icon="bx:blanket" className="me-1" />
-                                    Quản Lý Quyền
-                                </Link>
-                            )}
-                            {checkRoleAndPermission('roles.store') && (
-                                <Link to="/admin/roles/add" className="btn btn-primary mt-sm-0 ms-sm-3 mt-3 d-flex d-sm-inline-flex align-items-center">
-                                    <Icon icon="mdi:plus" className="me-1" />
-                                    Thêm Vai Trò
-                                </Link>
-                            )}
-                        </div>
+                        <h5 className="mb-0">Quản lý Quyền</h5>
+                        {checkRoleAndPermission('permissions.store') && (
+                            <Link to="/admin/permissions/add" className="btn btn-primary mt-sm-0 mt-3 ms-sm-3 d-flex d-sm-inline-flex align-items-center">
+                                <Icon icon="bx:plus" className="me-1" />
+                                Thêm mới
+                            </Link>
+                        )}
                     </div>
                     <div className="col-md-6 px-6 py-3">
                             <input
                                 type="text"
                                 className="form-control"
-                                placeholder="Tìm kiếm vai trò..."
+                                placeholder="Tìm kiếm Quyền..."
                                 value={filterName}
                                 onChange={e => handleSearch(e.target.value)}
                             />
                         </div>
                     <div className="px-6 py-2">
                         <p className="mb-0">
-                            Hiển thị từ {pagination.from} ~ {pagination.to} trong tổng số {pagination.total} Vai Trò
+                            Hiển thị từ {pagination.from} ~ {pagination.to} trong tổng số {pagination.total} Quyền
                         </p>
                     </div>
                     <div className="table-responsive">
@@ -94,4 +86,4 @@ const Roles = () => {
     );
 }
 
-export default Roles;
+export default Permissions;

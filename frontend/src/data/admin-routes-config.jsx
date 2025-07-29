@@ -1,14 +1,14 @@
 import { lazy } from 'react';
 
-const Dashboard = lazy(() => import('../components/dashboard'));
-const ManageUsers = lazy(() => import('../components/manage-users/manage-users'));
-const CreateOrEditUser = lazy(() => import('../components/create-or-edit-user/create-or-edit-user'));
-const Roles = lazy(() => import('../components/roles/roles'));
-const CreateOrEditRole = lazy(() => import('../components/create-or-edit-role/create-or-edit-role'));
-const Permissions = lazy(() => import('../components/permissions/permissions'));
-const CreateOrEditPermission = lazy(() => import('../components/create-or-edit-permission/create-or-edit-permission'));
-const ManageProducts = lazy(() => import('../components/manage-products/manage-products'));
-const CreateOrEditProduct = lazy(() => import('../components/create-or-edit-product/create-or-edit-product'));
+const Dashboard = lazy(() => import('../components/admin/dashboard'));
+const ManageUsers = lazy(() => import('../components/admin/manage-users/manage-users'));
+const CreateOrEditUser = lazy(() => import('../components/admin/create-or-edit-user/create-or-edit-user'));
+const Roles = lazy(() => import('../components/admin/roles/roles'));
+const CreateOrEditRole = lazy(() => import('../components/admin/create-or-edit-role/create-or-edit-role'));
+const Permissions = lazy(() => import('../components/admin/permissions/permissions'));
+const CreateOrEditPermission = lazy(() => import('../components/admin/create-or-edit-permission/create-or-edit-permission'));
+const ManageProducts = lazy(() => import('../components/admin/manage-products/manage-products'));
+const CreateOrEditProduct = lazy(() => import('../components/admin/create-or-edit-product/create-or-edit-product'));
 const NoPermission = lazy(() => import('../components/no-permission'));
 
 export const adminRoutesConfig = [

@@ -1,11 +1,11 @@
 import React from 'react';
 import { Icon } from '@iconify/react';
-import { useCreateOrEditProduct } from '~/hooks/use-create-or-edit-product';
+import { useCreateOrEditProduct } from '~/hooks/admin/use-create-or-edit-product';
 import ProductStatus from '~/constants/product-status';
-import CustomInputImage from '~/components/ui/custom-input-image';
-import CustomTextEditor from '~/components/ui/custom-text-editor';
-import CustomShowGroupButtonCreateOrEdit from '~/components/ui/custom-show-group-button-create-or-edit';
-import CustomModalDelete from '~/components/ui/custom-modal-delete';
+import CustomInputImage from '~/components/admin/ui/custom-input-image';
+import CustomTextEditor from '~/components/admin/ui/custom-text-editor';
+import CustomShowGroupButtonCreateOrEdit from '~/components/admin/ui/custom-show-group-button-create-or-edit';
+import CustomModalDelete from '~/components/admin/ui/custom-modal-delete';
 
 const CreateOrEditProduct = () => {
     const {

@@ -1,8 +1,8 @@
 import React from 'react';
 import { Icon } from '@iconify/react';
-import { useCreateOrEdit } from '~/hooks/use-create-or-edit-user';
-import CustomShowGroupButtonCreateOrEdit from '~/components/ui/custom-show-group-button-create-or-edit';
-import CustomModalDelete from '~/components/ui/custom-modal-delete';
+import { useCreateOrEdit } from '~/hooks/admin/use-create-or-edit-user';
+import CustomShowGroupButtonCreateOrEdit from '~/components/admin/ui/custom-show-group-button-create-or-edit';
+import CustomModalDelete from '~/components/admin/ui/custom-modal-delete';
 
 const CreateOrEditUser = () => {
     const {

@@ -1,8 +1,8 @@
 import React from 'react';
 import { Icon } from '@iconify/react';
-import { useCreateOrEditPermission } from '~/hooks/use-create-or-edit-permission';
-import CustomShowGroupButtonCreateOrEdit from '~/components/ui/custom-show-group-button-create-or-edit';
-import CustomModalDelete from '~/components/ui/custom-modal-delete';
+import { useCreateOrEditPermission } from '~/hooks/admin/use-create-or-edit-permission';
+import CustomShowGroupButtonCreateOrEdit from '~/components/admin/ui/custom-show-group-button-create-or-edit';
+import CustomModalDelete from '~/components/admin/ui/custom-modal-delete';
 
 const CreateOrEditPermission = () => {
     const {

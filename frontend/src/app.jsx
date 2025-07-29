@@ -3,11 +3,11 @@ import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { useEffect } from 'react';
 import { useAuth } from './hooks/use-auth';
-import LoadingSpinner from './components/ui/loading-spinner';
+import LoadingSpinner from './components/admin/ui/loading-spinner';
 
 import AppRoutes from './routes/app-routes';
 import { ToastContainer } from 'react-toastify';
-import ToastHandler from './components/ui/toast-handler';
+import ToastHandler from './components/admin/ui/toast-handler';
 
 import { store } from './redux/store';
 

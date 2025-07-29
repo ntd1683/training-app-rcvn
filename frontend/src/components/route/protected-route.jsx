@@ -1,7 +1,7 @@
 import React from 'react';
-import { Navigate, useLocation, useParams } from 'react-router-dom';
-import { useAuth } from '../../hooks/use-auth';
-import LoadingSpinner from '../ui/loading-spinner';
+import { Navigate, useLocation } from 'react-router-dom';
+import { useAuth } from '~/hooks/use-auth';
+import LoadingSpinner from '../admin/ui/loading-spinner';
 import { getUrlPrefix } from '../../utils/common';
 
 const ProtectedRoute = ({

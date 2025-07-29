@@ -17,9 +17,6 @@ const NotFound = () => {
         <Link to={`${urlPrefix}`} className="btn btn-primary">
           Về Trang Chủ
         </Link>
-        <Link to={`${urlPrefix}/logout`} className="btn btn-secondary ms-3">
-          Đăng Xuất
-        </Link>
         <div className="mt-4">
           <img
             src={errorImage}

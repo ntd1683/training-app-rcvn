@@ -1,9 +1,9 @@
 import React from 'react';
-import MultiSelectInput from '~/components/ui/multi-select-input';
+import MultiSelectInput from '~/components/admin/ui/multi-select-input';
 import { Icon } from '@iconify/react';
-import { useCreateOrEditRole } from '~/hooks/use-create-or-edit-role';
-import CustomShowGroupButtonCreateOrEdit from '~/components/ui/custom-show-group-button-create-or-edit';
-import CustomModalDelete from '~/components/ui/custom-modal-delete';
+import { useCreateOrEditRole } from '~/hooks/admin/use-create-or-edit-role';
+import CustomShowGroupButtonCreateOrEdit from '~/components/admin/ui/custom-show-group-button-create-or-edit';
+import CustomModalDelete from '~/components/admin/ui/custom-modal-delete';
 
 const CreateOrEditRole = () => {
     const {

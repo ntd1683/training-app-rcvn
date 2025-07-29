@@ -1,5 +1,5 @@
 import React from 'react';
-import { useDashboard as useDashboardAnalytics } from '../hooks/use-dashboard';
+import { useDashboard as useDashboardAnalytics } from '~/hooks/admin/use-dashboard';
 import { Icon } from '@iconify/react';
 
 const Dashboard = () => {

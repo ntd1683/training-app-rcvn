@@ -1,4 +1,4 @@
-import Modal from '~/components/ui/modal';
+import Modal from '~/components/admin/ui/modal';
 
 export const DeleteProductsModal = ({ selectedProduct, showDeleteModal, setShowDeleteModal, isDeleting, deleteError, handleDelete }) => {
     return (

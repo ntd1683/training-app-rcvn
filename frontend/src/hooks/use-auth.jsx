@@ -30,8 +30,8 @@ export const useAuth = () => {
         dispatch(initializeAuth());
     }, [dispatch]);
 
-    const handleLogin = useCallback(async (email, password, remember) => {
-        const result = await dispatch(loginUser({ email, password, remember }));
+    const handleLogin = useCallback(async (email, password, remember, isAdmin) => {
+        const result = await dispatch(loginUser({ email, password, remember, isAdmin }));
         return {
             success: loginUser.fulfilled.match(result),
             message: result.payload?.message || (loginUser.rejected.match(result) ? result.payload : null)

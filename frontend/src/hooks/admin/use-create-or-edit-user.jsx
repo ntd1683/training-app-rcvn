@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { fetchUserById, deleteUser, createUser, updateUser, fetchAllRoles } from '~/services/api';
 import { toast } from 'react-toastify';
-import RoleMain from '../constants/role-main';
+import RoleMain from '../../constants/role-main';
 
 export const useCreateOrEdit = () => {
     const [user, setUser] = useState({

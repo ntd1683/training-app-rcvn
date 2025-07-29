@@ -79,7 +79,7 @@ export const useLogin = () => {
         }
 
         try {
-            const response = await handleLogin(formData.email, formData.password, formData.rememberMe);
+            const response = await handleLogin(formData.email, formData.password, formData.rememberMe, true);
             if (response.success) {
                 navigate('/admin/products', { state: { success: 'Đăng nhập thành công' } });
             } else {

@@ -1,5 +1,4 @@
-import { Children } from 'react';
-import Modal from '~/components/ui/modal';
+import Modal from '~/components/admin/ui/modal';
 import { capitalizeEachWord } from '~/utils/common';
 
 const CustomModalDelete = ({title, showDeleteModal, setShowDeleteModal, isDeleting, errorDelete, handleDelete, children }) => {

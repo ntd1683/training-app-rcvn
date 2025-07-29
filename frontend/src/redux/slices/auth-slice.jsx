@@ -47,9 +47,9 @@ export const initializeAuth = createAsyncThunk(
 
 export const loginUser = createAsyncThunk(
   'auth/loginUser',
-  async ({ email, password, remember }, { rejectWithValue }) => {
+  async ({ email, password, remember, isAdmin }, { rejectWithValue }) => {
     try {
-      const response = await login(email, password, remember, true);
+      const response = await login(email, password, remember, isAdmin);
       const data = response.data;
 
       if (response.success && data.token) {

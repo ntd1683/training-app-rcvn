@@ -1,12 +1,12 @@
 import React, { Suspense } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import ProtectedRoute from '../components/route/protected-route';
-import Layout from '../components/layout/layout';
-import LoadingSpinner from '../components/ui/loading-spinner';
+import Layout from '../components/admin/layout/layout';
+import LoadingSpinner from '../components/admin/ui/loading-spinner';
 import NotFound from '../components/not-found';
 import { adminRoutesConfig } from '../data/admin-routes-config';
-import Login from '../components/auth/login';
-import Logout from '../components/auth/logout';
+import Login from '../components/admin/auth/login';
+import Logout from '../components/admin/auth/logout';
 
 const AdminRoutes = () => {
     return (
