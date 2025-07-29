@@ -6,14 +6,17 @@ import ProtectedRoute from '../components/route/protected-route';
 // import Logout from '../components/auth/logout';
 import NotFound from '../components/not-found';
 import { userRoutesConfig } from '../data/user-routes-config';
+import PreLoader from '../components/user/ui/pre-loader';
+import Layout from '../components/user/layout/layout';
+import '../assets/css/user/main.css'
+import '../assets/css/user/line-icon.css';
+
 
 const UserRoutes = () => {
   return (
     <Suspense
       fallback={
-        <div className="d-flex justify-content-center align-items-center vh-100">
-          {/* <LoadingSpinner /> */}
-        </div>
+        <PreLoader />
       }
     >
       <Routes>
@@ -37,9 +40,9 @@ const UserRoutes = () => {
               adminOnly={adminOnly}
             >
               {layout ? (
-                // <Layout>
+                <Layout>
                   <Component />
-                // </Layout>
+                </Layout>
               ) : (
                 <Component />
               )}
