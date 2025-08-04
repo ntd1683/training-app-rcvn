@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Customer;
 
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -24,7 +24,7 @@ class LoginRequest extends FormRequest
     public function rules()
     {
         return [
-            'email' => 'required|email|max:255|exists:mst_users,email',
+            'email' => 'required|email|max:255|exists:customers,email',
             'password' => 'required|string|min:4',
             'remember' => 'nullable|boolean',
         ];
@@ -38,14 +38,14 @@ class LoginRequest extends FormRequest
     public function messages()
     {
         return [
-            'email.required' => 'Email is required.',
-            'email.email' => 'Email must be a valid email address.',
-            'email.max' => 'Email must not exceed 255 characters.',
-            'email.exists' => 'The provided email does not exist in our records.',
-            'password.required' => 'Password is required.',
-            'password.string' => 'Password must be a string.',
-            'password.min' => 'Password must be at least 4 characters long.',
-            'remember.boolean' => 'Remember me must be a boolean value.',
+            'email.required' => 'Email là bắt buộc.',
+            'email.email' => 'Email phải là một địa chỉ email hợp lệ.',
+            'email.max' => 'Email không được vượt quá 255 ký tự.',
+            'email.exists' => 'Email đã cung cấp không tồn tại trong hệ thống.',
+            'password.required' => 'Mật khẩu là bắt buộc.',
+            'password.string' => 'Mật khẩu phải là một chuỗi.',
+            'password.min' => 'Mật khẩu phải có ít nhất 4 ký tự.',
+            'remember.boolean' => 'Nhớ tôi phải là một giá trị boolean.',
         ];
     }
 }

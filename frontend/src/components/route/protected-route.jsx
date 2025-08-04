@@ -9,10 +9,12 @@ const ProtectedRoute = ({
     requireAuth = true,
     requiredPermissions = [],
     requireAllPermissions = false,
-    adminOnly = false
+    adminOnly = false,
+    requireLoginAdmin = false
 }) => {
     const {
         isAuthenticated,
+        isLoginAdmin,
         isLoading,
         hasPermission,
         hasAnyPermission,
@@ -28,6 +30,10 @@ const ProtectedRoute = ({
                 <LoadingSpinner />
             </div>
         );
+    }
+
+    if (requireAuth && requireLoginAdmin && !isLoginAdmin) {
+        return <Navigate to={`${urlPrefix}/login`} state={{ from: location, error: "Bạn chưa đăng nhập với tư cách quản trị viên." }} replace />;
     }
 
     if (location.pathname !== `${urlPrefix}/logout` && requireAuth && !isAuthenticated) {

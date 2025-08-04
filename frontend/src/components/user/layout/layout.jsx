@@ -3,12 +3,13 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Navbar from "./navbar";
 import Footer from "./footer";
+import { useUserInfo } from '~/hooks/use-auth.jsx';
 
 const Layout = ({ children }) => {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
-  const user = null;
+  const user = useUserInfo().user;
 
   const toggleProfileDropdown = () => {
       setIsProfileOpen(!isProfileOpen);
@@ -31,16 +32,15 @@ const Layout = ({ children }) => {
 
   return (
       <>
-          <header className={`header navbar-area sticky-navbar ${isScrolled ? 'scrolled' : ''}`}>
+          <header className={`header navbar-area sticky-navbar ${isScrolled ? 'scrolled' : ''}`} style={{zIndex: '100'}}>
               <div className="header-middle">
                   <div className="container">
-                      <div className="row align-items-center">
-                          <div className="col-lg-2 col-md-2 col-7">
+                      <div className="row align-items-center mx-0 custom-width">
+                          <div className="col-lg-2 col-md-2 col-sm-7 col-3">
                             <Link to="/" className="navbar-brand" style={{ width: 'fit-content' }}>
                                 <img src="/logo192.png" alt="Logo" style={{ width: 'auto', height: '45px' }} />
                             </Link>
                           </div>
-                          
                           {/* Desktop Search */}
                           <div className="col-lg-5 col-md-7 d-none d-md-block">
                               <div className="main-menu-search">
@@ -55,7 +55,7 @@ const Layout = ({ children }) => {
                               </div>
                           </div>
                           
-                          <div className="col-lg-5 col-md-3 col-5">
+                          <div className="col-lg-5 col-md-3 col-sm-5 col-9 pe-0">
                               <div className="middle-right-area">
                                   {/* Mobile Search Button */}
                                   <div className="mobile-search-btn d-md-none">
@@ -153,29 +153,23 @@ const Layout = ({ children }) => {
                                                       {user ? (
                                                           <>
                                                               <li>
-                                                                  <span className="profile-item">Name: {user.name}</span>
-                                                              </li>
-                                                              <li>
-                                                                  <span className="profile-item">Email: {user.email}</span>
+                                                                  <span className="profile-item">{user.name}</span>
                                                               </li>
                                                               <li>
                                                                   <a href="/profile" className="profile-item">
-                                                                      Profile
+                                                                      Quản lý trang cá nhân
                                                                   </a>
                                                               </li>
                                                               <hr className="divider" />
                                                               <li>
-                                                                  <button
-                                                                      className="profile-item"
-                                                                      onClick={user.onLogout}
-                                                                  >
-                                                                      Logout
-                                                                  </button>
+                                                                  <Link to="/dang-xuat" className="profile-item">
+                                                                      Đăng Xuất
+                                                                  </Link>
                                                               </li>
                                                           </>
                                                       ) : (
                                                           <li>
-                                                              <a href="/login" className="profile-item">
+                                                              <a href="/dang-nhap" className="profile-item">
                                                                   Đăng Nhập
                                                               </a>
                                                           </li>
@@ -216,8 +210,8 @@ const Layout = ({ children }) => {
                   </div>
               )}
 
-              <div className="container">
-                  <div className="row align-items-center">
+              <div className="container social-links">
+                  <div className="row align-items-center custom-width">
                       <div className="col-lg-8 col-md-6 col-12">
                           <div className="nav-inner">
                               <Navbar />

@@ -32,6 +32,8 @@ class AuthResource extends BaseApiResource
             'permissions' => $this->resource['permissions'] ?? [],
             'last_login_at' => $this->resource['last_login_at'] ?? '',
             'token' => $this->resource['token'] ?? '',
+            'verify_email' => $this->resource['verify_email'] ?? false,
+            'email_verified_at' => $this->resource['email_verified_at'] ?? null,
         ];
     }
 }

@@ -38,6 +38,7 @@ const AdminRoutes = () => {
                             requireAuth={requireAuth}
                             requiredPermissions={permissions}
                             adminOnly={adminOnly}
+                            requireLoginAdmin={true}
                         >
                             {layout ? (
                                 <Layout>

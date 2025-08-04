@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\LoginRequest;
+use App\Http\Requests\Admin\LoginRequest;
 use App\Http\Resources\AuthResource;
-use App\Repositories\Services\AuthService;
+use App\Repositories\Services\Admin\AuthService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -33,13 +33,10 @@ class AuthController extends Controller
     public function login(LoginRequest $request)
     {
         try {
-            \Log::info('headers', $request->headers->all());
-            $clientPath = $request->header('X-Client-Path') ?: '';
             $result = $this->authService->login(
                 $request->only('email', 'password'),
                 $request->input('remember', false),
-                $request->ip(),
-                $clientPath
+                $request->ip()
             );
             return new AuthResource($result, 'Đăng nhập thành công thành công');
         } catch (\Exception $e) {

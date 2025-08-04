@@ -27,6 +27,8 @@
     "react-router-dom": "^7.6.3",
     "react-scripts": "5.0.1",
     "react-toastify": "^11.0.5",
+    "tiny-slider": "^2.9.4",
+    "tiny-slider-react": "^0.5.7",
     "web-vitals": "^2.1.4"
   },
   "scripts": {

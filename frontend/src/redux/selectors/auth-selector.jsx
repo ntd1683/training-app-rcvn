@@ -53,6 +53,11 @@ export const selectHasAllPermissions = createSelector(
         permissionList.every(permission => permissions.includes(permission))
 );
 
+export const selectIsLoginAdmin = createSelector(
+    [selectAuthState],
+    (auth) => auth.isLoginAdmin
+);
+
 export const selectIsAdmin = createSelector(
     [selectUser],
     (user) => user && RoleMain.getValue(user.group_role) >= RoleMain.Admin
@@ -66,4 +71,9 @@ export const selectAuthInfo = createSelector(
         permissions,
         ...loading,
     })
+);
+
+export const isVerifiedEmail = createSelector(
+    [selectUser],
+    (user) => user && user.email_verified_at !== null
 );

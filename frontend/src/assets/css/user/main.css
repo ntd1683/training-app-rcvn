@@ -924,7 +924,7 @@ ol {
 /* Bread Crumbs */
 .breadcrumbs {
     position: relative;
-    padding: 30px 0;
+    padding: 15px 0 10px 0;
     z-index: 2;
     text-align: left;
     background-color: #fff;
@@ -934,13 +934,13 @@ ol {
 
 @media only screen and (min-width: 768px) and (max-width: 991px) {
     .breadcrumbs {
-        padding: 30px;
+        padding: 15px 0 10px 0;
     }
 }
 
 @media (max-width: 767px) {
     .breadcrumbs {
-        padding: 30px;
+        padding: 15px 0 10px 0;
     }
 }
 
@@ -988,7 +988,6 @@ ol {
 @media (max-width: 767px) {
     .breadcrumbs .breadcrumb-nav {
         text-align: center;
-        margin-top: 15px;
     }
 }
 
@@ -2024,11 +2023,6 @@ ol {
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
 }
 
-/* Navbar spacer để tránh content bị che */
-.navbar-spacer {
-  height: 120px; /* Điều chỉnh theo chiều cao thực tế của navbar */
-}
-
 .mobile-search-btn .main-btn {
     height: 40px;
     width: 40px;
@@ -2095,10 +2089,21 @@ ol {
   }
 }
 
+/* Navbar spacer để tránh content bị che */
+.navbar-spacer {
+  height: 180px; /* Điều chỉnh theo chiều cao thực tế của navbar */
+}
+
+@media (max-width: 991px) {
+  .navbar-spacer {
+      height: 150px;
+  }
+}
+
 /* Responsive adjustments */
 @media (max-width: 768px) {
   .navbar-spacer {
-      height: 100px;
+      height: 120px;
   }
   
   .sticky-navbar .header-middle {
@@ -2120,7 +2125,7 @@ ol {
 
 @media (max-width: 576px) {
   .navbar-spacer {
-      height: 90px;
+      height: 120px;
   }
   
   .sticky-navbar .navbar-brand img {
@@ -3107,15 +3112,15 @@ ol {
     overflow: hidden;
 }
 
-.hero-area .slider-head:hover .tns-controls button:first-child {
+.hero-area .slider-head:hover .tns-controls button:first-child, .newest-product:hover .tns-controls button:first-child {
     left: 0;
 }
 
-.hero-area .slider-head:hover .tns-controls button:last-child {
+.hero-area .slider-head:hover .tns-controls button:last-child, .newest-product:hover .tns-controls button:last-child {
     right: 0;
 }
 
-.hero-area .tns-controls button {
+.hero-area .tns-controls button, .newest-product .tns-controls button {
     width: 35px;
     height: 60px;
     cursor: pointer;
@@ -3135,17 +3140,17 @@ ol {
     border-radius: 0;
 }
 
-.hero-area .tns-controls button:hover {
+.hero-area .tns-controls button:hover, .newest-product .tns-controls button:hover {
     background-color: #081828;
     color: #fff;
 }
 
-.hero-area .tns-controls button:first-child {
+.hero-area .tns-controls button:first-child, .newest-product .tns-controls button:first-child {
     left: -40px;
     border-radius: 0 4px 4px 0;
 }
 
-.hero-area .tns-controls button:last-child {
+.hero-area .tns-controls button:last-child, .newest-product .tns-controls button:last-child {
     right: -40px;
     border-radius: 4px 0px 0px 4px;
 }
@@ -7226,10 +7231,6 @@ blockquote span {
     padding: 0;
 }
 
-.account-login .login-form .title {
-    margin-bottom: 30px;
-}
-
 .account-login .login-form .title h3 {
     font-size: 22px;
     font-weight: 700;
@@ -7294,12 +7295,8 @@ blockquote span {
     color: #fff;
 }
 
-.account-login .bottom-content {
-    margin-top: 25px;
-}
-
 .account-login .alt-option {
-    margin: 30px 0;
+    margin: 10px 0;
     text-align: center;
     display: inline-block;
     position: relative;
@@ -7368,10 +7365,6 @@ blockquote span {
 
 .account-login .lost-pass:hover {
     color: #0167F3;
-}
-
-.account-login .button {
-    margin-top: 30px;
 }
 
 .account-login .button .btn {
@@ -8405,7 +8398,225 @@ blockquote span {
     }
 }
 
+/* Input groups
+******************************************************************************* */
+/* Using :focus-within to apply focus border and shadow to default and merged input-group */
+.input-group {
+  --bs-input-group-addon-border-color: color-mix(in sRGB, var(--bs-base-color) 22%, var(--bs-paper-bg));
+  --bs-input-group-disabled-border-color: rgba(var(--bs-base-color-rgb), 0.24);
+  border-radius: var(--bs-border-radius);
+  /*
+  ? Info :focus-within to apply focus border and shadow to default and merged input & input-group */
+}
+.input-group:has(.form-check-input):not(:has(.dropdown-toggle)) {
+  z-index: 1;
+}
+.input-group:has(.form-check-input):not(:has(.dropdown-toggle))::before {
+  z-index: -1;
+}
+.input-group .input-group-text {
+  border-color: var(--bs-input-group-addon-border-color);
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+@media (prefers-reduced-motion: reduce) {
+  .input-group .input-group-text {
+    transition: none;
+  }
+}
+.input-group .form-control:focus, .input-group .form-control:focus-within,
+.input-group .form-select:focus,
+.input-group .form-select:focus-within,
+.input-group .input-group-text:focus,
+.input-group .input-group-text:focus-within {
+  border-width: var(--bs-border-width);
+}
+.input-group .form-control, .input-group .form-control:focus, .input-group .form-control:focus-within,
+.input-group .input-group-text,
+.input-group .input-group-text:focus,
+.input-group .input-group-text:focus-within {
+  padding-block: calc(0.543rem - var(--bs-border-width));
+  padding-inline: calc(0.9375rem - var(--bs-border-width));
+}
+.input-group .form-select, .input-group .form-select:focus, .input-group .form-select:focus-within {
+  background-position: right 0.9375rem center;
+  padding-block: calc(0.543rem - var(--bs-border-width));
+  padding-inline-end: calc(2.625rem - var(--bs-border-width));
+  padding-inline-start: calc(0.9375rem - var(--bs-border-width));
+}
+.input-group.input-group-sm, .input-group.input-group-sm::before {
+  border-radius: var(--bs-border-radius-sm);
+}
+.input-group.input-group-sm .form-control, .input-group.input-group-sm .form-control:focus, .input-group.input-group-sm .form-control:focus-within,
+.input-group.input-group-sm .input-group-text,
+.input-group.input-group-sm .input-group-text:focus,
+.input-group.input-group-sm .input-group-text:focus-within {
+  padding-block: 0.3165rem;
+  padding-inline: 0.8125rem;
+}
+.input-group.input-group-sm .form-select, .input-group.input-group-sm .form-select:focus, .input-group.input-group-sm .form-select:focus-within {
+  background-position: right 0.8125rem center;
+  padding-block: 0.3165rem;
+  padding-inline: 0.8125rem;
+  padding-inline-start: calc(0.8125rem - var(--bs-border-width));
+}
+.input-group.input-group-lg, .input-group.input-group-lg::before {
+  border-radius: var(--bs-border-radius-lg);
+}
+.input-group.input-group-lg .form-control, .input-group.input-group-lg .form-control:focus, .input-group.input-group-lg .form-control:focus-within,
+.input-group.input-group-lg .input-group-text,
+.input-group.input-group-lg .input-group-text:focus,
+.input-group.input-group-lg .input-group-text:focus-within {
+  padding-block: 0.7075rem;
+  padding-inline: 1.3125rem;
+}
+.input-group.input-group-lg .form-select, .input-group.input-group-lg .form-select:focus, .input-group.input-group-lg .form-select:focus-within {
+  background-position: right 1.3125rem center;
+  padding-block: 0.7075rem;
+  padding-inline: 1.3125rem;
+  padding-inline-start: calc(1.3125rem - var(--bs-border-width));
+}
+.input-group::before {
+  position: absolute;
+  display: block;
+  block-size: 100%;
+  content: "";
+  inline-size: 100%;
+  inset-block-start: 0;
+  inset-inline-start: 0;
+  border-radius: var(--bs-border-radius);
+}
+.input-group > :not(:first-child):not(.dropdown-menu) {
+  margin-inline: calc(var(--bs-border-width) * -1) 0;
+}
+.input-group:hover .input-group-text,
+.input-group:hover .form-control,
+.input-group:hover .form-select {
+  border-color: var(--bs-gray-600);
+}
+.input-group:focus-within, .input-group:focus {
+  box-shadow: 0 0 0 var(--bs-border-width) var(--bs-primary);
+}
+.input-group:focus-within::before, .input-group:focus::before {
+  box-shadow: 0 0.125rem 0.25rem 0 rgba(var(--bs-primary-rgb), 0.4);
+}
+.input-group:focus-within:not(.input-group-merge) .form-control,
+.input-group:focus-within:not(.input-group-merge) .form-select,
+.input-group:focus-within:not(.input-group-merge) .input-group-text,
+.input-group:focus-within:not(.input-group-merge) .btn,
+.input-group:focus-within:not(.input-group-merge) .form-control::file-selector-button, .input-group:focus:not(.input-group-merge) .form-control,
+.input-group:focus:not(.input-group-merge) .form-select,
+.input-group:focus:not(.input-group-merge) .input-group-text,
+.input-group:focus:not(.input-group-merge) .btn,
+.input-group:focus:not(.input-group-merge) .form-control::file-selector-button {
+  box-shadow: var(--bs-border-width) 0 0 var(--bs-primary);
+}
+.input-group:focus-within .input-group-text,
+.input-group:focus-within .form-control,
+.input-group:focus-within .form-select, .input-group:focus .input-group-text,
+.input-group:focus .form-control,
+.input-group:focus .form-select {
+  border-color: var(--bs-primary);
+}
+.input-group:focus-within .input-group-text:hover,
+.input-group:focus-within .form-control:hover,
+.input-group:focus-within .form-select:hover, .input-group:focus .input-group-text:hover,
+.input-group:focus .form-control:hover,
+.input-group:focus .form-select:hover {
+  border-color: var(--bs-primary);
+}
+.input-group.input-group-merge > :not(:first-child):not(.dropdown-menu) {
+  margin-inline: 0;
+}
+.input-group.input-group-merge:not(.disabled) > :not(:first-child):not(.dropdown-menu):not(.btn):not(.dropdown-menu + .form-control):not(.btn + .form-control) {
+  margin-inline-start: -2px;
+}
+.input-group.input-group-merge .input-group-text, .input-group.input-group-merge .input-group-text:focus, .input-group.input-group-merge .input-group-text:focus-within,
+.input-group.input-group-merge .form-control,
+.input-group.input-group-merge .form-control:focus,
+.input-group.input-group-merge .form-control:focus-within,
+.input-group.input-group-merge .form-select,
+.input-group.input-group-merge .form-select:focus,
+.input-group.input-group-merge .form-select:focus-within {
+  box-shadow: none;
+}
+.input-group.input-group-merge .input-group-text:first-child,
+.input-group.input-group-merge .form-control:first-child,
+.input-group.input-group-merge .form-select:first-child {
+  border-inline-end: 0;
+}
+.input-group.input-group-merge .input-group-text:last-child,
+.input-group.input-group-merge .form-control:last-child,
+.input-group.input-group-merge .form-select:last-child {
+  border-inline-start: 0;
+}
+.input-group.input-group-merge .input-group-text:not(:first-child),
+.input-group.input-group-merge .form-control:not(:first-child),
+.input-group.input-group-merge .form-select:not(:first-child) {
+  border-inline-start: 0;
+  padding-inline-start: 0;
+}
+.input-group.input-group-merge .input-group-text:not(:last-child),
+.input-group.input-group-merge .form-control:not(:last-child),
+.input-group.input-group-merge .form-select:not(:last-child) {
+  border-inline-end: 0;
+}
+.input-group.input-group-merge.disabled, .input-group.input-group-merge[disabled] {
+  margin-inline: 0 !important;
+}
+.input-group.rounded-pill .input-group-text,
+.input-group.rounded-pill .form-control,
+.input-group.rounded-pill .form-select, .input-group.rounded-pill::before {
+  border-radius: 50rem;
+}
+.input-group.disabled .input-group-text,
+.input-group.disabled .form-control,
+.input-group.disabled .form-select, .input-group[disabled] .input-group-text,
+.input-group[disabled] .form-control,
+.input-group[disabled] .form-select {
+  border-color: var(--bs-input-group-disabled-border-color);
+  background-color: rgba(var(--bs-base-color-rgb), 0.06);
+  color: var(--bs-secondary-color);
+  pointer-events: none;
+}
+.input-group.disabled .form-select, .input-group[disabled] .form-select {
+  background-image: url('data:image/svg+xml,%3csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 22" fill="none"%3e%3cpath d="M10.9999 12.0743L15.5374 7.53676L16.8336 8.83292L10.9999 14.6666L5.16626 8.83292L6.46243 7.53676L10.9999 12.0743Z" fill="%23a7acb2" fill-opacity="0.9"/%3e%3c/svg%3e');
+}
+
+/* input-group-text icon size */
+.input-group-text {
+  background-clip: padding-box;
+  /* Adding transition (On focus border color change) */
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+@media (prefers-reduced-motion: reduce) {
+  .input-group-text {
+    transition: none;
+  }
+}
+
+.input-group-lg > .input-group-text .icon-base {
+  block-size: 1.375rem;
+  font-size: 1.375rem;
+  inline-size: 1.375rem;
+}
+
+.input-group-sm > .input-group-text .icon-base {
+  block-size: 1.125rem;
+  font-size: 1.125rem;
+  inline-size: 1.125rem;
+}
+
 /* Custom */
 a {
     text-decoration: none !important;
+}
+
+@media (max-width: 576px) {
+    header .header-middle .container .custom-width {
+        width: 90%;
+    }
+
+    header .social-links.container .custom-width {
+        width: 95%;
+    }
 }

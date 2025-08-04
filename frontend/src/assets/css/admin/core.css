@@ -22429,6 +22429,7 @@ li:not(:first-child) .dropdown-item, .dropdown-menu .dropdown-item:not(:first-ch
     inset-inline-end: 0.9rem;
     min-inline-size: auto;
     width: fit-content;
+    padding: 1rem 2rem;
   }
 }
 

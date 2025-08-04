@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('id')->primary();
             $table->string('name');
             $table->text('description')->nullable();
-//            $table->bigInteger('quantity')->default(0); // Uncomment if you want to track quantity
+            $table->bigInteger('quantity')->default(0); // Uncomment if you want to track quantity
             $table->unsignedDecimal('price', 15, 2);
             $table->string('currency')->default('VND');
             $table->tinyInteger('status')->default(1);

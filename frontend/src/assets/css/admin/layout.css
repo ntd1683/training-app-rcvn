@@ -115,3 +115,9 @@ li.nav-item.active span, li.nav-item.active svg{
   font-size: 1.5rem;
   color: var(--bs-primary);
 }
+
+@media (max-width: 576px) {
+  .layout-navbar .navbar-nav-right {
+    flex-basis: unset !important;
+  }
+}

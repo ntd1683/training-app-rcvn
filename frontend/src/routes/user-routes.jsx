@@ -1,18 +1,24 @@
-import React, { Suspense } from 'react';
+import React, { Suspense, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import { Routes, Route } from 'react-router-dom';
 import ProtectedRoute from '../components/route/protected-route';
-// import Layout from '../components/layout/layout';
-// import LoadingSpinner from '../components/ui/loading-spinner';
 // import Logout from '../components/auth/logout';
 import NotFound from '../components/not-found';
 import { userRoutesConfig } from '../data/user-routes-config';
 import PreLoader from '../components/user/ui/pre-loader';
 import Layout from '../components/user/layout/layout';
+import Logout from '../components/user/auth/logout';
 import '../assets/css/user/main.css'
 import '../assets/css/user/line-icon.css';
 
 
 const UserRoutes = () => {
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    window.scrollTo(0, 100);
+  }, [pathname]);
+
   return (
     <Suspense
       fallback={
@@ -20,15 +26,7 @@ const UserRoutes = () => {
       }
     >
       <Routes>
-        {/* <Route
-          path="/login"
-          element={
-            <ProtectedRoute requireAuth={false}>
-              <Login />
-            </ProtectedRoute>
-          }
-        /> */}
-        {/* <Route path="/logout" element={<Logout />} /> */}
+        <Route path="/dang-xuat" element={<Logout />} />
 
         {userRoutesConfig.map((route, index) => {
           const { path, element: Component, requireAuth, layout, permissions, adminOnly } = route;

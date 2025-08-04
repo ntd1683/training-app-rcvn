@@ -10,6 +10,14 @@
   overflow: hidden;
 }
 
+.preloader {
+  opacity: 1;
+  transition: opacity 0.5s ease;
+}
+.preloader.hidden {
+  opacity: 0;
+}
+
 .preloader-inner {
   position: absolute;
   top: 50%;

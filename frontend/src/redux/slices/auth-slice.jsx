@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { login, logout, verifyToken } from '~/services/api';
+import { register, login, logout, verifyToken, verifyEmail } from '~/services/api';
 
 // Async thunks
 export const initializeAuth = createAsyncThunk(
@@ -9,6 +9,8 @@ export const initializeAuth = createAsyncThunk(
       const token = localStorage.getItem('token');
       if (token) {
         const response = await verifyToken();
+        console.log(token, response);
+        
         if (response.success) {
           const userData = response.data;
           localStorage.setItem('permissions', JSON.stringify(userData.permissions || []));
@@ -61,12 +63,49 @@ export const loginUser = createAsyncThunk(
           user: data,
           permissions: data.permissions || [],
           token: data.token,
+          isAdmin: isAdmin
         };
       } else {
         throw new Error(data.message || 'Đăng nhập thất bại');
       }
     } catch (error) {
-      return rejectWithValue(error.message);
+      return rejectWithValue(error.response?.data?.message || 'Lỗi đăng nhập');
+    }
+  }
+);
+
+export const registerUser = createAsyncThunk(
+  'auth/registerUser',
+  async ({ fullName, email, password, rePassword }, { rejectWithValue }) => {
+    try {
+      const response = await register(fullName, email, password, rePassword);
+      const data = response.data;
+
+      if (response.success) {
+        return true;
+      } else {
+        throw new Error(data.message || 'Đăng ký thất bại');
+      }
+    } catch (error) {
+      return rejectWithValue(error.response?.data?.message || 'Lỗi đăng ký');
+    }
+  }
+);
+
+export const verifyEmailCustomer = createAsyncThunk(
+  'auth/verifyEmailCustomer',
+  async ({ token }, { rejectWithValue }) => {
+    try {
+      const response = await verifyEmail(token, false);
+      const data = response.data;
+
+      if (response.success) {
+        return data;
+      } else {
+        throw new Error(data.message || 'Đăng ký thất bại');
+      }
+    } catch (error) {
+      return rejectWithValue(error.response?.data?.message || 'Lỗi xác thực email');
     }
   }
 );
@@ -90,6 +129,7 @@ export const logoutUser = createAsyncThunk(
 
 const initialState = {
   isAuthenticated: false,
+  isLoginAdmin: false,
   isLoading: true,
   user: null,
   token: null,
@@ -98,6 +138,7 @@ const initialState = {
   authError: null,
 
   isLoginLoading: false,
+  isRegisterLoading: false,
   isLogoutLoading: false,
 };
 
@@ -161,12 +202,35 @@ const authSlice = createSlice({
         state.token = action.payload.token;
         state.permissions = action.payload.permissions;
         state.isAuthenticated = true;
+        state.isLoginAdmin = action.payload.isAdmin;
         state.authError = null;
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.isLoginLoading = false;
         state.errorPassword = action.payload || 'Đăng nhập thất bại';
         state.authError = action.payload;
+      })
+
+      .addCase(registerUser.pending, (state) => {
+        state.isRegisterLoading = true;
+        state.authError = null;
+      })
+      .addCase(registerUser.fulfilled, (state) => {
+        state.isRegisterLoading = false;
+        state.authError = null;
+      })
+      .addCase(registerUser.rejected, (state, action) => {
+        state.isRegisterLoading = false;
+        state.authError = action.payload || 'Đăng ký thất bại';
+      })
+
+      .addCase(verifyEmailCustomer.fulfilled, (state, action) => {
+        console.log('Verify Email Result:', action.payload);
+        console.log('User before update:', state.user);
+        
+        if (state.user) {
+          state.user.email_verified_at = action.payload.email_verified_at;
+        }
       })
 
       .addCase(logoutUser.pending, (state) => {

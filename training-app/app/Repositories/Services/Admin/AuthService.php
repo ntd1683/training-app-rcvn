@@ -1,12 +1,13 @@
 <?php
 
-namespace App\Repositories\Services;
+namespace App\Repositories\Services\Admin;
 
 use App\Models\User;
 use App\Repositories\UserRepository;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Auth;
 use Exception;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 /**
  * Class AuthService
@@ -33,46 +34,43 @@ class AuthService
      * @return array
      * @throws Exception
      */
-    public function login(array $credentials, bool $remember, string $ip, string $clientPath = '')
+    public function login(array $credentials, bool $remember, string $ip)
     {
-        $fromAdmin = $clientPath === 'admin';
-        \Log::info('User login attempt', [
-            'clientPath' => $clientPath,
-            'from_admin' => $fromAdmin,
-        ]);
         $user = $this->userRepository->findByEmail($credentials['email']);
         if (!$user || $user->is_delete || !$user->is_active) {
             throw new Exception('Email không tồn tại hoặc tài khoản đã bị xóa hoặc không hoạt động');
         }
 
-        if (Auth::attempt($credentials, $remember)) {
-            $user = Auth::user();
-            if ($fromAdmin && $user->hasRole('User')) {
-                throw new Exception('Bạn không có quyền truy cập vào trang quản trị');
-            }
-            $token = $user->createToken('authToken')->plainTextToken;
-
-            $this->userRepository->update([
-                'last_login_at' => Carbon::now(),
-                'last_login_ip' => $ip,
-            ], $user->id);
-
-            $permissions = $user->getAllPermissions()->pluck('name')->toArray();
-            $user->permissions = $permissions;
-
-            \Log::info('User logged in', [
-                'user_id' => $user->id,
-                'email' => $user->email,
-                'ip' => $ip,
-            ]);
-
-            return array_merge(
-                $user->only(['id', 'name', 'email', 'group_role', 'last_login_at', 'is_active']),
-                ['permissions' => $permissions, 'token' => $token]
-            );
+        if (!Hash::check($credentials['password'], $user->password)) {
+            throw new Exception('Thông tin đăng nhập không chính xác');
         }
 
-        throw new Exception('Thông tin đăng nhập không chính xác');
+        if ($user->hasRole('User')) {
+            throw new Exception('Bạn không có quyền truy cập vào trang quản trị');
+        }
+
+        $token = $remember
+            ? $user->createToken('authToken')->plainTextToken
+            : $user->createToken('authToken', ['*'], now()->addMonth())->plainTextToken;
+
+        $this->userRepository->update([
+            'last_login_at' => Carbon::now(),
+            'last_login_ip' => $ip,
+        ], $user->id);
+
+        $permissions = $user->getAllPermissions()->pluck('name')->toArray();
+        $user->permissions = $permissions;
+
+        \Log::info('User logged in', [
+            'user_id' => $user->id,
+            'email' => $user->email,
+            'ip' => $ip,
+        ]);
+
+        return array_merge(
+            $user->only(['id', 'name', 'email', 'group_role', 'last_login_at', 'is_active']),
+            ['permissions' => $permissions, 'token' => $token]
+        );
     }
 
     /**

@@ -5,7 +5,7 @@ import { getUrlPrefix } from '../utils/common';
 
 const NotFound = () => {
   const location = useLocation();
-  const urlPrefix = getUrlPrefix(location) === 'admin' ? '/admin' : '';
+  const urlPrefix = getUrlPrefix(location) === 'admin' ? '/admin' : '/';
   
   return (
     <div className="container text-center my-5">

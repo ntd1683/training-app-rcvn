@@ -2,6 +2,7 @@ import { useCallback, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import {
     selectIsAuthenticated,
+    selectIsLoginAdmin,
     selectUser,
     selectPermissions,
     selectAuthLoading,
@@ -11,7 +12,9 @@ import {
 import {
     initializeAuth,
     loginUser,
+    registerUser,
     logoutUser,
+    verifyEmailCustomer,
 } from '../redux/slices/auth-slice';
 
 export const useAuth = () => {
@@ -19,6 +22,7 @@ export const useAuth = () => {
 
     // Selectors
     const isAuthenticated = useSelector(selectIsAuthenticated);
+    const isLoginAdmin = useSelector(selectIsLoginAdmin);
     const user = useSelector(selectUser);
     const permissions = useSelector(selectPermissions);
     const loading = useSelector(selectAuthLoading);
@@ -35,6 +39,24 @@ export const useAuth = () => {
         return {
             success: loginUser.fulfilled.match(result),
             message: result.payload?.message || (loginUser.rejected.match(result) ? result.payload : null)
+        };
+    }, [dispatch]);
+
+    const handleRegister = useCallback(async (fullName, email, password, rePassword) => {
+        const result = await dispatch(registerUser({ fullName, email, password, rePassword }));
+        return {
+            success: registerUser.fulfilled.match(result),
+            message: result.payload?.message || (registerUser.rejected.match(result) ? result.payload : null)
+        };
+    }, [dispatch]);
+
+    const handleVerifyEmailCustomer = useCallback(async (token) => {
+        const result = await dispatch(verifyEmailCustomer({ token }));
+        console.log('Verify Email Result:', result);
+        
+        return {
+            success: verifyEmailCustomer.fulfilled.match(result),
+            message: result.payload?.message || (verifyEmailCustomer.rejected.match(result) ? result.payload : null)
         };
     }, [dispatch]);
 
@@ -58,6 +80,7 @@ export const useAuth = () => {
     return {
         // State
         isAuthenticated,
+        isLoginAdmin,
         user,
         permissions,
         isAdmin,
@@ -67,6 +90,8 @@ export const useAuth = () => {
         // Actions
         initialize,
         handleLogin,
+        handleRegister,
+        handleVerifyEmailCustomer,
         handleLogout,
 
         // Permission helpers
@@ -91,10 +116,12 @@ export const useUserInfo = () => {
     const user = useSelector(selectUser);
     const isAdmin = useSelector(selectIsAdmin);
     const isAuthenticated = useSelector(selectIsAuthenticated);
+    const isLoginAdmin = useSelector(selectIsLoginAdmin);
 
     return useMemo(() => ({
         user,
         isAdmin,
         isAuthenticated,
-    }), [user, isAdmin, isAuthenticated]);
+        isLoginAdmin,
+    }), [user, isAdmin, isAuthenticated, isLoginAdmin]);
 };

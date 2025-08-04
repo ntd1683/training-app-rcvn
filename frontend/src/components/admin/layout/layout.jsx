@@ -73,7 +73,7 @@ const Layout = ({children}) => {
               right: 0,
               zIndex: 1040,
               transition: 'all 0.1s ease-in-out',
-              boxShadow: isScrolled ? '0 2px 10px rgba(0,0,0,0.1)' : 'none',
+              // boxShadow: isScrolled ? '0 2px 10px rgba(0,0,0,0.1)' : 'none',
               backdropFilter: isScrolled ? 'blur(10px)' : 'none',
               backgroundColor: isScrolled ? 'rgba(255,255,255,0.95)' : 'var(--bs-navbar-bg, #fff)'
             }}
@@ -107,7 +107,7 @@ const Layout = ({children}) => {
                   <ul className="dropdown-menu dropdown-menu-end">
                     <li>
                       <Link to="#" className="dropdown-item">
-                        <div className="d-flex">
+                        <div className="d-flex text-center w-100">
                           <div className="flex-grow-1">
                             <h6 className="mb-0">{user.name}</h6>
                             <small className="text-body-secondary">{user.group_role}</small>
@@ -119,7 +119,7 @@ const Layout = ({children}) => {
                       <div className="dropdown-divider my-1"></div>
                     </li>
                     <li>
-                      <Link to="/admin/logout" className="dropdown-item">
+                      <Link to="/admin/logout" className="dropdown-item d-flex justify-content-center">
                         <Icon icon="bx:power-off" className="icon-base bx icon-md me-3"></Icon><span>Log Out</span>
                       </Link>
                     </li>

@@ -1,14 +1,14 @@
 <?php
 
 use App\Http\Controllers\AnalyticController;
-use App\Http\Controllers\ImageController;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\AuthCustomerController;
+use App\Http\Controllers\LogoutController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AuthController;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,11 +20,14 @@ use App\Http\Controllers\AuthController;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+
 Route::middleware('auth:sanctum')->group(function () {
-    Route::post('/logout', [AuthController::class, 'logout']);
+    Route::post('/logout', [LogoutController::class, 'logout']);
     Route::get('/analytics', [AnalyticController::class, 'analytic'])->name('analytics');
-    Route::post('/verify-token', [AuthController::class, 'verifyToken'])->name('verify.token');
-    Route::get('/user', [AuthController::class, 'profile'])->name('profile.update');
+    Route::post('/admin/verify-token', [AuthController::class, 'verifyToken'])->name('verify.token');
+    Route::get('/admin/profile', [AuthController::class, 'profile'])->name('profile.update');
+
+// Customer routes
 
     Route::middleware(['permission'])->group(function () {
         Route::prefix('users')->group(function () {
@@ -64,4 +67,18 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 })->middleware('throttle:60,1');
 
-Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:10,1');
+Route::post('/admin/login', [AuthController::class, 'login'])->middleware('throttle:10,1');
+
+Route::post('/login', [AuthCustomerController::class, 'login'])->middleware('throttle:10,1');
+Route::post('/register', [AuthCustomerController::class, 'register'])->middleware('throttle:10,1');
+Route::post('/email/verify-token', [AuthCustomerController::class, 'verify'])
+    ->middleware('throttle:6,1')
+    ->name('api.customer.verification.verify');
+Route::post('/email/resend', [AuthCustomerController::class, 'resend'])
+    ->middleware('throttle:6,1')
+    ->name('api.customer.verification.resend');
+
+Route::middleware('auth:customer')->group(function () {
+    Route::get('/profile', [AuthCustomerController::class, 'profile'])->name('profile.update');
+    Route::post('/verify-token', [AuthCustomerController::class, 'verifyToken'])->name('verify.token');
+});

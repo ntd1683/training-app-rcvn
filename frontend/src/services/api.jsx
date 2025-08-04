@@ -25,10 +25,25 @@ export const getAnalytics = async () => {
 // Authentication functions
 
 export const login = async (email, password, remember, isAdmin) => {
-  const headers = isAdmin ? { 'X-Client-Path': 'admin' } : {};  
-  const response = await api.post(`${prefixApi}/login`, { email, password, remember }, {
-    headers: headers,
-  });
+  let url = `${prefixApi}/login`;
+  if (isAdmin) {
+    url = `${prefixApi}/admin/login`;
+  }
+  const response = await api.post(url, { email, password, remember });
+  return response.data;
+};
+
+export const register = async (fullName, email, password, rePassword) => {
+  const response = await api.post(
+    `${prefixApi}/register`,
+    { name: fullName, email, password, re_password: rePassword }
+  );
+  return response.data;
+};
+
+export const verifyEmail = async (token, isAdmin = false) => {
+  const url = isAdmin ? `${prefixApi}/admin/email/verify-token` : `${prefixApi}/email/verify-token`;
+  const response = await api.post(url, { token });
   return response.data;
 };
 
@@ -44,6 +59,8 @@ export const logout = async () => {
 export const verifyToken = async () => {
   try {
     const token = localStorage.getItem('token');
+    console.log("Verifying token:", token);
+    
     const response = await api.post(`${prefixApi}/verify-token`, null, {
       headers: { Authorization: `Bearer ${token}` },
     });
