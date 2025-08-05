@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '~/hooks/use-auth';
+import { useAuth } from '~/hooks/admin/use-auth';
 import '~/assets/css/admin/page-auth.css';
 import { toast } from 'react-toastify';
 
@@ -79,7 +79,7 @@ export const useLogin = () => {
         }
 
         try {
-            const response = await handleLogin(formData.email, formData.password, formData.rememberMe, true);
+            const response = await handleLogin(formData.email, formData.password, formData.rememberMe);
             if (response.success) {
                 navigate('/admin/products', { state: { success: 'Đăng nhập thành công' } });
             } else {

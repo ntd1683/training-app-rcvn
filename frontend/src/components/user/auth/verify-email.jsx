@@ -52,7 +52,7 @@ const VerifyEmail = () => {
   const renderInitialState = () => (
     <>
       <h2>Xác Thực Email</h2>
-      <p>Bạn vui lòng xác thực email để hoàn tất đăng ký tài khoản.</p>
+      <p>Bạn vui lòng bấm xác thực email để hoàn tất đăng ký tài khoản.</p>
       <div className="button">
         <button
           type="button"

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Xác thực Email</title>
+    <title>{{ $title }}</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -58,7 +58,7 @@
 <body>
 <div class="header">
     <div class="logo">{{ config('app.website_name') }}</div>
-    <h1>Xác thực địa chỉ email</h1>
+    <h1>{{ $title }}</h1>
 </div>
 
 <div class="content">
@@ -67,7 +67,7 @@
     <p>{{ $content }}</p>
 
     <div style="text-align: center;">
-        <a href="{{ $url }}" class="button">Xác thực Email</a>
+        <a href="{{ $url }}" class="button">{{ $button }}</a>
     </div>
 
     <p>Nếu nút không hoạt động, bạn có thể sao chép và dán liên kết sau vào trình duyệt:</p>

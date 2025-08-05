@@ -29,14 +29,18 @@ class PasswordResetMail extends ResetPasswordBase
         $content = "Bạn đã yêu cầu đặt lại mật khẩu cho tài khoản của mình.
         Vui lòng nhấp vào nút bên dưới để tiến hành đặt lại mật khẩu:";
         $textPass = "Nếu bạn không yêu cầu đặt lại mật khẩu, vui lòng bỏ qua email này.";
+        $title = "Khôi phục mật khẩu";
+        $button = "Khôi phục mật khẩu";
 
         return (new MailMessage)
             ->subject('Khôi phục mật khẩu')
             ->view('emails.template_simple', [
+                'title' => $title,
                 'user' => $notifiable,
                 'url' => $verificationUrl,
                 'content' => $content,
                 'textPass' => $textPass,
+                'button' => $button,
             ]);
     }
 }

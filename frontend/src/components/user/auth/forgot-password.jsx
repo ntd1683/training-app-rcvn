@@ -37,9 +37,8 @@ const ForgotPassword = () => {
                                         value={email}
                                         onChange={(e) => setEmail(e.target.value)}
                                         disabled={loading}
-                                        errors={errors.email}
+                                        errors={errors}
                                     />
-                                    {errors && <p className={`text-danger error-all mb-3 mt-1 fw-bold`}>{errors.all}</p>}
                                     <div className="button">
                                         <button
                                             className="btn"

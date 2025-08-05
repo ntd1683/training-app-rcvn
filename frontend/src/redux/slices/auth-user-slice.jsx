@@ -1,16 +1,16 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import {
-  register, login, logout, verifyToken, verifyEmail, resetPassword, changeResetPassword
+  login, logout, verifyToken
 } from '~/services/api';
 
 // Async thunks
 export const initializeAuth = createAsyncThunk(
-  'auth/initializeAuth',
+  'auth_user/initializeAuth',
   async (_, { rejectWithValue }) => {
     try {
       const token = localStorage.getItem('token');
       if (token) {
-        const response = await verifyToken();
+        const response = await verifyToken({ isAdmin: true });
         
         if (response.success) {
           const userData = response.data;
@@ -49,10 +49,10 @@ export const initializeAuth = createAsyncThunk(
   });
 
 export const loginUser = createAsyncThunk(
-  'auth/loginUser',
-  async ({ email, password, remember, isAdmin }, { rejectWithValue }) => {
+  'auth_user/loginUser',
+  async ({ email, password, remember }, { rejectWithValue }) => {
     try {
-      const response = await login(email, password, remember, isAdmin);
+      const response = await login(email, password, remember, true);
       const data = response.data;
 
       if (response.success && data.token) {
@@ -64,7 +64,6 @@ export const loginUser = createAsyncThunk(
           user: data,
           permissions: data.permissions || [],
           token: data.token,
-          isAdmin: isAdmin
         };
       } else {
         throw new Error(data.message || 'Đăng nhập thất bại');
@@ -75,79 +74,11 @@ export const loginUser = createAsyncThunk(
   }
 );
 
-export const registerUser = createAsyncThunk(
-  'auth/registerUser',
-  async ({ fullName, email, password, rePassword }, { rejectWithValue }) => {
-    try {
-      const response = await register(fullName, email, password, rePassword);
-      const data = response.data;
-
-      if (response.success) {
-        return true;
-      } else {
-        throw new Error(data.message || 'Đăng ký thất bại');
-      }
-    } catch (error) {
-      return rejectWithValue(error.response?.data?.message || 'Lỗi đăng ký');
-    }
-  }
-);
-
-export const verifyEmailCustomer = createAsyncThunk(
-  'auth/verifyEmailCustomer',
-  async ({ token }, { rejectWithValue }) => {
-    try {
-      const response = await verifyEmail(token, false);
-      const data = response.data;
-
-      if (response.success) {
-        return data;
-      } else {
-        throw new Error(data.message || 'Đăng ký thất bại');
-      }
-    } catch (error) {
-      return rejectWithValue(error.response?.data?.message || 'Lỗi xác thực email');
-    }
-  }
-);
-
-export const resetPasswordCustomer = createAsyncThunk(
-  'auth/resetPassword',
-  async ({ email }, { rejectWithValue }) => {
-    try {
-      const response = await resetPassword(email);
-      if (response.success) {
-        return true;
-      } else {
-        throw new Error(response.message || 'Lỗi gửi email khôi phục mật khẩu');
-      }
-    } catch (error) {
-      return rejectWithValue(error.response?.data?.message || 'Lỗi gửi email khôi phục mật khẩu');
-    }
-  }
-);
-
-export const changeResetPasswordCustomer = createAsyncThunk(
-  'auth/changeResetPassword',
-  async ({ email, password, rePassword, token }, { rejectWithValue }) => {
-    try {
-      const response = await changeResetPassword(email, password, rePassword, token);
-      if (response.success) {
-        return true;
-      } else {
-        throw new Error(response.message || 'Lỗi khôi phục mật khẩu, vui lòng thử lại!');
-      }
-    } catch (error) {
-      return rejectWithValue(error.response?.data?.message || 'Lỗi khôi phục mật khẩu, vui lòng thử lại!');
-    }
-  }
-);
-
 export const logoutUser = createAsyncThunk(
-  'auth/logoutUser',
+  'auth_user/logoutUser',
   async (_, { rejectWithValue }) => {
     try {
-      await logout();
+      await logout({ isAdmin: true });
       localStorage.removeItem('token');
       localStorage.removeItem('permissions');
       localStorage.removeItem('user');
@@ -162,7 +93,6 @@ export const logoutUser = createAsyncThunk(
 
 const initialState = {
   isAuthenticated: false,
-  isLoginAdmin: false,
   isLoading: true,
   user: null,
   token: null,
@@ -176,7 +106,7 @@ const initialState = {
 };
 
 const authSlice = createSlice({
-  name: 'auth',
+  name: 'auth_user',
   initialState,
   reducers: {
     clearAuthError: (state) => {
@@ -235,32 +165,12 @@ const authSlice = createSlice({
         state.token = action.payload.token;
         state.permissions = action.payload.permissions;
         state.isAuthenticated = true;
-        state.isLoginAdmin = action.payload.isAdmin;
         state.authError = null;
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.isLoginLoading = false;
         state.errorPassword = action.payload || 'Đăng nhập thất bại';
         state.authError = action.payload;
-      })
-
-      .addCase(registerUser.pending, (state) => {
-        state.isRegisterLoading = true;
-        state.authError = null;
-      })
-      .addCase(registerUser.fulfilled, (state) => {
-        state.isRegisterLoading = false;
-        state.authError = null;
-      })
-      .addCase(registerUser.rejected, (state, action) => {
-        state.isRegisterLoading = false;
-        state.authError = action.payload || 'Đăng ký thất bại';
-      })
-
-      .addCase(verifyEmailCustomer.fulfilled, (state, action) => {
-        if (state.user) {
-          state.user.email_verified_at = action.payload.email_verified_at;
-        }
       })
 
       .addCase(logoutUser.pending, (state) => {

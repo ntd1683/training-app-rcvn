@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '~/hooks/use-auth';
+import { useAuth } from '~/hooks/user/use-auth';
 import { useEffect, useState } from 'react';
 
 const Logout = () => {

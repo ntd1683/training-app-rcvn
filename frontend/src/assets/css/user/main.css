@@ -8620,3 +8620,13 @@ a {
         width: 95%;
     }
 }
+
+a.anchor {
+    color: gray !important;
+    font-weight: 500;
+}
+
+a.anchor:hover {
+    color: #0167F3 !important;
+    text-decoration: underline !important;
+}

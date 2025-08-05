@@ -2,7 +2,6 @@ import React from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { useEffect } from 'react';
-import { useAuth } from './hooks/use-auth';
 
 import AppRoutes from './routes/app-routes';
 import { ToastContainer } from 'react-toastify';
@@ -20,12 +19,6 @@ import 'popper.js';
 import 'bootstrap/dist/js/bootstrap.bundle.min';
 
 const AppContent = () => {
-  const { initialize } = useAuth();
-
-  useEffect(() => {
-    initialize();
-  }, [initialize]);
-
   return (
     <>
       <ToastHandler />

@@ -22,13 +22,6 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::middleware('auth:sanctum')->group(function () {
-    Route::post('/logout', [LogoutController::class, 'logout']);
-    Route::get('/analytics', [AnalyticController::class, 'analytic'])->name('analytics');
-    Route::post('/admin/verify-token', [AuthController::class, 'verifyToken'])->name('verify.token');
-    Route::get('/admin/profile', [AuthController::class, 'profile'])->name('profile.update');
-
-// Customer routes
-
     Route::middleware(['permission'])->group(function () {
         Route::prefix('users')->group(function () {
             Route::get('/', [UserController::class, 'index'])->name('users.index');
@@ -67,16 +60,11 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 })->middleware('throttle:60,1');
 
-Route::post('/admin/login', [AuthController::class, 'login'])->middleware('throttle:10,1');
-
 Route::post('/login', [AuthCustomerController::class, 'login'])->middleware('throttle:10,1');
 Route::post('/register', [AuthCustomerController::class, 'register'])->middleware('throttle:10,1');
 Route::post('/email/verify-token', [AuthCustomerController::class, 'verifyEmail'])
     ->middleware('throttle:6,1')
     ->name('api.customer.verification.verify');
-Route::post('/email/resend', [AuthCustomerController::class, 'resendEmail'])
-    ->middleware('throttle:6,1')
-    ->name('api.customer.verification.resend');
 Route::post('/password/email', [AuthCustomerController::class, 'sendResetLinkEmail'])
     ->middleware('throttle:6,1')
     ->name('password.email');
@@ -85,6 +73,10 @@ Route::post('/password/reset', [AuthCustomerController::class, 'reset'])
     ->name('password.reset');
 
 Route::middleware('auth:customer')->group(function () {
-    Route::get('/profile', [AuthCustomerController::class, 'profile'])->name('profile.update');
+    Route::post('/logout', [LogoutController::class, 'logout']);
+    Route::put('/profile', [AuthCustomerController::class, 'updateProfile'])->name('profile.update');
     Route::post('/verify-token', [AuthCustomerController::class, 'verifyToken'])->name('verify.token');
+    Route::post('/email/resend', [AuthCustomerController::class, 'resendEmail'])
+        ->middleware('throttle:6,1')
+        ->name('api.customer.verification.resend');
 });

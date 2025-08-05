@@ -1,5 +1,5 @@
 import { useNavigate, useLocation } from 'react-router-dom';
-import { useAuth } from '~/hooks/use-auth';
+import { useAuth } from '~/hooks/admin/use-auth';
 import { useEffect, useState } from 'react';
 import { getUrlPrefix } from '~/utils/common';
 

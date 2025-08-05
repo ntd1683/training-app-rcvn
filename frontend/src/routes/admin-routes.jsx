@@ -1,6 +1,7 @@
-import React, { Suspense } from 'react';
+import React, { Suspense, useEffect } from 'react';
 import { Routes, Route } from 'react-router-dom';
-import ProtectedRoute from '../components/route/protected-route';
+import { useAuth } from '../hooks/admin/use-auth';
+import ProtectedRoute from '../components/admin/route/protected-route';
 import Layout from '../components/admin/layout/layout';
 import LoadingSpinner from '../components/admin/ui/loading-spinner';
 import NotFound from '../components/not-found';
@@ -11,6 +12,11 @@ import '../assets/css/admin/core.css';
 import '../assets/css/admin/custom-toast.css';
 
 const AdminRoutes = () => {
+    const { initialize } = useAuth();
+    useEffect(() => {
+        initialize();
+    }, [initialize]);
+
     return (
         <Suspense
             fallback={
@@ -38,7 +44,6 @@ const AdminRoutes = () => {
                             requireAuth={requireAuth}
                             requiredPermissions={permissions}
                             adminOnly={adminOnly}
-                            requireLoginAdmin={true}
                         >
                             {layout ? (
                                 <Layout>

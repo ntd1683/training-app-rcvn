@@ -5,12 +5,11 @@ namespace App\Repositories\Services\Customer;
 use App\Models\Customer;
 use App\Models\User;
 use App\Repositories\CustomerRepository;
-use App\Repositories\UserRepository;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Auth\Events\Verified;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Password;
 
 /**
  * Class AuthService
@@ -57,18 +56,19 @@ class AuthService
             'last_login_ip' => $ip,
         ], $customer->id);
 
-        $permissions = $customer->getAllPermissions()->pluck('name')->toArray();
-        $customer->permissions = $permissions;
-
         \Log::info('User logged in', [
             'customer_id' => $customer->id,
             'email' => $customer->email,
             'ip' => $ip,
         ]);
 
+        $arr_customer = $customer->toArray();
+        $arr_customer['total_products'] = $customer->total_products;
+        $arr_customer['total_price'] = $customer->total_price;
+
         return array_merge(
-            $customer->only(['id', 'name', 'email', 'last_login_at']),
-            ['permissions' => $permissions, 'token' => $token]
+            $arr_customer,
+            ['token' => $token]
         );
     }
 
@@ -161,15 +161,75 @@ class AuthService
     }
 
     /**
-     * Get the authenticated user's profile
-     * @param User $user
-     * @return array
+     * Send a password reset link to the user's email
+     * @param string $email
+     * @return bool
+     * @throws Exception
      */
-    public function getProfile($user)
+    public function sendResetLinkEmail(string $email)
     {
-        $permissions = $user->getAllPermissions()->pluck('name')->toArray();
-        $user->permissions = $permissions;
-        return $user->only('id', 'name', 'email', 'is_active', 'permissions');
+        \Log::info('Password reset link requested', [
+            'email' => $email,
+        ]);
+        if (!$email) {
+            throw new Exception('Email không được để trống');
+        }
+        $status = Password::broker('customers')->sendResetLink(['email' => $email]);
+
+        if ($status !== Password::RESET_LINK_SENT) {
+            throw new Exception(__($status));
+        }
+
+        return true;
+    }
+
+    /**
+     * Reset the user's password
+     * @param array $data
+     * @return bool
+     * @throws Exception
+     */
+    public function resetPassword(array $data)
+    {
+        $status = Password::broker('customers')->reset(
+            $data,
+            function ($customer, $password) {
+                $customer->password = bcrypt($password);
+                $customer->save();
+            }
+        );
+
+        if ($status !== Password::PASSWORD_RESET) {
+            throw new Exception(__($status));
+        }
+
+        return true;
+    }
+
+    /**
+     * Update the authenticated customer's profile
+     * @param Customer $customer
+     * @param array $data
+     * @return Customer
+     * @throws Exception
+     */
+    public function updateProfile($customer, array $data)
+    {
+        $customer->fill($data);
+        if (isset($data['password']) && isset($data['new_password'])) {
+            if (!\Hash::check($data['password'], $customer->password)) {
+                throw new \Exception('Mật khẩu hiện tại không đúng');
+            }
+            $customer->password = bcrypt($data['new_password']);
+        }
+        $customer->save();
+
+        \Log::info('Customer profile updated', [
+            'customer' => $customer->id,
+            'email' => $customer->email,
+        ]);
+
+        return $customer;
     }
 
     /**

@@ -45,14 +45,18 @@ class CustomVerifyEmail extends VerifyEmailBase implements ShouldQueue
         $content = "Cảm ơn bạn đã đăng ký tài khoản! Để hoàn tất quá trình đăng ký,
         vui lòng xác thực địa chỉ email của bạn bằng cách nhấp vào nút bên dưới:";
         $textPass = "Nếu bạn không tạo tài khoản, vui lòng bỏ qua email này.";
+        $title = "Xác thực địa chỉ email của bạn";
+        $button = "Xác thực email";
 
         return (new MailMessage)
             ->subject('Xác thực địa chỉ email của bạn')
             ->view('emails.template_simple', [
+                'title' => $title,
                 'user' => $notifiable,
                 'url' => $verificationUrl,
                 'content' => $content,
                 'textPass' => $textPass,
+                'button' => $button,
             ]);
     }
 }

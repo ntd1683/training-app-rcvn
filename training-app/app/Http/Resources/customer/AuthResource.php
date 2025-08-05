@@ -1,6 +1,8 @@
 <?php
 
-namespace App\Http\Resources;
+namespace App\Http\Resources\customer;
+
+use App\Http\Resources\BaseApiResource;
 
 class AuthResource extends BaseApiResource
 {
@@ -9,7 +11,7 @@ class AuthResource extends BaseApiResource
      *
      * @var string
      */
-    protected string $message = 'Lấy thông tin user thành công';
+    protected string $message = 'Lấy thông tin người dùng thành công';
 
     /**
      * Transform the resource into an array.
@@ -27,13 +29,11 @@ class AuthResource extends BaseApiResource
             'id' => $this->resource['id'] ?? null,
             'name' => $this->resource['name'] ?? '',
             'email' => $this->resource['email'] ?? '',
-            'group_role' => $this->resource['group_role'] ?? '',
-            'is_active' => $this->resource['is_active'] ?? '',
-            'permissions' => $this->resource['permissions'] ?? [],
             'last_login_at' => $this->resource['last_login_at'] ?? '',
             'token' => $this->resource['token'] ?? '',
-            'verify_email' => $this->resource['verify_email'] ?? false,
             'email_verified_at' => $this->resource['email_verified_at'] ?? null,
+            'total_products' => $this->resource['total_products'] ?? 0,
+            'total_price' => $this->resource['total_price'] ?? 0,
         ];
     }
 }

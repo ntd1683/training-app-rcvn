@@ -70,4 +70,26 @@ class Customer extends Authenticatable implements MustVerifyEmail
     {
         $this->notify(new PasswordResetMail($token));
     }
+
+    /**
+     * Get the total product purchased
+     *
+     * @return int
+     */
+    public function getTotalProductsAttribute(): int
+    {
+//        Todo: Implement logic to calculate total products purchased by the customer
+        return 125;
+    }
+
+    /**
+     * Get the total price order placed
+     *
+     * @return float
+     */
+    public function getTotalPriceAttribute(): float
+    {
+//        Todo: Implement logic to calculate total price of orders placed by the customer
+        return 1500.75;
+    }
 }

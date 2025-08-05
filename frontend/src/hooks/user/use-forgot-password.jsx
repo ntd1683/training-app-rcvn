@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '~/hooks/use-auth';
+import { useAuth } from './use-auth';
 import '~/assets/css/admin/page-auth.css';
 import { toast } from 'react-toastify';
 
@@ -38,8 +38,8 @@ export const useForgotPassword = () => {
             if (response.success) {
                 navigate('/dang-nhap', { state: { success: 'Vui lòng kiểm tra email để lấy lại mật khẩu' } });
             } else {
-                setErrors('Có lỗi xảy ra, vui lòng thử lại!');
-                toast.error('Có lỗi xảy ra, vui lòng thử lại!');
+                setErrors(response.message || 'Có lỗi xảy ra, vui lòng thử lại!');
+                toast.error(response.message || 'Có lỗi xảy ra, vui lòng thử lại!');
             }
         } catch (error) {
             setErrors('Có lỗi xảy ra, vui lòng thử lại!');

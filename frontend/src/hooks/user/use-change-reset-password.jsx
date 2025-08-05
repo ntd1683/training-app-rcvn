@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useAuth } from '~/hooks/use-auth';
+import { useAuth } from './use-auth';
 import '~/assets/css/admin/page-auth.css';
 import { toast } from 'react-toastify';
 

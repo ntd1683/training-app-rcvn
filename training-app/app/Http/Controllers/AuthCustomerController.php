@@ -4,14 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\Customer\LoginRequest;
 use App\Http\Requests\Customer\RegisterRequest;
-use App\Http\Resources\AuthResource;
-use App\Models\Customer;
+use App\Http\Requests\Customer\ResetPasswordRequest;
+use App\Http\Requests\Customer\SendResetLinkEmailRequest;
+use App\Http\Requests\Customer\UpdateProfileRequest;
+use App\Http\Requests\Customer\VerifyEmailRequest;
+use App\Http\Resources\customer\AuthResource;
 use App\Repositories\Services\Customer\AuthService;
-use Illuminate\Auth\Events\Verified;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Password;
 
 /**
  * Class AuthController
@@ -80,10 +80,10 @@ class AuthCustomerController extends Controller
     /**
      * Verify the user's email address
      *
-     * @param  Request $request
+     * @param  VerifyEmailRequest $request
      * @return AuthResource|JsonResponse
      */
-    public function verifyEmail(Request $request)
+    public function verifyEmail(VerifyEmailRequest $request)
     {
         try {
             $token = $request->input('token');
@@ -108,12 +108,8 @@ class AuthCustomerController extends Controller
     public function resendEmail(Request $request)
     {
         try {
-            $validated = $request->validate(
-                [
-                'email' => 'required|email|exists:customers,email',
-                ]
-            );
-            $email = $validated['email'];
+            $customer = $request->user();
+            $email = $customer->email;
             if (!$email) {
                 return (new AuthResource(null))->errorResponse(
                     'BAD_REQUEST',
@@ -136,78 +132,67 @@ class AuthCustomerController extends Controller
     /**
      * Send a password reset link to the user's email
      *
-     * @param  Request $request
+     * @param  SendResetLinkEmailRequest $request
      * @return AuthResource|JsonResponse
      */
-    public function sendResetLinkEmail(Request $request)
+    public function sendResetLinkEmail(SendResetLinkEmailRequest $request)
     {
-        $request->validate(
-            [
-            'email' => 'required|email|exists:customers,email',
-            ]
-        );
+        try {
+            $email = $request->input('email');
+            if (!$email) {
+                return (new AuthResource(null))->errorResponse(
+                    'BAD_REQUEST',
+                    null,
+                    'Email không được để trống'
+                );
+            }
 
-        $status = Password::broker('customers')->sendResetLink(
-            $request->only('email')
-        );
-
-        if ($status === Password::RESET_LINK_SENT) {
-            return new AuthResource(null, 'Vui lòng kiểm tra email để khôi phục lại mật khẩu.');
+            $this->authService->sendResetLinkEmail($email);
+            return new AuthResource(
+                null,
+                'Vui lòng kiểm tra email để khôi phục lại mật khẩu.'
+            );
+        } catch (\Exception $e) {
+            return (new AuthResource(null))->errorResponse(
+                'SERVER_ERROR',
+                null,
+                'Có lỗi xảy ra: ' . $e->getMessage()
+            );
         }
-
-        return (new AuthResource(null))->errorResponse(
-            'SERVER_ERROR',
-            null,
-            'Có lỗi xảy ra: ' . __($status)
-        );
     }
 
     /**
      * Reset the user's password
      *
-     * @param  Request $request
+     * @param  ResetPasswordRequest $request
      * @return AuthResource|JsonResponse
      */
-    public function reset(Request $request)
+    public function reset(ResetPasswordRequest $request)
     {
-        $request->validate(
-            [
-            'email' => 'required|email|exists:customers,email',
-            'token' => 'required|string',
-            'password' => 'required|string|min:4|confirmed',
-            ]
-        );
-
-        $status = Password::broker('customers')->reset(
-            $request->only('email', 'password', 'password_confirmation', 'token'),
-            function ($customer, $password) {
-                $customer->password = Hash::make($password);
-                $customer->save();
-            }
-        );
-
-        if ($status === Password::PASSWORD_RESET) {
-            return new AuthResource(null, 'Mật khẩu đã được đặt lại thành công.');
+        $data = $request->only('email', 'password', 'password_confirmation', 'token');
+        try {
+            $result = $this->authService->resetPassword($data);
+            return new AuthResource($result, 'Đặt lại mật khẩu thành công');
+        } catch (\Exception $e) {
+            return (new AuthResource(null))->errorResponse(
+                'SERVER_ERROR',
+                null,
+                'Có lỗi xảy ra: ' . $e->getMessage()
+            );
         }
-
-        return (new AuthResource(null))->errorResponse(
-            'SERVER_ERROR',
-            null,
-            'Có lỗi xảy ra: ' . __($status)
-        );
     }
 
     /**
-     * Get the authenticated user's profile
+     * Update the authenticated user's profile
      *
-     * @param  Request $request
+     * @param  UpdateProfileRequest $request
      * @return AuthResource|JsonResponse
      */
-    public function profile(Request $request)
+    public function updateProfile(UpdateProfileRequest $request)
     {
         try {
-            $user = $this->authService->getProfile($request->user());
-            return new AuthResource($user, 'Lấy thông tin người dùng thành công');
+            $user = $this->authService->updateProfile($request->user(), $request->all());
+            return new AuthResource($user, 'Cập nhật thông tin người dùng thành công');
         } catch (\Exception $e) {
             return (new AuthResource(null))->errorResponse(
                 'SERVER_ERROR',
@@ -226,10 +211,7 @@ class AuthCustomerController extends Controller
     public function verifyToken(Request $request)
     {
         try {
-            \Log::info('Verifying customer token', ['token' => $request->bearerToken()]);
-            \Log::info('Request', ['request' => $request->all()]);
             $customer = $request->user();
-            \Log::info('Customer token verification', ['customer_id' => $customer->id ?? null]);
             if ($customer === null) {
                 return (new AuthResource(null))->errorResponse(
                     'UNAUTHORIZED',

@@ -13,7 +13,7 @@ const api = axios.create({
 export const getAnalytics = async () => {
   try {
     const token = localStorage.getItem('token');
-    const response = await api.get(`${prefixApi}/analytics`, {
+    const response = await api.get(`${prefixApi}/admin/analytics`, {
       headers: { Authorization: `Bearer ${token}` },
     });
     return response.data;
@@ -41,7 +41,16 @@ export const register = async (fullName, email, password, rePassword) => {
   return response.data;
 };
 
-export const verifyEmail = async (token, isAdmin = false) => {
+export const sendVerifyEmail = async (isAdmin = false) => {
+  const url = isAdmin ? `${prefixApi}/admin/email/resend` : `${prefixApi}/email/resend`;
+  const token = localStorage.getItem('token');
+  const response = await api.post(url, null,{
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return response.data;
+};
+
+export const verifyEmailWithToken = async (token, isAdmin = false) => {
   const url = isAdmin ? `${prefixApi}/admin/email/verify-token` : `${prefixApi}/email/verify-token`;
   const response = await api.post(url, { token });
   return response.data;
@@ -62,20 +71,60 @@ export const changeResetPassword = async (email, password, rePassword, token) =>
   return response.data;
 };
 
-export const logout = async () => {
+// Get Profile
+export const getProfileData = async (data, isAdmin = false) => {
+  const url = isAdmin ? `${prefixApi}/admin/profile` : `${prefixApi}/profile`;
+  if (!data) {
+    throw new Error("No data provided for profile retrieval");
+  }
+
+  try {
+    const token = localStorage.getItem('token');
+    const response = await api.get(url, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const updateProfileData = async (data, isAdmin = false) => {
+  const url = isAdmin ? `${prefixApi}/admin/profile` : `${prefixApi}/profile`;
+  try {
+    const token = localStorage.getItem('token');
+    const params = {
+      name: data.name,
+      email: data.email,
+      password: data.password || undefined,
+      new_password: data.newPassword || undefined,
+      new_password_confirmation: data.confirmPassword || undefined,
+    };
+    
+    const response = await api.put(url, params, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const logout = async (isAdmin = false) => {
   const token = localStorage.getItem('token');
-  const response = await api.post(`${prefixApi}/logout`, {}, {
+  const url = isAdmin ? `${prefixApi}/admin/logout` : `${prefixApi}/logout`;
+  const response = await api.post(url, {}, {
     headers: { Authorization: `Bearer ${token}` },
   });
 
   return response;
 };
 
-export const verifyToken = async () => {
+export const verifyToken = async (isAdmin = false) => {
   try {
     const token = localStorage.getItem('token');
-    
-    const response = await api.post(`${prefixApi}/verify-token`, null, {
+    const url = isAdmin ? `${prefixApi}/admin/verify-token` : `${prefixApi}/verify-token`;
+    const response = await api.post(url, null, {
       headers: { Authorization: `Bearer ${token}` },
     });
     return response.data;
