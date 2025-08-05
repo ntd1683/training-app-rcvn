@@ -11,7 +11,6 @@ export const initializeAuth = createAsyncThunk(
       const token = localStorage.getItem('token');
       if (token) {
         const response = await verifyToken();
-        console.log(token, response);
         
         if (response.success) {
           const userData = response.data;

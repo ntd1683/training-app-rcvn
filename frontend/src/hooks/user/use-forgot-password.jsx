@@ -34,7 +34,6 @@ export const useForgotPassword = () => {
 
         try {
             const response = await handleResetPassword(email);
-            console.log(response);
             
             if (response.success) {
                 navigate('/dang-nhap', { state: { success: 'Vui lòng kiểm tra email để lấy lại mật khẩu' } });
@@ -43,8 +42,6 @@ export const useForgotPassword = () => {
                 toast.error('Có lỗi xảy ra, vui lòng thử lại!');
             }
         } catch (error) {
-            console.log(error);
-            
             setErrors('Có lỗi xảy ra, vui lòng thử lại!');
             toast.error('Có lỗi xảy ra, vui lòng thử lại!');
         } finally {

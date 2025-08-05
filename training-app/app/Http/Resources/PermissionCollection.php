@@ -6,7 +6,7 @@ class PermissionCollection extends BaseCollection
     /**
      * Message for the response
      *
-     * @var string
+     * @var    string
      * @Author Nguyen.Tan.Dung
      */
     protected string $message = 'Lấy danh sách quyền thành công';

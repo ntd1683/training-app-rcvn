@@ -14,7 +14,8 @@ class AnalyticController extends Controller
 
     /**
      * UserController constructor.
-     * @param UserService $userService
+     *
+     * @param UserService    $userService
      * @param ProductService $productService
      */
     public function __construct(UserService $userService, ProductService $productService)

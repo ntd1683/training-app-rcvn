@@ -6,8 +6,8 @@ use ValueError;
 /**
  * Enum representing the status of a product.
  *
- * @package App\Enums
- * @author Nguyen.Tan.Dung
+ * @package    App\Enums
+ * @author     Nguyen.Tan.Dung
  * @lastUpdate Nguyen.Tan.Dung
  */
 enum StatusProductEnum: int

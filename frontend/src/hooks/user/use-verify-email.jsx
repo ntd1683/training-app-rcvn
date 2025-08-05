@@ -26,8 +26,6 @@ export const useVerifyEmail = () => {
 
         try {
             const response = await handleVerifyEmailCustomer(token);
-            console.log('Verify Email Response:', response);
-            
 
             if (response.success) {
                 toast.success('Xác thực email thành công');

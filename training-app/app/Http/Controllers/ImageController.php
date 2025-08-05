@@ -10,6 +10,7 @@ class ImageController extends Controller
 
     /**
      * ImageController constructor.
+     *
      * @param ImageService $imageService
      */
     public function __construct(ImageService $imageService)
@@ -29,10 +30,12 @@ class ImageController extends Controller
                 ->header('Access-Control-Allow-Origin', config('app.frontend_url'))
                 ->header('Content-Disposition', 'inline; filename="' . $imageInfoContent['original_name'] . '"');
         } catch (\Exception $e) {
-            return response()->json([
+            return response()->json(
+                [
                 'error' => 'Ảnh không tồn tại hoặc không tìm thấy',
                 'message' => $e->getMessage(),
-            ], 404);
+                ], 404
+            );
         }
     }
 }

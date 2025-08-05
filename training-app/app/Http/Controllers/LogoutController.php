@@ -14,7 +14,8 @@ class LogoutController extends Controller
 {
     /**
      * Log out
-     * @param Request $request
+     *
+     * @param  Request $request
      * @return AuthResource|JsonResponse
      */
     public function logout(Request $request)

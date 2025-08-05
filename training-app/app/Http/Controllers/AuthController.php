@@ -18,6 +18,7 @@ class AuthController extends Controller
 
     /**
      * AuthController constructor.
+     *
      * @param AuthService $authService
      */
     public function __construct(AuthService $authService)
@@ -27,7 +28,8 @@ class AuthController extends Controller
 
     /**
      * Handle user login
-     * @param LoginRequest $request
+     *
+     * @param  LoginRequest $request
      * @return AuthResource|\Illuminate\Http\JsonResponse
      */
     public function login(LoginRequest $request)
@@ -50,7 +52,8 @@ class AuthController extends Controller
 
     /**
      * Get the authenticated user's profile
-     * @param Request $request
+     *
+     * @param  Request $request
      * @return AuthResource|\Illuminate\Http\JsonResponse
      */
     public function profile(Request $request)
@@ -69,7 +72,8 @@ class AuthController extends Controller
 
     /**
      * Verify the user's token
-     * @param Request $request
+     *
+     * @param  Request $request
      * @return AuthResource|JsonResponse
      */
     public function verifyToken(Request $request)
@@ -95,7 +99,8 @@ class AuthController extends Controller
 
     /**
      * Log the user out
-     * @param Request $request
+     *
+     * @param  Request $request
      * @return AuthResource|JsonResponse
      */
     public function logout(Request $request)

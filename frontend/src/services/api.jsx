@@ -74,7 +74,6 @@ export const logout = async () => {
 export const verifyToken = async () => {
   try {
     const token = localStorage.getItem('token');
-    console.log("Verifying token:", token);
     
     const response = await api.post(`${prefixApi}/verify-token`, null, {
       headers: { Authorization: `Bearer ${token}` },

@@ -23,6 +23,7 @@ class AuthCustomerController extends Controller
 
     /**
      * AuthController constructor.
+     *
      * @param AuthService $authService
      */
     public function __construct(AuthService $authService)
@@ -32,7 +33,8 @@ class AuthCustomerController extends Controller
 
     /**
      * Handle customer login
-     * @param LoginRequest $request
+     *
+     * @param  LoginRequest $request
      * @return AuthResource|JsonResponse
      */
     public function login(LoginRequest $request)
@@ -55,7 +57,8 @@ class AuthCustomerController extends Controller
 
     /**
      * Handle customer registration
-     * @param RegisterRequest $request
+     *
+     * @param  RegisterRequest $request
      * @return AuthResource|JsonResponse
      */
     public function register(RegisterRequest $request)
@@ -76,7 +79,8 @@ class AuthCustomerController extends Controller
 
     /**
      * Verify the user's email address
-     * @param Request $request
+     *
+     * @param  Request $request
      * @return AuthResource|JsonResponse
      */
     public function verifyEmail(Request $request)
@@ -97,15 +101,18 @@ class AuthCustomerController extends Controller
 
     /**
      * Resend the verification email to the user
-     * @param Request $request
+     *
+     * @param  Request $request
      * @return AuthResource|JsonResponse
      */
     public function resendEmail(Request $request)
     {
         try {
-            $validated = $request->validate([
+            $validated = $request->validate(
+                [
                 'email' => 'required|email|exists:customers,email',
-            ]);
+                ]
+            );
             $email = $validated['email'];
             if (!$email) {
                 return (new AuthResource(null))->errorResponse(
@@ -128,14 +135,17 @@ class AuthCustomerController extends Controller
 
     /**
      * Send a password reset link to the user's email
-     * @param Request $request
+     *
+     * @param  Request $request
      * @return AuthResource|JsonResponse
      */
     public function sendResetLinkEmail(Request $request)
     {
-        $request->validate([
+        $request->validate(
+            [
             'email' => 'required|email|exists:customers,email',
-        ]);
+            ]
+        );
 
         $status = Password::broker('customers')->sendResetLink(
             $request->only('email')
@@ -154,16 +164,19 @@ class AuthCustomerController extends Controller
 
     /**
      * Reset the user's password
-     * @param Request $request
+     *
+     * @param  Request $request
      * @return AuthResource|JsonResponse
      */
     public function reset(Request $request)
     {
-        $request->validate([
+        $request->validate(
+            [
             'email' => 'required|email|exists:customers,email',
             'token' => 'required|string',
             'password' => 'required|string|min:4|confirmed',
-        ]);
+            ]
+        );
 
         $status = Password::broker('customers')->reset(
             $request->only('email', 'password', 'password_confirmation', 'token'),
@@ -186,7 +199,8 @@ class AuthCustomerController extends Controller
 
     /**
      * Get the authenticated user's profile
-     * @param Request $request
+     *
+     * @param  Request $request
      * @return AuthResource|JsonResponse
      */
     public function profile(Request $request)
@@ -205,7 +219,8 @@ class AuthCustomerController extends Controller
 
     /**
      * Verify the user's token
-     * @param Request $request
+     *
+     * @param  Request $request
      * @return AuthResource|JsonResponse
      */
     public function verifyToken(Request $request)

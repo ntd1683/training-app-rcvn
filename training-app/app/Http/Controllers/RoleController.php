@@ -21,6 +21,7 @@ class RoleController extends Controller
 
     /**
      * RoleController constructor.
+     *
      * @param RoleService $roleService
      */
     public function __construct(RoleService $roleService)

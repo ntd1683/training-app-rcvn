@@ -4,19 +4,19 @@
  * Helper functions for HTML sanitization and purification.
  *
  * @package App\Helpers
- * @author LastName.FirstName
+ * @author  Nguyen.Tan.Dung
+ * @php     version 8.4.8
  * @version 1.0
  */
 
-/**
- * Get HTMLPurifier configuration object with predefined safe settings.
- *
- * @return HTMLPurifier_Config The configured HTMLPurifier config object
- * @author Nguyen.Tan.Dung
- * @lastupdate Nguyen.Tan.Dung
- */
-
 if (!function_exists('getHTMLPurifierConfig')) {
+    /**
+     * Get HTMLPurifier configuration object with predefined safe settings.
+     *
+     * @return     HTMLPurifier_Config The configured HTMLPurifier config object
+     * @author     Nguyen.Tan.Dung
+     * @lastupdate Nguyen.Tan.Dung
+     */
     function getHTMLPurifierConfig(): HTMLPurifier_Config
     {
         $config = HTMLPurifier_Config::createDefault();
@@ -43,15 +43,15 @@ if (!function_exists('getHTMLPurifierConfig')) {
     }
 }
 
-/**
- * Sanitize a filename by removing special characters and trimming whitespace.
- *
- * @param string $filename The original filename
- * @return string The sanitized filename
- * @author Nguyen.Tan.Dung
- * @lastupdate Nguyen.Tan.Dung
- */
 if (!function_exists('sanitizeFilename')) {
+    /**
+     * Sanitize a filename by removing special characters and trimming whitespace.
+     *
+     * @param      string $filename The original filename
+     * @return     string The sanitized filename
+     * @author     Nguyen.Tan.Dung
+     * @lastupdate Nguyen.Tan.Dung
+     */
     function sanitizeFilename(string $filename): string
     {
         // Remove special characters except for alphanumeric, underscores, dashes, and dots

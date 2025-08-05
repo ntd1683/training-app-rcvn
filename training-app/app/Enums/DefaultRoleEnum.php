@@ -6,8 +6,8 @@ use ValueError;
 /**
  * Enum representing default roles in the application.
  *
- * @package App\Enums
- * @author Nguyen.Tan.Dung
+ * @package    App\Enums
+ * @author     Nguyen.Tan.Dung
  * @lastUpdate Nguyen.Tan.Dung
  */
 enum DefaultRoleEnum: int
@@ -20,9 +20,10 @@ enum DefaultRoleEnum: int
 
     /**
      * Get value from name.
-     * @param string $name
-     * @return int
-     * @author Nguyen.Tan.Dung
+     *
+     * @param      string $name
+     * @return     int
+     * @author     Nguyen.Tan.Dung
      * @lastUpdate Nguyen.Tan.Dung
      */
     public static function getValueFromName(string $name): int

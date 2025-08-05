@@ -13,8 +13,8 @@ class BaseCollection extends ResourceCollection
     /**
      * Create a new collection instance.
      *
-     * @param  mixed  $resource
-     * @param  string|null  $message
+     * @param  mixed       $resource
+     * @param  string|null $message
      * @return void
      */
     public function __construct($resource, ?string $message = null)
@@ -26,7 +26,7 @@ class BaseCollection extends ResourceCollection
     /**
      * Transform the resource collection into an array.
      *
-     * @param  Request  $request
+     * @param  Request $request
      * @return array
      */
     public function toArray($request)
