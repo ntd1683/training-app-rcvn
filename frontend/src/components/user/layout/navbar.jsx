@@ -1,5 +1,6 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useState } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 
 const Navbar = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -7,14 +8,15 @@ const Navbar = () => {
     const toggleMenu = () => {
         setIsMenuOpen(!isMenuOpen);
     };
+
+    const location = useLocation();
+    const isActive = (path) => location.pathname === path ? "active" : "";
     return (
         <nav className="navbar navbar-expand-lg">
             <button
                 className={`navbar-toggler mobile-menu-btn ${isMenuOpen ? 'active' : 'collapsed'}`}
                 type="button"
                 onClick={toggleMenu}
-                data-bs-toggle="collapse"
-                data-bs-target="#navbarSupportedContent"
                 aria-controls="navbarSupportedContent"
                 aria-expanded={isMenuOpen}
                 aria-label="Toggle navigation"
@@ -23,10 +25,18 @@ const Navbar = () => {
                 <span className="toggler-icon"></span>
                 <span className="toggler-icon"></span>
             </button>
-            <div className="collapse navbar-collapse sub-menu-bar" id="navbarSupportedContent">
+            <div
+                className={`navbar-collapse sub-menu-bar ${isMenuOpen ? 'show' : 'collapse'}`}
+                id="navbarSupportedContent"
+            >
                 <ul id="nav" className="navbar-nav ms-auto">
                     <li className="nav-item">
-                        <a href="index.html" className="active" aria-label="Toggle navigation">Home</a>
+                        <Link
+                            className={isActive('/')}
+                            onClick={() => setIsMenuOpen(false)}
+                            aria-label="Toggle navigation"
+                            to="/"
+                        >Trang chủ</Link>
                     </li>
                     <li className="nav-item">
                         <a className="dd-menu collapsed" href="#" data-bs-toggle="collapse"

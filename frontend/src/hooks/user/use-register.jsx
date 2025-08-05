@@ -19,7 +19,8 @@ export const useRegister = () => {
         rePassword: '',
     });
 
-    const { isAuthenticated, isLoginLoading, handleRegister } = useAuth();
+    const [isLoading, setIsLoading] = useState(false);
+    const { isAuthenticated, handleRegister } = useAuth();
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -104,8 +105,10 @@ export const useRegister = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setIsLoading(true);
 
         if (!validateForm()) {
+            setIsLoading(false);
             return;
         }
 
@@ -124,13 +127,15 @@ export const useRegister = () => {
                 all: 'Có lỗi xảy ra, vui lòng thử lại!',
             })
             toast.error('Có lỗi xảy ra, vui lòng thử lại!');
+        } finally {
+            setIsLoading(false);
         }
     };
 
     return {
         formData,
         errors,
-        isLoginLoading,
+        isLoading,
         handleInputChange,
         handleSubmit,
     };

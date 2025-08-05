@@ -9,7 +9,7 @@ const Register = () => {
     const {
         formData,
         errors,
-        isLoginLoading,
+        isLoading,
         handleInputChange,
         handleSubmit
     } = useRegister();
@@ -39,7 +39,7 @@ const Register = () => {
                                         isRequired={true}
                                         value={formData.fullName}
                                         onChange={(e) => handleInputChange('fullName', e.target.value)}
-                                        disabled={isLoginLoading}
+                                        disabled={isLoading}
                                         errors={errors.fullName}
                                     />
                                     <InputText
@@ -48,7 +48,7 @@ const Register = () => {
                                         isRequired={true}
                                         value={formData.email}
                                         onChange={(e) => handleInputChange('email', e.target.value)}
-                                        disabled={isLoginLoading}
+                                        disabled={isLoading}
                                         errors={errors.email}
                                     />
                                     <InputPassword
@@ -58,7 +58,7 @@ const Register = () => {
                                         isRequired={true}
                                         value={formData.password}
                                         onChange={(e) => handleInputChange('password', e.target.value)}
-                                        disabled={isLoginLoading}
+                                        disabled={isLoading}
                                         errors={errors.password}
                                     />
                                     <InputPassword
@@ -68,7 +68,7 @@ const Register = () => {
                                         isRequired={true}
                                         value={formData.rePassword}
                                         onChange={(e) => handleInputChange('rePassword', e.target.value)}
-                                        disabled={isLoginLoading}
+                                        disabled={isLoading}
                                         errors={errors.rePassword}
                                     />
                                     {errors && <p className={`text-danger error-all mb-3 mt-1 fw-bold`}>{errors.all}</p>}
@@ -77,7 +77,7 @@ const Register = () => {
                                             className="btn"
                                             type="button"
                                             onClick={(e) => handleSubmit(e)}
-                                            disabled={isLoginLoading}
+                                            disabled={isLoading}
                                         >Đăng Ký</button>
                                     </div>
                                     <p className="outer-link">Bạn đã có tài khoản? <Link to="/dang-nhap">Đăng nhập tại đây</Link>
