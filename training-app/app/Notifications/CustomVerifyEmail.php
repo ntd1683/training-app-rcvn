@@ -42,12 +42,17 @@ class CustomVerifyEmail extends VerifyEmailBase implements ShouldQueue
     public function toMail($notifiable)
     {
         $verificationUrl = $this->verificationUrl($notifiable);
+        $content = "Cảm ơn bạn đã đăng ký tài khoản! Để hoàn tất quá trình đăng ký,
+        vui lòng xác thực địa chỉ email của bạn bằng cách nhấp vào nút bên dưới:";
+        $textPass = "Nếu bạn không tạo tài khoản, vui lòng bỏ qua email này.";
 
         return (new MailMessage)
             ->subject('Xác thực địa chỉ email của bạn')
-            ->view('emails.verify-email', [
+            ->view('emails.template_simple', [
                 'user' => $notifiable,
-                'url' => $verificationUrl
+                'url' => $verificationUrl,
+                'content' => $content,
+                'textPass' => $textPass,
             ]);
     }
 }

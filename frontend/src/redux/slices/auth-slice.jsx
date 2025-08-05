@@ -1,5 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { register, login, logout, verifyToken, verifyEmail } from '~/services/api';
+import {
+  register, login, logout, verifyToken, verifyEmail, resetPassword, changeResetPassword
+} from '~/services/api';
 
 // Async thunks
 export const initializeAuth = createAsyncThunk(
@@ -106,6 +108,38 @@ export const verifyEmailCustomer = createAsyncThunk(
       }
     } catch (error) {
       return rejectWithValue(error.response?.data?.message || 'Lỗi xác thực email');
+    }
+  }
+);
+
+export const resetPasswordCustomer = createAsyncThunk(
+  'auth/resetPassword',
+  async ({ email }, { rejectWithValue }) => {
+    try {
+      const response = await resetPassword(email);
+      if (response.success) {
+        return true;
+      } else {
+        throw new Error(response.message || 'Lỗi gửi email khôi phục mật khẩu');
+      }
+    } catch (error) {
+      return rejectWithValue(error.response?.data?.message || 'Lỗi gửi email khôi phục mật khẩu');
+    }
+  }
+);
+
+export const changeResetPasswordCustomer = createAsyncThunk(
+  'auth/changeResetPassword',
+  async ({ email, password, rePassword, token }, { rejectWithValue }) => {
+    try {
+      const response = await changeResetPassword(email, password, rePassword, token);
+      if (response.success) {
+        return true;
+      } else {
+        throw new Error(response.message || 'Lỗi khôi phục mật khẩu, vui lòng thử lại!');
+      }
+    } catch (error) {
+      return rejectWithValue(error.response?.data?.message || 'Lỗi khôi phục mật khẩu, vui lòng thử lại!');
     }
   }
 );
@@ -225,9 +259,6 @@ const authSlice = createSlice({
       })
 
       .addCase(verifyEmailCustomer.fulfilled, (state, action) => {
-        console.log('Verify Email Result:', action.payload);
-        console.log('User before update:', state.user);
-        
         if (state.user) {
           state.user.email_verified_at = action.payload.email_verified_at;
         }

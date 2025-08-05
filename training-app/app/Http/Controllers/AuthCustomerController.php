@@ -10,6 +10,8 @@ use App\Repositories\Services\Customer\AuthService;
 use Illuminate\Auth\Events\Verified;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Password;
 
 /**
  * Class AuthController
@@ -77,7 +79,7 @@ class AuthCustomerController extends Controller
      * @param Request $request
      * @return AuthResource|JsonResponse
      */
-    public function verify(Request $request)
+    public function verifyEmail(Request $request)
     {
         try {
             $token = $request->input('token');
@@ -98,7 +100,7 @@ class AuthCustomerController extends Controller
      * @param Request $request
      * @return AuthResource|JsonResponse
      */
-    public function resend(Request $request)
+    public function resendEmail(Request $request)
     {
         try {
             $validated = $request->validate([
@@ -122,6 +124,64 @@ class AuthCustomerController extends Controller
                 'Có lỗi xảy ra: ' . $e->getMessage()
             );
         }
+    }
+
+    /**
+     * Send a password reset link to the user's email
+     * @param Request $request
+     * @return AuthResource|JsonResponse
+     */
+    public function sendResetLinkEmail(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email|exists:customers,email',
+        ]);
+
+        $status = Password::broker('customers')->sendResetLink(
+            $request->only('email')
+        );
+
+        if ($status === Password::RESET_LINK_SENT) {
+            return new AuthResource(null, 'Vui lòng kiểm tra email để khôi phục lại mật khẩu.');
+        }
+
+        return (new AuthResource(null))->errorResponse(
+            'SERVER_ERROR',
+            null,
+            'Có lỗi xảy ra: ' . __($status)
+        );
+    }
+
+    /**
+     * Reset the user's password
+     * @param Request $request
+     * @return AuthResource|JsonResponse
+     */
+    public function reset(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email|exists:customers,email',
+            'token' => 'required|string',
+            'password' => 'required|string|min:4|confirmed',
+        ]);
+
+        $status = Password::broker('customers')->reset(
+            $request->only('email', 'password', 'password_confirmation', 'token'),
+            function ($customer, $password) {
+                $customer->password = Hash::make($password);
+                $customer->save();
+            }
+        );
+
+        if ($status === Password::PASSWORD_RESET) {
+            return new AuthResource(null, 'Mật khẩu đã được đặt lại thành công.');
+        }
+
+        return (new AuthResource(null))->errorResponse(
+            'SERVER_ERROR',
+            null,
+            'Có lỗi xảy ra: ' . __($status)
+        );
     }
 
     /**

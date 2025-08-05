@@ -71,12 +71,18 @@ Route::post('/admin/login', [AuthController::class, 'login'])->middleware('throt
 
 Route::post('/login', [AuthCustomerController::class, 'login'])->middleware('throttle:10,1');
 Route::post('/register', [AuthCustomerController::class, 'register'])->middleware('throttle:10,1');
-Route::post('/email/verify-token', [AuthCustomerController::class, 'verify'])
+Route::post('/email/verify-token', [AuthCustomerController::class, 'verifyEmail'])
     ->middleware('throttle:6,1')
     ->name('api.customer.verification.verify');
-Route::post('/email/resend', [AuthCustomerController::class, 'resend'])
+Route::post('/email/resend', [AuthCustomerController::class, 'resendEmail'])
     ->middleware('throttle:6,1')
     ->name('api.customer.verification.resend');
+Route::post('/password/email', [AuthCustomerController::class, 'sendResetLinkEmail'])
+    ->middleware('throttle:6,1')
+    ->name('password.email');
+Route::post('/password/reset', [AuthCustomerController::class, 'reset'])
+    ->middleware('throttle:6,1')
+    ->name('password.reset');
 
 Route::middleware('auth:customer')->group(function () {
     Route::get('/profile', [AuthCustomerController::class, 'profile'])->name('profile.update');

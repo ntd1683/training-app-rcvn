@@ -64,7 +64,7 @@
 <div class="content">
     <h2>Xin chào {{ $user->name }},</h2>
 
-    <p>Cảm ơn bạn đã đăng ký tài khoản! Để hoàn tất quá trình đăng ký, vui lòng xác thực địa chỉ email của bạn bằng cách nhấp vào nút bên dưới:</p>
+    <p>{{ $content }}</p>
 
     <div style="text-align: center;">
         <a href="{{ $url }}" class="button">Xác thực Email</a>
@@ -78,7 +78,7 @@
     <p><strong>Lưu ý:</strong> Liên kết này sẽ hết hạn sau 60 phút.</p>
 
     <div class="footer">
-        <p>Nếu bạn không tạo tài khoản, vui lòng bỏ qua email này.</p>
+        <p>{{ $textPass }}</p>
         <p>© {{ date('Y') }} {{ config('app.website_name') }}. Tất cả quyền được bảo lưu.</p>
     </div>
 </div>

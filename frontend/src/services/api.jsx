@@ -47,6 +47,21 @@ export const verifyEmail = async (token, isAdmin = false) => {
   return response.data;
 };
 
+export const resetPassword = async (email) => {
+  const response = await api.post(`${prefixApi}/password/email`, { email });
+  return response.data;
+};
+
+export const changeResetPassword = async (email, password, rePassword, token) => {
+  const response = await api.post(`${prefixApi}/password/reset`, {
+    email,
+    password,
+    password_confirmation: rePassword,
+    token,
+  });
+  return response.data;
+};
+
 export const logout = async () => {
   const token = localStorage.getItem('token');
   const response = await api.post(`${prefixApi}/logout`, {}, {

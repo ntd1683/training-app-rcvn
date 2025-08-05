@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Notifications\CustomVerifyEmail;
+use App\Notifications\PasswordResetMail;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -57,5 +58,16 @@ class Customer extends Authenticatable implements MustVerifyEmail
     public function sendEmailVerificationNotification(): void
     {
         $this->notify(new CustomVerifyEmail);
+    }
+
+    /**
+     * Send notification reset password.
+     *
+     * @param  string  $token
+     * @return void
+     */
+    public function sendPasswordResetNotification($token)
+    {
+        $this->notify(new PasswordResetMail($token));
     }
 }

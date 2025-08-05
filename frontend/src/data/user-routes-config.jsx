@@ -5,6 +5,8 @@ const Home = lazy(() => import('../components/user/home'));
 const Login = lazy(() => import('../components/user/auth/login'))
 const Register = lazy(() => import('../components/user/auth/register'));
 const VerifyEmail = lazy(() => import('../components/user/auth/verify-email'));
+const ForgotPassword = lazy(() => import('../components/user/auth/forgot-password'));
+const ChangeResetPassword = lazy(() => import('../components/user/auth/change-reset-password'));
 
 export const userRoutesConfig = [
     {
@@ -34,6 +36,20 @@ export const userRoutesConfig = [
         requireAuth: false,
         layout: true,
         title: 'Xác Thực Email',
+    },
+    {
+        path: '/quen-mat-khau',
+        element: ForgotPassword,
+        requireAuth: false,
+        layout: true,
+        title: 'Quên Mật Khẩu',
+    },
+    {
+        path: '/khoi-phuc-mat-khau/:token',
+        element: ChangeResetPassword,
+        requireAuth: false,
+        layout: true,
+        title: 'Khôi Phục Mật Khẩu',
     },
     {
         path: '/no-permission',

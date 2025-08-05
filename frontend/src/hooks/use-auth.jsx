@@ -15,6 +15,8 @@ import {
     registerUser,
     logoutUser,
     verifyEmailCustomer,
+    resetPasswordCustomer,
+    changeResetPasswordCustomer,
 } from '../redux/slices/auth-slice';
 
 export const useAuth = () => {
@@ -52,11 +54,28 @@ export const useAuth = () => {
 
     const handleVerifyEmailCustomer = useCallback(async (token) => {
         const result = await dispatch(verifyEmailCustomer({ token }));
-        console.log('Verify Email Result:', result);
-        
+
         return {
             success: verifyEmailCustomer.fulfilled.match(result),
             message: result.payload?.message || (verifyEmailCustomer.rejected.match(result) ? result.payload : null)
+        };
+    }, [dispatch]);
+
+    const handleResetPassword = useCallback(async (email) => {
+        const result = await dispatch(resetPasswordCustomer({ email }));
+
+        return {
+            success: resetPasswordCustomer.fulfilled.match(result),
+            message: result.payload?.message || (resetPasswordCustomer.rejected.match(result) ? result.payload : null)
+        };
+    }, [dispatch]);
+
+    const handleChangeResetPassword = useCallback(async (email, password, rePassword, token) => {
+        const result = await dispatch(changeResetPasswordCustomer({ email, password, rePassword, token }));
+
+        return {
+            success: changeResetPasswordCustomer.fulfilled.match(result),
+            message: result.payload?.message || (changeResetPasswordCustomer.rejected.match(result) ? result.payload : null)
         };
     }, [dispatch]);
 
@@ -92,6 +111,8 @@ export const useAuth = () => {
         handleLogin,
         handleRegister,
         handleVerifyEmailCustomer,
+        handleResetPassword,
+        handleChangeResetPassword,
         handleLogout,
 
         // Permission helpers
