@@ -226,7 +226,7 @@ const Layout = React.memo(({ children }) => {
                 )}
 
                 <div className="container social-links">
-                    <div className="row align-items-center custom-width">
+                    <div className="row align-items-center custom-width" style={{ padding: '10px 0' }}>
                         <div className="col-lg-8 col-md-6 col-12">
                             <div className="nav-inner">
                                 <Navbar />
@@ -234,7 +234,7 @@ const Layout = React.memo(({ children }) => {
                         </div>
                         <div className="col-lg-4 col-md-6 col-12">
                             <div className="nav-social">
-                                <h5 className="title m-0">Follow Us:</h5>
+                                <h5 className="title ">Follow Us: </h5>
                                 <ul className="m-0">
                                     <li>
                                         <a href="#"><i className="lni lni-facebook-filled"></i></a>

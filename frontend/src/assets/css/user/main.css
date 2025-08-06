@@ -2016,7 +2016,7 @@ ol {
   z-index: 1000;
   transition: all 0.3s ease;
   background: #fff;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  /* box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); */
 }
 
 .sticky-navbar.scrolled {
@@ -2682,7 +2682,7 @@ ol {
 @media (max-width: 767px) {
     .header .nav-social {
         position: relative;
-        margin-top: -45px;
+        margin-top: -30px;
     }
 }
 
@@ -8629,4 +8629,8 @@ a.anchor {
 a.anchor:hover {
     color: #0167F3 !important;
     text-decoration: underline !important;
+}
+
+.navbar-toggler {
+    border: none;
 }

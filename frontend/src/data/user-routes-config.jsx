@@ -8,6 +8,7 @@ const VerifyEmail = lazy(() => import('../components/user/auth/verify-email'));
 const ForgotPassword = lazy(() => import('../components/user/auth/forgot-password'));
 const ChangeResetPassword = lazy(() => import('../components/user/auth/change-reset-password'));
 const ProfilePage = lazy(() => import('../components/user/profile/profile-page'));
+const Products = lazy(() => import('../components/user/products'));
 
 export const userRoutesConfig = [
     {
@@ -58,6 +59,13 @@ export const userRoutesConfig = [
         requireAuth: true,
         layout: true,
         title: 'Trang Cá Nhân',
+    },
+    {
+        path: '/shop',
+        element: Products,
+        requireAuth: false,
+        layout: true,
+        title: 'Cửa Hàng',
     },
     {
         path: '/khong-co-quyen',
