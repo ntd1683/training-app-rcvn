@@ -40,8 +40,6 @@ export const useProfile = () => {
 
     useEffect(() => {
         if (user) {
-            console.log('user profile change', user);
-            
             setFormData(prev => ({
                 ...prev,
                 name: user.fullName || user.name || '',

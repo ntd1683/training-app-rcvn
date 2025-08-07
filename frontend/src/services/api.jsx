@@ -441,7 +441,7 @@ export const fetchProducts = async (page = 1, perPage = 10, filters = {}) => {
     const params = {
       page,
       per_page: perPage,
-      name: filters.filterText || undefined,
+      name: filters.filterName || undefined,
       status: filters.filterStatus || undefined,
       price_to: filters.filterPriceTo || undefined,
       price_from: filters.filterPriceFrom || undefined,

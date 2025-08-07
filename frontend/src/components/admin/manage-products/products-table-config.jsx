@@ -1,19 +1,7 @@
 import { Icon } from '@iconify/react';
 import ProductStatus from '~/constants/product-status';
 import '~/assets/css/admin/image-tooltip.css';
-import { checkRoleAndPermission } from '~/utils/common';
-
-const stripHtmlAndTruncate = (html, maxLength = 50) => {
-    if (!html) return 'Không có mô tả';
-    const tempDiv = document.createElement('div');
-    tempDiv.innerHTML = html;
-    const textContent = tempDiv.textContent || tempDiv.innerText || '';
-    if (textContent.length > maxLength) {
-        return `${textContent.substring(0, maxLength)}...`;
-    }
-
-    return textContent;
-};
+import { checkRoleAndPermission, stripHtmlAndTruncate } from '~/utils/common';
 
 const NameWithImageTooltip = ({ row }) => {
     return (

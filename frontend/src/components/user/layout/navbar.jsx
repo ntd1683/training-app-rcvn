@@ -1,6 +1,10 @@
-/* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+
+const listNavbar = [
+    { name: 'Trang chủ', path: '/' },
+    { name: 'Cửa Hàng', path: '/shop' },
+]
 
 const Navbar = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -30,14 +34,18 @@ const Navbar = () => {
                 id="navbarSupportedContent"
             >
                 <ul id="nav" className="navbar-nav ms-auto">
-                    <li className="nav-item">
-                        <Link
-                            className={isActive('/')}
-                            onClick={() => setIsMenuOpen(false)}
-                            aria-label="Toggle navigation"
-                            to="/"
-                        >Trang chủ</Link>
-                    </li>
+                    {listNavbar.map((item, index) => (
+                        <li className="nav-item" key={index}>
+                            <Link
+                                className={isActive(item.path)}
+                                onClick={() => setIsMenuOpen(false)}
+                                aria-label="Toggle navigation"
+                                to={item.path}
+                            >
+                                {item.name}
+                            </Link>
+                        </li>
+                    ))}
                     <li className="nav-item">
                         <a className="dd-menu collapsed" href="#" data-bs-toggle="collapse"
                             data-bs-target="#submenu-1-2" aria-controls="navbarSupportedContent"

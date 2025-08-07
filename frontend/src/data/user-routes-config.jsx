@@ -9,6 +9,7 @@ const ForgotPassword = lazy(() => import('../components/user/auth/forgot-passwor
 const ChangeResetPassword = lazy(() => import('../components/user/auth/change-reset-password'));
 const ProfilePage = lazy(() => import('../components/user/profile/profile-page'));
 const Products = lazy(() => import('../components/user/products'));
+const ProductDetail = lazy(() => import('../components/user/product-detail'));
 
 export const userRoutesConfig = [
     {
@@ -66,6 +67,13 @@ export const userRoutesConfig = [
         requireAuth: false,
         layout: true,
         title: 'Cửa Hàng',
+    },
+    {
+        path: '/san-pham/:id',
+        element: ProductDetail,
+        requireAuth: false,
+        layout: true,
+        title: 'Chi Tiết Sản Phẩm',
     },
     {
         path: '/khong-co-quyen',

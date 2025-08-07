@@ -1,3 +1,5 @@
+import DOMPurify from 'dompurify';
+
 export const checkRoleAndPermission = (permission) => {
   const user = JSON.parse(localStorage.getItem('user') || '{}');
 
@@ -44,3 +46,24 @@ export const formatPrice = (price, currency = 'USD') => {
 
   return price.toLocaleString(locale, { style: 'currency', currency });
 }
+
+export const stripHtmlAndTruncate = (html, maxLength = 50) => {
+  if (!html) return 'Không có mô tả';
+  const tempDiv = document.createElement('div');
+  tempDiv.innerHTML = html;
+  const textContent = tempDiv.textContent || tempDiv.innerText || '';
+  if (textContent.length > maxLength) {
+    return `${textContent.substring(0, maxLength)}...`;
+  }
+
+  return textContent;
+};
+
+export const sanitizeContent = (html) => {
+  return DOMPurify.sanitize(html, {
+    ALLOWED_TAGS: ['p', 'br', 'strong', 'em', 'u', 'h1', 'h2', 'h3', 'ul', 'ol', 'li', 'a'],
+    ALLOWED_ATTR: ['href', 'target', 'rel'],
+    FORBID_TAGS: ['script', 'object', 'embed', 'form', 'input', 'iframe'],
+    FORBID_ATTR: ['onerror', 'onload', 'onclick', 'onmouseover']
+  });
+};

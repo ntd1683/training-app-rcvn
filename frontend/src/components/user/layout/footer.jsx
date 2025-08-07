@@ -1,4 +1,3 @@
-/* eslint-disable jsx-a11y/anchor-is-valid */
 import credit from '../../../assets/images/credit-cards-footer.png'
 
 const Footer = () => {

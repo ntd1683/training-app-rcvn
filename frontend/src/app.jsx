@@ -11,7 +11,6 @@ import { store } from './redux/store';
 
 import './app.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import 'perfect-scrollbar/css/perfect-scrollbar.css';
 import 'react-toastify/dist/ReactToastify.css';
 
 import 'jquery';
