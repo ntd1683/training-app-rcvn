@@ -92,4 +92,14 @@ class Customer extends Authenticatable implements MustVerifyEmail
 //        Todo: Implement logic to calculate total price of orders placed by the customer
         return 1500.75;
     }
+
+    public function orders()
+    {
+        return $this->hasMany(Order::class, 'customer_id');
+    }
+
+    public function payments()
+    {
+        return $this->hasMany(Payment::class, 'customer_id');
+    }
 }

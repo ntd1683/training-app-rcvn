@@ -51,14 +51,17 @@ Route::middleware('auth:sanctum')->group(function () {
         });
 
         Route::prefix('products')->group(function () {
-            Route::get('/', [ProductController::class, 'index'])->name('products.index');
-            Route::get('/{id}', [ProductController::class, 'edit'])->name('products.edit');
             Route::post('/', [ProductController::class, 'store'])->name('products.store');
             Route::post('/{id}', [ProductController::class, 'update'])->name('products.update');
             Route::delete('/{id}', [ProductController::class, 'destroy'])->name('products.delete');
         });
     });
 })->middleware('throttle:60,1');
+
+Route::prefix('products')->group(function () {
+    Route::get('/', [ProductController::class, 'index'])->name('products.index');
+    Route::get('/{id}', [ProductController::class, 'edit'])->name('products.edit');
+});
 
 Route::post('/login', [AuthCustomerController::class, 'login'])->middleware('throttle:10,1');
 Route::post('/register', [AuthCustomerController::class, 'register'])->middleware('throttle:10,1');

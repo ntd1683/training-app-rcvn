@@ -2,6 +2,8 @@
 
 namespace App\Repositories\Criteria;
 
+use App\Enums\ProductStatusEnum;
+use Illuminate\Database\Eloquent\Builder;
 use Prettus\Repository\Contracts\CriteriaInterface;
 use Prettus\Repository\Contracts\RepositoryInterface;
 
@@ -24,12 +26,13 @@ class ProductFilterCriteria implements CriteriaInterface
 
     /**
      * Apply criteria in query repository
-     * @param \Illuminate\Database\Eloquent\Builder $model
+     * @param Builder $model
      * @param RepositoryInterface $repository
-     * @return \Illuminate\Database\Eloquent\Builder
+     * @return Builder
      */
     public function apply($model, RepositoryInterface $repository)
     {
+        $model->withSoldCount();
         if (!empty($this->filters['name'])) {
             $model->where('name', 'like', '%' . $this->filters['name'] . '%');
         }
@@ -46,12 +49,25 @@ class ProductFilterCriteria implements CriteriaInterface
             $model->where('currency', $this->filters['currency']);
         }
 
-        if (isset($this->filters['status'])) {
-            $model->where('status', $this->filters['status']);
+        $status = $this->filters['status'] ?? null;
+        if (isset($status)) {
+            if(ProductStatusEnum::getBoth($status)) {
+                $model->whereIn('status', [
+                    ProductStatusEnum::SELLING,
+                    ProductStatusEnum::OUT_OF_STOCK
+                ]);
+                $model->orderBy('status');
+            } else {
+                $model->where('status', $this->filters['status']);
+            }
         }
 
         $sortBy = $this->filters['sort_by'] ?? 'created_at';
         $sortOrder = $this->filters['sort_order'] ?? 'desc';
+        if($sortBy === 'popular') {
+            $sortBy = 'sold_count';
+            $sortOrder = 'desc';
+        }
         $model->orderBy($sortBy, $sortOrder);
 
         return $model;

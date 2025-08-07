@@ -226,8 +226,11 @@ class ProductService
         $products->getCollection()->transform(function ($item) {
             $item->image_url = $item->image ? asset('storage/' . $item->image->path) : null;
             unset($item->image);
+            $item->author = $item->user ? $item->user->name : 'N/A';
             return $item;
         });
+        $max = $this->productRepository->max('price');
+        $products->max_value = round($max / 100) * 100;
         return $products;
     }
 }
