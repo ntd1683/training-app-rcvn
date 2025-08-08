@@ -3,6 +3,7 @@
 use App\Http\Controllers\AnalyticController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AuthCustomerController;
+use App\Http\Controllers\BannerController;
 use App\Http\Controllers\LogoutController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\ProductController;
@@ -61,6 +62,10 @@ Route::middleware('auth:sanctum')->group(function () {
 Route::prefix('products')->group(function () {
     Route::get('/', [ProductController::class, 'index'])->name('products.index');
     Route::get('/{id}', [ProductController::class, 'edit'])->name('products.edit');
+});
+
+Route::prefix('banners')->group(function () {
+    Route::get('/', [BannerController::class, 'index'])->name('banners.index');
 });
 
 Route::post('/login', [AuthCustomerController::class, 'login'])->middleware('throttle:10,1');

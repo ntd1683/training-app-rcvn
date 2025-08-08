@@ -1,9 +1,7 @@
 import React, { useEffect } from "react";
-import { Link } from "react-router-dom";
-import { formatPrice } from "../../../utils/common";
 import { useSelector, useDispatch } from 'react-redux';
-import { selectProductsBestSeller, selectIsLoading, selectError } from '../../../redux/selectors/products-selector';
-import { loadProductsBestSeller } from '../../../redux/slices/products-slice';
+import { selectProductsBestSeller, selectIsLoading, selectError } from '~/redux/selectors/products-selector';
+import { loadProductsBestSeller } from '~/redux/slices/products-slice';
 import Item from "../ui/item-product";
 
 const BestSellerProducts = () => {

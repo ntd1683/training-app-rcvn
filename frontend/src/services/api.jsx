@@ -545,3 +545,33 @@ export const deleteProduct = async (id) => {
     throw error;
   }
 };
+
+// Banner management functions
+export const fetchBanners = async (page = 1, perPage = 10, filters = {}) => {
+  try {
+    const token = localStorage.getItem('token');
+
+    const params = {
+      page,
+      per_page: perPage,
+      type: filters.type || undefined,
+      sort_by: filters.sortBy,
+      sort_order: filters.sortOrder
+    };
+
+    Object.keys(params).forEach(key => {
+      if (params[key] === undefined) {
+        delete params[key];
+      }
+    });
+
+    const response = await api.get(`${prefixApi}/banners`, {
+      params,
+      headers: { Authorization: `Bearer ${token}` }
+    });
+
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};

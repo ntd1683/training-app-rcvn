@@ -183,6 +183,7 @@ const productSlice = createSlice({
         },
         resetSorting: (state) => {
             state.sorting = {
+                sortName: '',
                 sortBy: '',
                 sortOrder: '',
                 sortClickCount: {},

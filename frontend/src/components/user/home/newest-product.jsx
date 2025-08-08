@@ -2,8 +2,8 @@ import React, { useEffect } from "react";
 import 'tiny-slider/dist/tiny-slider.css';
 import { tns } from 'tiny-slider/src/tiny-slider';
 import { useSelector, useDispatch } from 'react-redux';
-import { selectProductsNewest, selectIsLoading, selectError } from '../../../redux/selectors/products-selector';
-import { loadProductsNewest } from '../../../redux/slices/products-slice';
+import { selectProductsNewest, selectIsLoading, selectError } from '~/redux/selectors/products-selector';
+import { loadProductsNewest } from '~/redux/slices/products-slice';
 import Item from "../ui/item-product";
 
 const NewestProduct = () => {

@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Repositories\BannerRepository;
+use App\Repositories\BannerRepositoryEloquent;
 use App\Repositories\CustomerRepository;
 use App\Repositories\CustomerRepositoryEloquent;
 use App\Repositories\ImageRepository;
@@ -13,6 +15,7 @@ use App\Repositories\ProductRepositoryEloquent;
 use App\Repositories\RoleRepository;
 use App\Repositories\RoleRepositoryEloquent;
 use App\Repositories\Services\Admin\AuthService;
+use App\Repositories\Services\BannerService;
 use App\Repositories\Services\CustomerService;
 use App\Repositories\Services\ImageService;
 use App\Repositories\Services\PermissionService;
@@ -67,6 +70,11 @@ class AppServiceProvider extends ServiceProvider
 
         $this->app->bind(AuthService::class, function ($app) {
             return new AuthService($app->make(UserRepository::class));
+        });
+
+        $this->app->bind(BannerRepository::class, BannerRepositoryEloquent::class);
+        $this->app->bind(BannerService::class, function ($app) {
+            return new BannerService($app->make(BannerRepository::class));
         });
     }
 

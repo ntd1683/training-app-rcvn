@@ -23,8 +23,9 @@ class DatabaseSeeder extends Seeder
 //            CreateRoleUserSeeder::class,
 //            PaymentsTableSeeder::class,
 //            OrdersTableSeeder::class,
-            OrderDetailsTableSeeder::class,
+//            OrderDetailsTableSeeder::class,
             PaymentTransactionsTableSeeder::class,
+            BannersTableSeeder::class,
         ]);
     }
 }
