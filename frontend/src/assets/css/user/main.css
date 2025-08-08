@@ -1748,7 +1748,7 @@ ol {
     border-radius: 50%;
 }
 
-.header .navbar-cart .cart-items:hover .shopping-item {
+.header .navbar-cart .cart-items .shopping-item.active {
     opacity: 1;
     visibility: visible;
 }

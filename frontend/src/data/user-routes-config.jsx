@@ -76,6 +76,13 @@ export const userRoutesConfig = [
         title: 'Chi Tiết Sản Phẩm',
     },
     {
+        path: '/gio-hang',
+        element: lazy(() => import('../components/user/cart-display')),
+        requireAuth: false,
+        layout: true,
+        title: 'Giỏ Hàng',
+    },
+    {
         path: '/khong-co-quyen',
         element: NoPermission,
         requireAuth: true,

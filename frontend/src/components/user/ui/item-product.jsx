@@ -1,6 +1,9 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { formatPrice } from "~/utils/common";
+import { useDispatch, useSelector } from "react-redux";
+import { addToCart } from "~/redux/slices/cart-slice";
+import { selectIsAddToCart } from "~/redux/selectors/cart-selector";
 
 const isNewProduct = (createdAt, distance = 30) => {
     if (!createdAt) return false;
@@ -11,7 +14,8 @@ const isNewProduct = (createdAt, distance = 30) => {
     return diffDays <= distance;
 };
 
-const Item = ({ product, className = "" , distanceDayNew = 30}) => {
+const Item = ({ product, className = "", distanceDayNew = 30 }) => {
+    const dispatch = useDispatch();
     const navigate = useNavigate()
     const isOutStock = product.status === 2 || product.quantity <= 0;
 
@@ -28,8 +32,10 @@ const Item = ({ product, className = "" , distanceDayNew = 30}) => {
         navigate(`/san-pham/${product.id}`);
     };
 
+    const isAddToCart = useSelector(selectIsAddToCart);
     const handleAddToCart = (e) => {
         e.stopPropagation();
+        dispatch(addToCart(product));
     };
 
     return (
@@ -39,21 +45,27 @@ const Item = ({ product, className = "" , distanceDayNew = 30}) => {
             style={{ cursor: "pointer" }}
         >
             <div className="product-image">
-                <img src={product.image_url} alt="#" />
+                <img src={product.image_url} alt={product.name.length > 50
+                    ? product.name.slice(0, 50) + '...'
+                    : product.name} />
                 {tag}
-                <div className="button">
-                    <button 
-                        onClick={handleAddToCart}
-                        className="btn"
-                    >
-                        <i className="lni lni-cart"></i> Thêm vào giỏ hàng
-                    </button>
-                </div>
+                {!isAddToCart && (
+                    <div className="button">
+                        <button
+                            onClick={handleAddToCart}
+                            className="btn"
+                        >
+                            <i className="lni lni-cart"></i> Thêm vào giỏ hàng
+                        </button>
+                    </div>
+                )}
             </div>
             <div className="product-info">
                 {/* <span className="category">Watches</span> */}
                 <h4 className="title">
-                    <Link to={`/san-pham/${product.id}`}>{product.name}</Link>
+                    <Link to={`/san-pham/${product.id}`}>{product.name.length > 50
+                        ? product.name.slice(0, 50) + '...'
+                        : product.name}</Link>
                 </h4>
                 {/* <ul className="review">
                                     <li><i className="lni lni-star-filled"></i></li>
