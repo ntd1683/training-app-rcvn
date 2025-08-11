@@ -1,0 +1,101 @@
+.dual-range-container {
+    width: 100%;
+    padding: 20px 0;
+}
+
+.dual-range-container .range-inputs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 25px;
+    justify-content: space-between;
+}
+
+.dual-range-container .range-input-group {
+    position: relative;
+    flex: 1;
+}
+
+.dual-range-container .range-input {
+    width: 100%;
+    padding: 8px 12px;
+    border: 2px solid #e0e0e0;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    text-align: center;
+    outline: none;
+    transition: border-color 0.3s ease;
+    background: #f8f9fa;
+}
+
+.dual-range-container .range-input:focus {
+    border-color: #007bff;
+    background: white;
+}
+
+.dual-range-container .range-label {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #666;
+    font-size: 12px;
+    pointer-events: none;
+}
+
+.dual-range-container .slider-container {
+    position: relative;
+    height: 6px;
+    background: #e9ecef;
+    border-radius: 3px;
+    margin: 0 15px;
+}
+
+.dual-range-container .slider-track {
+    position: absolute;
+    height: 100%;
+    background: linear-gradient(90deg, #007bff 0%, #0056b3 100%);
+    border-radius: 3px;
+}
+
+.dual-range-container .slider-thumb {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background: white;
+    border: 3px solid #007bff;
+    border-radius: 50%;
+    cursor: pointer;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.dual-range-container .slider-thumb:hover,
+.dual-range-container .slider-thumb.active {
+    border-color: #0056b3;
+    transform: translate(-50%, -50%) scale(1.1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.dual-range-container .slider-thumb.dragging {
+    transform: translate(-50%, -50%) scale(1.2);
+}
+
+@media (max-width: 576px) {
+    .dual-range-container .range-inputs {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .dual-range-container .slider-container {
+        margin: 0 10px;
+    }
+}
+
+@media (min-width: 976px) {
+    .dual-range-container .range-inputs {
+        display: block;
+    }
+}

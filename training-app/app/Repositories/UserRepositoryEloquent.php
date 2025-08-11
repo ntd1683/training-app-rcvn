@@ -14,6 +14,7 @@ class UserRepositoryEloquent extends BaseRepository implements UserRepository
 {
     /**
      * Specify Model class name
+     *
      * @return string
      */
     public function model()
@@ -23,6 +24,7 @@ class UserRepositoryEloquent extends BaseRepository implements UserRepository
 
     /**
      * Boot up the repository, pushing criteria
+     *
      * @return void
      */
     public function boot()
@@ -31,7 +33,8 @@ class UserRepositoryEloquent extends BaseRepository implements UserRepository
 
     /**
      * Find a user by email
-     * @param string $email
+     *
+     * @param  string $email
      * @return \Illuminate\Database\Eloquent\Model|null
      */
     public function findByEmail($email)
@@ -44,7 +47,8 @@ class UserRepositoryEloquent extends BaseRepository implements UserRepository
 
     /**
      * Soft delete a user
-     * @param int $id
+     *
+     * @param  int $id
      * @return bool
      */
     public function softDelete($id)
@@ -60,7 +64,8 @@ class UserRepositoryEloquent extends BaseRepository implements UserRepository
 
     /**
      * Toggle user active status
-     * @param int $id
+     *
+     * @param  int $id
      * @return \Illuminate\Database\Eloquent\Model|null
      */
     public function toggleStatus($id)

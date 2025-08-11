@@ -441,7 +441,7 @@ export const fetchProducts = async (page = 1, perPage = 10, filters = {}) => {
     const params = {
       page,
       per_page: perPage,
-      name: filters.filterText || undefined,
+      name: filters.filterName || undefined,
       status: filters.filterStatus || undefined,
       price_to: filters.filterPriceTo || undefined,
       price_from: filters.filterPriceFrom || undefined,
@@ -541,6 +541,61 @@ export const deleteProduct = async (id) => {
     });
 
     return true;
+  } catch (error) {
+    throw error;
+  }
+};
+
+// Banner management functions
+export const fetchBanners = async (page = 1, perPage = 10, filters = {}) => {
+  try {
+    const token = localStorage.getItem('token');
+
+    const params = {
+      page,
+      per_page: perPage,
+      type: filters.type || undefined,
+      sort_by: filters.sortBy,
+      sort_order: filters.sortOrder
+    };
+
+    Object.keys(params).forEach(key => {
+      if (params[key] === undefined) {
+        delete params[key];
+      }
+    });
+
+    const response = await api.get(`${prefixApi}/banners`, {
+      params,
+      headers: { Authorization: `Bearer ${token}` }
+    });
+
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+// Order management functions
+export const createOrder = async (orderData) => {
+  try {
+    const token = localStorage.getItem('token');
+    const response = await api.post(`${prefixApi}/orders/paypal/create`, orderData, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const approveOrder = async (orderId) => {
+  try {
+    const token = localStorage.getItem('token');
+    const response = await api.post(`${prefixApi}/orders/paypal/approve`, { 'order_id': orderId }, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return response.data;
   } catch (error) {
     throw error;
   }

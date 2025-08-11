@@ -1,17 +1,16 @@
 import React from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
-import { useEffect } from 'react';
 
 import AppRoutes from './routes/app-routes';
 import { ToastContainer } from 'react-toastify';
 import ToastHandler from './components/admin/ui/toast-handler';
 
-import { store } from './redux/store';
+import { PersistGate } from 'redux-persist/integration/react';
+import { store, persistor } from './redux/store';
 
 import './app.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import 'perfect-scrollbar/css/perfect-scrollbar.css';
 import 'react-toastify/dist/ReactToastify.css';
 
 import 'jquery';
@@ -42,9 +41,13 @@ const AppContent = () => {
 function App() {
   return (
     <Provider store={store}>
-      <BrowserRouter>
-        <AppContent />
-      </BrowserRouter>
+      <PersistGate
+        persistor={persistor}
+      >
+        <BrowserRouter>
+          <AppContent />
+        </BrowserRouter>
+      </PersistGate>
     </Provider>
   );
 }

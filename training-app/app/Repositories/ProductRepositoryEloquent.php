@@ -14,6 +14,7 @@ class ProductRepositoryEloquent extends BaseRepository implements ProductReposit
 {
     /**
      * Specify Model class name
+     *
      * @return string
      */
     public function model()
@@ -23,6 +24,7 @@ class ProductRepositoryEloquent extends BaseRepository implements ProductReposit
 
     /**
      * Boot up the repository, pushing criteria
+     *
      * @return void
      */
     public function boot()

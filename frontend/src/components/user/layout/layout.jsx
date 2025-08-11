@@ -1,9 +1,9 @@
-/* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import Navbar from "./navbar";
 import Footer from "./footer";
 import { useUserInfo } from '~/hooks/user/use-auth.jsx';
+import { CartLayout } from './cart-layout';
 
 const Layout = React.memo(({ children }) => {
     const [isProfileOpen, setIsProfileOpen] = useState(false);
@@ -77,7 +77,7 @@ const Layout = React.memo(({ children }) => {
 
     return (
         <>
-            <header className={`header navbar-area sticky-navbar ${isScrolled ? 'scrolled' : ''}`} style={{ zIndex: '100' }}>
+            <header className={`header navbar-area sticky-navbar ${isScrolled ? 'scrolled' : ''}`} style={{ zIndex: '110' }}>
                 <div className="header-middle">
                     <div className="container">
                         <div className="row align-items-center mx-0 custom-width">
@@ -114,12 +114,12 @@ const Layout = React.memo(({ children }) => {
                                     </div>
 
                                     {/* Hotline - ẩn trên mobile để tiết kiệm không gian */}
-                                    <div className="nav-hotline d-none d-lg-block">
+                                    <a className="nav-hotline d-none d-lg-block" href="tel:+1001234567890">
                                         <i className="lni lni-phone"></i>
                                         <h3>Hotline:
                                             <span>(+100) 123 456 7890</span>
                                         </h3>
-                                    </div>
+                                    </a>
 
                                     <div className="navbar-cart">
                                         <div className="wishlist">
@@ -128,59 +128,7 @@ const Layout = React.memo(({ children }) => {
                                                 <span className="total-items">0</span>
                                             </a>
                                         </div>
-                                        <div className="cart-items">
-                                            <a href="#" className="main-btn">
-                                                <i className="lni lni-cart"></i>
-                                                <span className="total-items">2</span>
-                                            </a>
-                                            <div className="shopping-item">
-                                                <div className="dropdown-cart-header">
-                                                    <span>2 Items</span>
-                                                    <a href="cart.html">View Cart</a>
-                                                </div>
-                                                <ul className="shopping-list">
-                                                    <li>
-                                                        <a href="#" className="remove" title="Remove this item"><i
-                                                            className="lni lni-close"></i></a>
-                                                        <div className="cart-img-head">
-                                                            <a className="cart-img" href="product-details.html">
-                                                                <img src="assets/images/header/cart-items/item1.jpg" alt="#" />
-                                                            </a>
-                                                        </div>
-
-                                                        <div className="content">
-                                                            <h4><a href="product-details.html">
-                                                                Apple Watch Series 6</a></h4>
-                                                            <p className="quantity">1x - <span className="amount">$99.00</span></p>
-                                                        </div>
-                                                    </li>
-                                                    <li>
-                                                        <a className="remove" title="Remove this item">
-                                                            <i className="lni lni-close"></i>
-                                                        </a>
-                                                        <div className="cart-img-head">
-                                                            <a className="cart-img" href="product-details.html">
-                                                                <img src="assets/images/header/cart-items/item2.jpg" alt="#" />
-                                                            </a>
-                                                        </div>
-                                                        <div className="content">
-                                                            <h4><a href="product-details.html">Wi-Fi Smart Camera</a></h4>
-                                                            <p className="quantity">1x - <span className="amount">$35.00</span></p>
-                                                        </div>
-                                                    </li>
-                                                </ul>
-                                                <div className="bottom">
-                                                    <div className="total">
-                                                        <span>Total</span>
-                                                        <span className="total-amount">$134.00</span>
-                                                    </div>
-                                                    <div className="button">
-                                                        <a href="checkout.html" className="btn animate">Checkout</a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-
+                                        <CartLayout />
                                         {/* Profile */}
                                         <div className="profile">
                                             <button
@@ -226,7 +174,7 @@ const Layout = React.memo(({ children }) => {
                 )}
 
                 <div className="container social-links">
-                    <div className="row align-items-center custom-width">
+                    <div className="row align-items-center custom-width" style={{ padding: '10px 0' }}>
                         <div className="col-lg-8 col-md-6 col-12">
                             <div className="nav-inner">
                                 <Navbar />
@@ -234,7 +182,7 @@ const Layout = React.memo(({ children }) => {
                         </div>
                         <div className="col-lg-4 col-md-6 col-12">
                             <div className="nav-social">
-                                <h5 className="title m-0">Follow Us:</h5>
+                                <h5 className="title ">Follow Us: </h5>
                                 <ul className="m-0">
                                     <li>
                                         <a href="#"><i className="lni lni-facebook-filled"></i></a>

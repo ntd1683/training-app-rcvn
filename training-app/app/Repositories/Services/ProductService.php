@@ -24,8 +24,9 @@ class ProductService
 
     /**
      * UserService constructor.
+     *
      * @param ProductRepository $productRepository
-     * @param ImageService $imageService
+     * @param ImageService      $imageService
      */
     public function __construct(ProductRepository $productRepository, ImageService $imageService)
     {
@@ -35,6 +36,7 @@ class ProductService
 
     /**
      * Get all products
+     *
      * @return Collection
      */
     public function getAllProducts()
@@ -44,7 +46,8 @@ class ProductService
 
     /**
      * Find a product by ID
-     * @param int $id
+     *
+     * @param  int $id
      * @return Model|null
      * @throws Exception
      */
@@ -64,8 +67,9 @@ class ProductService
 
     /**
      * Create a new product
-     * @param array $data
-     * @param null $image
+     *
+     * @param  array $data
+     * @param  null  $image
      * @return Model
      * @throws Throwable
      */
@@ -105,9 +109,10 @@ class ProductService
 
     /**
      * Update a product
-     * @param int $id
-     * @param array $data
-     * @param null $image
+     *
+     * @param  int   $id
+     * @param  array $data
+     * @param  null  $image
      * @return Model
      * @throws Throwable
      */
@@ -145,7 +150,7 @@ class ProductService
                 $imageRecord = $this->imageService->createImage($image, auth()->id());
                 $productData['image_id'] = $imageRecord->id;
             } elseif ($product->image && empty($validated['image_url'])) {
-//              Delete old image if user delete image old
+                //              Delete old image if user delete image old
                 Log::info("Deleting old image: {$product->image->path}");
                 $this->imageService->deleteImage($product->image->id);
                 $product->image_id = null;
@@ -162,8 +167,9 @@ class ProductService
 
     /**
      * Delete a product
-     * @param int $id
-     * @param \Illuminate\Contracts\Auth\Authenticatable|null $currentUser
+     *
+     * @param  int                                             $id
+     * @param  \Illuminate\Contracts\Auth\Authenticatable|null $currentUser
      * @return bool
      * @throws Exception
      */
@@ -177,10 +183,10 @@ class ProductService
             throw new Exception('Sản phẩm đã bị xóa trước đó', 404);
         }
 
-//        Todo: Uncomment if you want to delete image when soft delete product
-//        if ($product->image) {
-//            $this->imageService->deleteImage($product->image->id);
-//        }
+        //        Todo: Uncomment if you want to delete image when soft delete product
+        //        if ($product->image) {
+        //            $this->imageService->deleteImage($product->image->id);
+        //        }
 
         \Log::info('ProductService: Attempting to delete product', ['product_id' => $id]);
         return $this->productRepository->delete($id);
@@ -188,7 +194,8 @@ class ProductService
 
     /**
      * Get a product for editing
-     * @param int $id
+     *
+     * @param  int $id
      * @return Model
      * @throws Exception
      */
@@ -208,7 +215,8 @@ class ProductService
 
     /**
      * Get filtered and paginated products
-     * @param array $filters
+     *
+     * @param  array $filters
      * @return LengthAwarePaginator
      */
     public function getFilteredProducts(array $filters)
@@ -223,11 +231,16 @@ class ProductService
         $perPage = $count > 20 ? ($filters['per_page'] ?? 10) : 20;
         $currentPage = $filters['page'] ?? 1;
         $products = $query->paginate($perPage, ['*'], 'page', $currentPage);
-        $products->getCollection()->transform(function ($item) {
-            $item->image_url = $item->image ? asset('storage/' . $item->image->path) : null;
-            unset($item->image);
-            return $item;
-        });
+        $products->getCollection()->transform(
+            function ($item) {
+                $item->image_url = $item->image ? asset('storage/' . $item->image->path) : null;
+                unset($item->image);
+                $item->author = $item->user ? $item->user->name : 'N/A';
+                return $item;
+            }
+        );
+        $max = $this->productRepository->max('price');
+        $products->max_value = round($max / 100) * 100;
         return $products;
     }
 }

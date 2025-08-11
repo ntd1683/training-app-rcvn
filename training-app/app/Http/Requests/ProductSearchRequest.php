@@ -13,7 +13,7 @@ class ProductSearchRequest extends FormRequest
      */
     public function authorize()
     {
-        return auth('sanctum')->check();
+        return true;
     }
 
     /**
@@ -30,8 +30,8 @@ class ProductSearchRequest extends FormRequest
             'price_from' => 'numeric|nullable',
             'price_to' => 'numeric|nullable',
             'currency' => 'string|nullable|max:10',
-            'status' => 'integer|nullable|in:0,1,2',
-            'sort_by' => 'string|nullable|in:id,name,description,status,price',
+            'status' => 'integer|nullable|in:0,1,2,3', // 0: STOPPED, 1: SELLING, 2: OUT_OF_STOCK, 3: BOTH
+            'sort_by' => 'string|nullable|in:id,name,description,status,price,created_at,popular',
             'sort_order' => 'string|nullable|in:asc,desc',
         ];
     }

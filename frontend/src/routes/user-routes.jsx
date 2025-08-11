@@ -7,8 +7,6 @@ import { userRoutesConfig } from '../data/user-routes-config';
 import PreLoader from '../components/user/ui/pre-loader';
 import Layout from '../components/user/layout/layout';
 import Logout from '../components/user/auth/logout';
-import '../assets/css/user/main.css'
-import '../assets/css/user/line-icon.css';
 import { useAuth } from '../hooks/user/use-auth';
 
 const UserRoutes = () => {
@@ -32,13 +30,11 @@ const UserRoutes = () => {
         <Route path="/dang-xuat" element={<Logout />} />
 
         {userRoutesConfig.map((route, index) => {
-          const { path, element: Component, requireAuth, layout, permissions, adminOnly } = route;
+          const { path, element: Component, requireAuth, layout } = route;
 
           const routeElement = (
             <ProtectedRoute
               requireAuth={requireAuth}
-              requiredPermissions={permissions}
-              adminOnly={adminOnly}
             >
               {layout ? (
                 <Layout>

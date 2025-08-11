@@ -2,10 +2,20 @@
 
 namespace App\Providers;
 
+use App\Repositories\BannerRepository;
+use App\Repositories\BannerRepositoryEloquent;
 use App\Repositories\CustomerRepository;
 use App\Repositories\CustomerRepositoryEloquent;
 use App\Repositories\ImageRepository;
 use App\Repositories\ImageRepositoryEloquent;
+use App\Repositories\OrderDetailRepository;
+use App\Repositories\OrderDetailRepositoryEloquent;
+use App\Repositories\OrderRepository;
+use App\Repositories\OrderRepositoryEloquent;
+use App\Repositories\PaymentRepository;
+use App\Repositories\PaymentRepositoryEloquent;
+use App\Repositories\PaymentTransactionRepository;
+use App\Repositories\PaymentTransactionRepositoryEloquent;
 use App\Repositories\PermissionRepository;
 use App\Repositories\PermissionRepositoryEloquent;
 use App\Repositories\ProductRepository;
@@ -13,8 +23,11 @@ use App\Repositories\ProductRepositoryEloquent;
 use App\Repositories\RoleRepository;
 use App\Repositories\RoleRepositoryEloquent;
 use App\Repositories\Services\Admin\AuthService;
+use App\Repositories\Services\BannerService;
 use App\Repositories\Services\CustomerService;
 use App\Repositories\Services\ImageService;
+use App\Repositories\Services\OrderService;
+use App\Repositories\Services\PaypalService;
 use App\Repositories\Services\PermissionService;
 use App\Repositories\Services\ProductService;
 use App\Repositories\Services\RoleService;
@@ -67,6 +80,32 @@ class AppServiceProvider extends ServiceProvider
 
         $this->app->bind(AuthService::class, function ($app) {
             return new AuthService($app->make(UserRepository::class));
+        });
+
+        $this->app->bind(BannerRepository::class, BannerRepositoryEloquent::class);
+        $this->app->bind(BannerService::class, function ($app) {
+            return new BannerService($app->make(BannerRepository::class));
+        });
+
+        $this->app->bind(OrderDetailRepository::class, OrderDetailRepositoryEloquent::class);
+        $this->app->bind(OrderRepository::class, OrderRepositoryEloquent::class);
+        $this->app->bind(OrderService::class, function ($app) {
+            return new OrderService(
+                $app->make(OrderRepository::class),
+                $app->make(ProductRepository::class),
+                $app->make(OrderDetailRepository::class)
+            );
+        });
+
+        $this->app->bind(PaymentRepository::class, PaymentRepositoryEloquent::class);
+        $this->app->bind(PaymentTransactionRepository::class, PaymentTransactionRepositoryEloquent::class);
+        $this->app->bind(PaypalService::class, function ($app) {
+            return new PaypalService(
+                $app->make(OrderRepository::class),
+                $app->make(OrderService::class),
+                $app->make(PaymentRepository::class),
+                $app->make(PaymentTransactionRepository::class)
+            );
         });
     }
 

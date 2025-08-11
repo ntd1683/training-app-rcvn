@@ -13,6 +13,7 @@ class ImageRepositoryEloquent extends BaseRepository implements ImageRepository
 {
     /**
      * Specify Model class name
+     *
      * @return string
      */
     public function model()
@@ -22,6 +23,7 @@ class ImageRepositoryEloquent extends BaseRepository implements ImageRepository
 
     /**
      * Boot up the repository, pushing criteria
+     *
      * @return void
      */
     public function boot()

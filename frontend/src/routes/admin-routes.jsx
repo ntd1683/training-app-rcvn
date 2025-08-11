@@ -8,8 +8,6 @@ import NotFound from '../components/not-found';
 import { adminRoutesConfig } from '../data/admin-routes-config';
 import Login from '../components/admin/auth/login';
 import Logout from '../components/admin/auth/logout';
-import '../assets/css/admin/core.css';
-import '../assets/css/admin/custom-toast.css';
 
 const AdminRoutes = () => {
     const { initialize } = useAuth();

@@ -15,7 +15,8 @@ interface RoleRepository extends RepositoryInterface
 {
     /**
      * Find a role by name
-     * @param string $name
+     *
+     * @param  string $name
      * @return \Illuminate\Database\Eloquent\Model|null
      */
     public function findByName($name);

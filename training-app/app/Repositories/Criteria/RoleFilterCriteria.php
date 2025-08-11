@@ -15,6 +15,7 @@ class RoleFilterCriteria implements CriteriaInterface
 
     /**
      * RoleFilterCriteria constructor.
+     *
      * @param array $filters
      */
     public function __construct(array $filters)
@@ -24,8 +25,9 @@ class RoleFilterCriteria implements CriteriaInterface
 
     /**
      * Apply criteria in query repository
-     * @param \Illuminate\Database\Eloquent\Builder $model
-     * @param RepositoryInterface $repository
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder $model
+     * @param  RepositoryInterface                   $repository
      * @return \Illuminate\Database\Eloquent\Builder
      */
     public function apply($model, RepositoryInterface $repository)
@@ -35,9 +37,11 @@ class RoleFilterCriteria implements CriteriaInterface
         }
 
         if (!empty($this->filters['permissions'])) {
-            $model->whereHas('permissions', function ($query) {
-                $query->whereIn('name', $this->filters['permissions']);
-            });
+            $model->whereHas(
+                'permissions', function ($query) {
+                    $query->whereIn('name', $this->filters['permissions']);
+                }
+            );
         }
         $sortBy = $this->filters['sort_by'] ?? 'created_at';
         $sortOrder = $this->filters['sort_order'] ?? 'desc';

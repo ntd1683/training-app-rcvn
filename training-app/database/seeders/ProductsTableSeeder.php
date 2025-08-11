@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Enums\StatusProductEnum;
+use App\Enums\ProductStatusEnum;
 use App\Models\User;
 use Faker\Factory as Faker;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -32,9 +32,9 @@ class ProductsTableSeeder extends Seeder
                 'price' => $faker->numberBetween(1, 100),
                 'currency' => 'USD',
                 'status' => $faker->randomElement([
-                    StatusProductEnum::STOPPED->value,
-                    StatusProductEnum::SELLING->value,
-                    StatusProductEnum::OUT_OF_STOCK->value,
+                    ProductStatusEnum::STOPPED->value,
+                    ProductStatusEnum::SELLING->value,
+                    ProductStatusEnum::OUT_OF_STOCK->value,
                 ]),
                 'deleted_at' => $faker->boolean(10) ? now() : null,
                 'user_id' => $faker->randomElement($users),

@@ -28,6 +28,7 @@ class ImageService
 
     /**
      * UserService constructor.
+     *
      * @param ImageRepository $imageRepository
      */
     public function __construct(ImageRepository $imageRepository)
@@ -37,6 +38,7 @@ class ImageService
 
     /**
      * Get all images
+     *
      * @return Collection
      */
     public function getAllImages()
@@ -46,7 +48,8 @@ class ImageService
 
     /**
      * Find an image by ID
-     * @param int $id
+     *
+     * @param  int $id
      * @return Model|null
      * @throws Exception
      */
@@ -62,7 +65,8 @@ class ImageService
 
     /**
      * Find an image by filename
-     * @param string $filename
+     *
+     * @param  string $filename
      * @return Model|null
      * @throws Exception
      */
@@ -78,15 +82,18 @@ class ImageService
 
     /**
      * Get image file by filename
-     * @param string $filename
+     *
+     * @param  string $filename
      * @return array
      * @throws Exception
      */
     public function getImageFileByFileName(string $filename)
     {
-        $imageRecord = Cache::remember("image_{$filename}", 3600, function () use ($filename) {
-            return Image::where('filename', $filename)->first();
-        });
+        $imageRecord = Cache::remember(
+            "image_{$filename}", 3600, function () use ($filename) {
+                return Image::where('filename', $filename)->first();
+            }
+        );
 
         if (!$imageRecord) {
             throw new Exception('Không tìm thấy ảnh', 404);
@@ -105,8 +112,9 @@ class ImageService
 
     /**
      * Create a new image
-     * @param UploadedFile $image
-     * @param int $userId
+     *
+     * @param  UploadedFile $image
+     * @param  int          $userId
      * @return Model
      * @throws Exception|Throwable
      */
@@ -148,8 +156,9 @@ class ImageService
 
     /**
      * Update an image
-     * @param string $filename
-     * @param array $data
+     *
+     * @param  string $filename
+     * @param  array  $data
      * @return \Illuminate\Database\Eloquent\Model
      * @throws Exception
      */
@@ -173,7 +182,8 @@ class ImageService
 
     /**
      * Delete an image
-     * @param int $id
+     *
+     * @param  int $id
      * @return bool
      * @throws Exception
      */
@@ -193,7 +203,8 @@ class ImageService
 
     /**
      * Delete a storage image
-     * @param string $path
+     *
+     * @param  string $path
      * @return bool
      * @throws Exception
      */

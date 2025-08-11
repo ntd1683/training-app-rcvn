@@ -54,6 +54,7 @@ class BaseCollection extends ResourceCollection
             'meta' => [
                 'timestamp' => now()->toDateTimeString(),
                 'path' => $request->path(),
+                'max' => $this->resource->max_value ?? null,
             ],
         ];
     }

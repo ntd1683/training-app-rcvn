@@ -24,6 +24,7 @@ class UserService
 
     /**
      * UserService constructor.
+     *
      * @param UserRepository $userRepository
      */
     public function __construct(UserRepository $userRepository)
@@ -33,6 +34,7 @@ class UserService
 
     /**
      * Get all users
+     *
      * @return Collection
      */
     public function getAllUsers()
@@ -42,7 +44,8 @@ class UserService
 
     /**
      * Find a user by ID
-     * @param int $id
+     *
+     * @param  int $id
      * @return Model|null
      */
     public function getUserById($id)
@@ -61,8 +64,9 @@ class UserService
 
     /**
      * Create a new user
-     * @param array $data
-     * @param Authenticatable|null $currentUser
+     *
+     * @param  array                $data
+     * @param  Authenticatable|null $currentUser
      * @return Model
      * @throws Exception|Throwable
      */
@@ -104,9 +108,10 @@ class UserService
 
     /**
      * Update a user
-     * @param int $id
-     * @param array $data
-     * @param \Illuminate\Contracts\Auth\Authenticatable|null $currentUser
+     *
+     * @param  int                                             $id
+     * @param  array                                           $data
+     * @param  \Illuminate\Contracts\Auth\Authenticatable|null $currentUser
      * @return \Illuminate\Database\Eloquent\Model
      * @throws Exception
      */
@@ -158,8 +163,9 @@ class UserService
 
     /**
      * Delete a user
-     * @param int $id
-     * @param \Illuminate\Contracts\Auth\Authenticatable|null $currentUser
+     *
+     * @param  int                                             $id
+     * @param  \Illuminate\Contracts\Auth\Authenticatable|null $currentUser
      * @return bool
      * @throws Exception
      */
@@ -184,7 +190,8 @@ class UserService
 
     /**
      * Toggle user active status
-     * @param int $id
+     *
+     * @param  int $id
      * @return \Illuminate\Database\Eloquent\Model
      * @throws Exception
      */
@@ -199,7 +206,8 @@ class UserService
 
     /**
      * Delete a user
-     * @param int $id
+     *
+     * @param  int $id
      * @return bool
      */
     public function destroyUser($id)
@@ -209,7 +217,8 @@ class UserService
 
     /**
      * Find a user by email
-     * @param string $email
+     *
+     * @param  string $email
      * @return Model|null
      */
     public function findUserByEmail($email)
@@ -219,7 +228,8 @@ class UserService
 
     /**
      * Get filtered and paginated users
-     * @param array $filters
+     *
+     * @param  array $filters
      * @return LengthAwarePaginator
      */
     public function getFilteredUsers(array $filters)

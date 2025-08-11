@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\OrderStatusEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -70,5 +71,21 @@ class Product extends Model
             return asset('storage/' . $this->image->path);
         }
         return null;
+    }
+
+    public function orderDetails()
+    {
+        return $this->hasMany(OrderDetail::class, 'product_id');
+    }
+
+    public function scopeWithSoldCount($query)
+    {
+        return $query->withSum([
+            'orderDetails as sold_count' => function ($query) {
+                $query->whereHas('order', function ($subQuery) {
+                    $subQuery->where('status', OrderStatusEnum::COMPLETED);
+                });
+            }
+        ], 'quantity');
     }
 }

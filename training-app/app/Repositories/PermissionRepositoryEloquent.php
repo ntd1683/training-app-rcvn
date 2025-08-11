@@ -13,6 +13,7 @@ class PermissionRepositoryEloquent extends BaseRepository implements PermissionR
 {
     /**
      * Specify Model class name
+     *
      * @return string
      */
     public function model()
@@ -22,6 +23,7 @@ class PermissionRepositoryEloquent extends BaseRepository implements PermissionR
 
     /**
      * Boot up the repository
+     *
      * @return void
      */
     public function boot()

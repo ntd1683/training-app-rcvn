@@ -21,6 +21,7 @@ class PermissionService
 
     /**
      * PermissionService constructor.
+     *
      * @param PermissionRepository $permissionRepository
      */
     public function __construct(PermissionRepository $permissionRepository)
@@ -30,6 +31,7 @@ class PermissionService
 
     /**
      * Get all permissions
+     *
      * @return \Illuminate\Database\Eloquent\Collection
      */
     public function getAllPermissions()
@@ -39,15 +41,18 @@ class PermissionService
 
     /**
      * Search permissions with filters
-     * @param array $filters
+     *
+     * @param  array $filters
      * @return LengthAwarePaginator
      */
     public function searchPermissions(array $filters)
     {
         $query = $this->permissionRepository->newQuery();
-        $query->select(['id', 'name', 'guard_name',
+        $query->select(
+            ['id', 'name', 'guard_name',
             DB::raw('(SELECT COUNT(*) FROM role_has_permissions WHERE permission_id = permissions.id) as roles_count')
-        ]);
+            ]
+        );
 
         $criteria = new PermissionFilterCriteria($filters);
         $query = $criteria->apply($query, $this->permissionRepository);
@@ -61,7 +66,8 @@ class PermissionService
 
     /**
      * Create a new permission
-     * @param array $data
+     *
+     * @param  array $data
      * @return array
      * @throws Exception
      */
@@ -83,10 +89,12 @@ class PermissionService
                 }
 
                 if (!$this->permissionRepository->findWhere(['name' => $name])->first()) {
-                    $this->permissionRepository->create([
+                    $this->permissionRepository->create(
+                        [
                         'name' => $name,
                         'guard_name' => 'sanctum',
-                    ]);
+                        ]
+                    );
                     $permissionCreated[] = $name;
                 } else {
                     $errorCreated[] = $name;
@@ -114,10 +122,12 @@ class PermissionService
             ];
         }
 
-        $permission = $this->permissionRepository->create([
+        $permission = $this->permissionRepository->create(
+            [
             'name' => $data['name'],
             'guard_name' => 'sanctum',
-        ]);
+            ]
+        );
 
         return [
             'success' => true,
@@ -133,7 +143,8 @@ class PermissionService
 
     /**
      * Get a permission for editing
-     * @param int $id
+     *
+     * @param  int $id
      * @return \Illuminate\Database\Eloquent\Model
      * @throws Exception
      */
@@ -148,8 +159,9 @@ class PermissionService
 
     /**
      * Update a permission
-     * @param int $id
-     * @param array $data
+     *
+     * @param  int   $id
+     * @param  array $data
      * @return \Illuminate\Database\Eloquent\Model
      * @throws Exception
      */
@@ -165,7 +177,8 @@ class PermissionService
 
     /**
      * Delete a permission
-     * @param int $id
+     *
+     * @param  int $id
      * @return bool
      * @throws Exception
      */
@@ -176,9 +189,11 @@ class PermissionService
             throw new Exception('Quyền không tồn tại', 404);
         }
 
-        $roles = Role::whereHas('permissions', function ($query) use ($id) {
-            $query->where('id', $id);
-        })->get();
+        $roles = Role::whereHas(
+            'permissions', function ($query) use ($id) {
+                $query->where('id', $id);
+            }
+        )->get();
 
         if ($roles->isNotEmpty()) {
             throw new Exception('Không thể xóa quyền vì nó đang được sử dụng bởi vai trò khác', 400);
