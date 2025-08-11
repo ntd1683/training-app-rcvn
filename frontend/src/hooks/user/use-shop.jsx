@@ -39,6 +39,7 @@ export const useShop = () => {
     const sorting = useSelector(selectSorting);
 
     // Default values for price range
+    // eslint-disable-next-line no-unused-vars
     const [defaultPriceRange, setDefaultPriceRange] = useState({
         min: 0,
         max: 50000,

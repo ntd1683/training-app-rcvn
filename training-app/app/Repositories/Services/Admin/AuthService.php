@@ -19,6 +19,7 @@ class AuthService
 
     /**
      * AuthService constructor.
+     *
      * @param UserRepository $userRepository
      */
     public function __construct(UserRepository $userRepository)
@@ -28,9 +29,10 @@ class AuthService
 
     /**
      * Handle user login
-     * @param array $credentials
-     * @param bool $remember
-     * @param string $ip
+     *
+     * @param  array  $credentials
+     * @param  bool   $remember
+     * @param  string $ip
      * @return array
      * @throws Exception
      */
@@ -53,19 +55,23 @@ class AuthService
             ? $user->createToken('authToken')->plainTextToken
             : $user->createToken('authToken', ['*'], now()->addMonth())->plainTextToken;
 
-        $this->userRepository->update([
+        $this->userRepository->update(
+            [
             'last_login_at' => Carbon::now(),
             'last_login_ip' => $ip,
-        ], $user->id);
+            ], $user->id
+        );
 
         $permissions = $user->getAllPermissions()->pluck('name')->toArray();
         $user->permissions = $permissions;
 
-        \Log::info('User logged in', [
+        \Log::info(
+            'User logged in', [
             'user_id' => $user->id,
             'email' => $user->email,
             'ip' => $ip,
-        ]);
+            ]
+        );
 
         return array_merge(
             $user->only(['id', 'name', 'email', 'group_role', 'last_login_at', 'is_active']),
@@ -75,7 +81,8 @@ class AuthService
 
     /**
      * Get the authenticated user's profile
-     * @param User $user
+     *
+     * @param  User $user
      * @return array
      */
     public function getProfile($user)
@@ -87,7 +94,8 @@ class AuthService
 
     /**
      * Verify the user's token
-     * @param User|null $user
+     *
+     * @param  User|null $user
      * @return array
      */
     public function verifyToken($user)
@@ -110,7 +118,8 @@ class AuthService
 
     /**
      * Log the user out
-     * @param User|null $user
+     *
+     * @param  User|null $user
      * @return array
      */
     public function logout($user)
@@ -123,9 +132,11 @@ class AuthService
             ];
         }
 
-        \Log::info('User logout attempt with invalid token', [
+        \Log::info(
+            'User logout attempt with invalid token', [
             'user_id' => $user?->id,
-        ]);
+            ]
+        );
         return [
             'success' => false,
             'message' => 'Bạn chưa đăng nhập hoặc token không hợp lệ',

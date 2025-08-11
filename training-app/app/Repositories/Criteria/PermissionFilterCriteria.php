@@ -15,6 +15,7 @@ class PermissionFilterCriteria implements CriteriaInterface
 
     /**
      * PermissionFilterCriteria constructor.
+     *
      * @param array $filters
      */
     public function __construct(array $filters)
@@ -24,8 +25,9 @@ class PermissionFilterCriteria implements CriteriaInterface
 
     /**
      * Apply criteria in query repository
-     * @param \Illuminate\Database\Eloquent\Builder $model
-     * @param RepositoryInterface $repository
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder $model
+     * @param  RepositoryInterface                   $repository
      * @return \Illuminate\Database\Eloquent\Builder
      */
     public function apply($model, RepositoryInterface $repository)

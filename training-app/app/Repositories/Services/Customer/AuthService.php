@@ -21,6 +21,7 @@ class AuthService
 
     /**
      * AuthService constructor.
+     *
      * @param CustomerRepository $customerRepository
      */
     public function __construct(CustomerRepository $customerRepository)
@@ -30,9 +31,10 @@ class AuthService
 
     /**
      * Handle user login
-     * @param array $credentials
-     * @param bool $remember
-     * @param string $ip
+     *
+     * @param  array  $credentials
+     * @param  bool   $remember
+     * @param  string $ip
      * @return array
      * @throws Exception
      */
@@ -51,16 +53,20 @@ class AuthService
             ? $customer->createToken('authToken')->plainTextToken
             : $customer->createToken('authToken', ['*'], now()->addMonth())->plainTextToken;
 
-        $this->customerRepository->update([
+        $this->customerRepository->update(
+            [
             'last_login_at' => Carbon::now(),
             'last_login_ip' => $ip,
-        ], $customer->id);
+            ], $customer->id
+        );
 
-        \Log::info('User logged in', [
+        \Log::info(
+            'User logged in', [
             'customer_id' => $customer->id,
             'email' => $customer->email,
             'ip' => $ip,
-        ]);
+            ]
+        );
 
         $arr_customer = $customer->toArray();
         $arr_customer['total_products'] = $customer->total_products;
@@ -74,7 +80,8 @@ class AuthService
 
     /**
      * Handle customer registration
-     * @param array $data
+     *
+     * @param  array $data
      * @return Customer
      * @throws Exception
      */
@@ -92,17 +99,20 @@ class AuthService
 
         $customer->sendEmailVerificationNotification();
 
-        \Log::info('New customer registered', [
+        \Log::info(
+            'New customer registered', [
             'customer_id' => $customer->id,
             'email' => $customer->email,
-        ]);
+            ]
+        );
 
         return $customer;
     }
 
     /**
      * Verify the user's email address
-     * @param string $token
+     *
+     * @param  string $token
      * @return Customer |null
      */
     public function verifyEmail(string $token)
@@ -141,11 +151,11 @@ class AuthService
 
     /**
      * Resend the email verification token
-     * @param string $email
+     *
+     * @param  string $email
      * @return bool
      * @throws Exception
      */
-
     public function resendVerificationToken(string $email)
     {
         $customer = $this->customerRepository->findByEmail($email);
@@ -162,15 +172,18 @@ class AuthService
 
     /**
      * Send a password reset link to the user's email
-     * @param string $email
+     *
+     * @param  string $email
      * @return bool
      * @throws Exception
      */
     public function sendResetLinkEmail(string $email)
     {
-        \Log::info('Password reset link requested', [
+        \Log::info(
+            'Password reset link requested', [
             'email' => $email,
-        ]);
+            ]
+        );
         if (!$email) {
             throw new Exception('Email không được để trống');
         }
@@ -185,7 +198,8 @@ class AuthService
 
     /**
      * Reset the user's password
-     * @param array $data
+     *
+     * @param  array $data
      * @return bool
      * @throws Exception
      */
@@ -208,8 +222,9 @@ class AuthService
 
     /**
      * Update the authenticated customer's profile
-     * @param Customer $customer
-     * @param array $data
+     *
+     * @param  Customer $customer
+     * @param  array    $data
      * @return Customer
      * @throws Exception
      */
@@ -224,17 +239,20 @@ class AuthService
         }
         $customer->save();
 
-        \Log::info('Customer profile updated', [
+        \Log::info(
+            'Customer profile updated', [
             'customer' => $customer->id,
             'email' => $customer->email,
-        ]);
+            ]
+        );
 
         return $customer;
     }
 
     /**
      * Log the customer out
-     * @param Customer|null $customer
+     *
+     * @param  Customer|null $customer
      * @return array
      */
     public function logout($customer)
@@ -247,9 +265,11 @@ class AuthService
             ];
         }
 
-        \Log::info('Customer logout attempt with invalid token', [
+        \Log::info(
+            'Customer logout attempt with invalid token', [
             'customer_id' => $customer?->id,
-        ]);
+            ]
+        );
         return [
             'success' => false,
             'message' => 'Bạn chưa đăng nhập hoặc token không hợp lệ',

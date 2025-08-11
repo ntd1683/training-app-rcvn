@@ -20,6 +20,7 @@ class RoleService
 
     /**
      * RoleService constructor.
+     *
      * @param RoleRepository $roleRepository
      */
     public function __construct(RoleRepository $roleRepository)
@@ -29,6 +30,7 @@ class RoleService
 
     /**
      * Get all roles
+     *
      * @return \Illuminate\Database\Eloquent\Collection
      */
     public function getAllRoles()
@@ -38,7 +40,8 @@ class RoleService
 
     /**
      * Create a new role
-     * @param array $data
+     *
+     * @param  array $data
      * @return \Illuminate\Database\Eloquent\Model
      * @throws Exception
      */
@@ -62,7 +65,8 @@ class RoleService
 
     /**
      * Get a role for editing
-     * @param string $name
+     *
+     * @param  string $name
      * @return \Illuminate\Database\Eloquent\Model
      * @throws Exception
      */
@@ -78,8 +82,9 @@ class RoleService
 
     /**
      * Update a role
-     * @param string $name
-     * @param array $data
+     *
+     * @param  string $name
+     * @param  array  $data
      * @return \Illuminate\Database\Eloquent\Model
      * @throws Exception
      */
@@ -108,7 +113,8 @@ class RoleService
 
     /**
      * Delete a role
-     * @param string $name
+     *
+     * @param  string $name
      * @return bool
      * @throws Exception
      */
@@ -132,18 +138,23 @@ class RoleService
 
     /**
      * Search roles with filters
-     * @param array $filters
+     *
+     * @param  array $filters
      * @return LengthAwarePaginator
      */
     public function getFilteredRoles(array $filters)
     {
-        $query = $this->roleRepository->newQuery()->with(['permissions' => function ($query) {
-            $query->select('id', 'name');
-        }]);
+        $query = $this->roleRepository->newQuery()->with(
+            ['permissions' => function ($query) {
+                $query->select('id', 'name');
+            }]
+        );
 
-        $query->select(['id', 'name', 'guard_name',
+        $query->select(
+            ['id', 'name', 'guard_name',
             DB::raw('(SELECT COUNT(*) FROM model_has_roles WHERE role_id = roles.id) as users_count')
-        ]);
+            ]
+        );
 
         $criteria = new RoleFilterCriteria($filters);
         $query = $criteria->apply($query, $this->roleRepository);

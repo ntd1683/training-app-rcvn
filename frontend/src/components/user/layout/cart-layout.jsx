@@ -1,5 +1,4 @@
 import React, { useState, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import {
     selectCartTotalQuantity,
@@ -13,7 +12,6 @@ import { removeFromCart } from '~/redux/slices/cart-slice';
 
 export const CartLayout = () => {
     const dispatch = useDispatch();
-    const navigate = useNavigate();
     const [isOpen, setIsOpen] = useState(false);
     const cartRef = useRef(null);
     const timeoutRef = useRef(null);

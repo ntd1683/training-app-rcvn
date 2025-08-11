@@ -26,7 +26,8 @@ class OrderService
     protected OrderDetailRepository $orderDetailRepository;
     /**
      * Order constructor.
-     * @param OrderRepository $orderRepository
+     *
+     * @param OrderRepository   $orderRepository
      * @param ProductRepository $productRepository
      * @
      */
@@ -34,8 +35,7 @@ class OrderService
         OrderRepository $orderRepository,
         ProductRepository $productRepository,
         OrderDetailRepository $orderDetailRepository
-    )
-    {
+    ) {
         $this->orderRepository = $orderRepository;
         $this->productRepository = $productRepository;
         $this->orderDetailRepository = $orderDetailRepository;
@@ -43,6 +43,7 @@ class OrderService
 
     /**
      * Get all orders
+     *
      * @return Collection
      */
     public function getAllOrders()
@@ -52,7 +53,8 @@ class OrderService
 
     /**
      * Find a order by ID
-     * @param int $id
+     *
+     * @param  int $id
      * @return Model|null
      * @throws Exception
      */
@@ -72,8 +74,9 @@ class OrderService
 
     /**
      * Create a new order
-     * @param array $data
-     * @param $currentUser
+     *
+     * @param  array $data
+     * @param  $currentUser
      * @return Model
      * @throws Throwable
      */
@@ -113,13 +116,15 @@ class OrderService
             foreach ($data['products'] as $item) {
                 $product = $this->productRepository->find($item['id']);
                 $totalAmount += $product['price'] * $item['quantity'];
-                $this->orderDetailRepository->create([
+                $this->orderDetailRepository->create(
+                    [
                     'id' => Str::uuid(),
                     'order_id' => $order->id,
                     'product_id' => $product['id'],
                     'quantity' => $item['quantity'],
                     'price' => $product['price'],
-                ]);
+                    ]
+                );
             }
 
             $order->update(['total_amount' => $totalAmount]);
@@ -133,7 +138,8 @@ class OrderService
 
     /**
      * Update status a order
-     * @param int $id
+     *
+     * @param  int $id
      * @return Model
      * @throws Throwable
      */
@@ -154,49 +160,51 @@ class OrderService
 
     /**
      * Get a product for editing
-     * @param int $id
+     *
+     * @param  int $id
      * @return Model
      * @throws Exception
      */
     public function getProductForEdit($id)
     {
-//        $product = $this->productRepository->find($id);
-//        if (!$product) {
-//            throw new Exception('Không tìm thấy sản phẩm', 404);
-//        }
-//        if ($product->deleted_at) {
-//            throw new Exception('Sản phẩm đã bị xóa trước đó', 404);
-//        }
-//
-//        $product->image_url = $product->image ? asset('storage/' . $product->image->path) : null;
-//        return $product;
+        //        $product = $this->productRepository->find($id);
+        //        if (!$product) {
+        //            throw new Exception('Không tìm thấy sản phẩm', 404);
+        //        }
+        //        if ($product->deleted_at) {
+        //            throw new Exception('Sản phẩm đã bị xóa trước đó', 404);
+        //        }
+        //
+        //        $product->image_url = $product->image ? asset('storage/' . $product->image->path) : null;
+        //        return $product;
     }
 
     /**
      * Get filtered and paginated products
-     * @param array $filters
+     *
+     * @param  array $filters
      * @return LengthAwarePaginator
      */
     public function getFilteredProducts(array $filters)
     {
-//        $query = $this->productRepository->newQuery();
-//
-//        $criteria = new ProductFilterCriteria($filters);
-//        $query = $criteria->apply($query, $this->productRepository);
-//
-//        $count = $query->count();
-//
-//        $perPage = $count > 20 ? ($filters['per_page'] ?? 10) : 20;
-//        $currentPage = $filters['page'] ?? 1;
-//        $products = $query->paginate($perPage, ['*'], 'page', $currentPage);
-//        $products->getCollection()->transform(function ($item) {
-//            $item->image_url = $item->image ? asset('storage/' . $item->image->path) : null;
-//            unset($item->image);
-//            $item->author = $item->user ? $item->user->name : 'N/A';
-//            return $item;
-//        });
-//        $max = $this->productRepository->max('price');
-//        $products->max_value = round($max / 100) * 100;
-//        return $products;
+        //        $query = $this->productRepository->newQuery();
+        //
+        //        $criteria = new ProductFilterCriteria($filters);
+        //        $query = $criteria->apply($query, $this->productRepository);
+        //
+        //        $count = $query->count();
+        //
+        //        $perPage = $count > 20 ? ($filters['per_page'] ?? 10) : 20;
+        //        $currentPage = $filters['page'] ?? 1;
+        //        $products = $query->paginate($perPage, ['*'], 'page', $currentPage);
+        //        $products->getCollection()->transform(function ($item) {
+        //            $item->image_url = $item->image ? asset('storage/' . $item->image->path) : null;
+        //            unset($item->image);
+        //            $item->author = $item->user ? $item->user->name : 'N/A';
+        //            return $item;
+        //        });
+        //        $max = $this->productRepository->max('price');
+        //        $products->max_value = round($max / 100) * 100;
+        //        return $products;
     }
 }

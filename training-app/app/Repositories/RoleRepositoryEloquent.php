@@ -14,6 +14,7 @@ class RoleRepositoryEloquent extends BaseRepository implements RoleRepository
 {
     /**
      * Specify Model class name
+     *
      * @return string
      */
     public function model()
@@ -23,6 +24,7 @@ class RoleRepositoryEloquent extends BaseRepository implements RoleRepository
 
     /**
      * Boot up the repository
+     *
      * @return void
      */
     public function boot()
@@ -32,7 +34,8 @@ class RoleRepositoryEloquent extends BaseRepository implements RoleRepository
 
     /**
      * Find a role by name
-     * @param string $name
+     *
+     * @param  string $name
      * @return \Illuminate\Database\Eloquent\Model|null
      */
     public function findByName($name)

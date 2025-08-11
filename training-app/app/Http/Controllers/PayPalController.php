@@ -6,8 +6,11 @@ use App\Http\Requests\PaypalCaptureRequest;
 use App\Http\Requests\PaypalCreateRequest;
 use App\Http\Resources\OrderResource;
 use App\Repositories\Services\PaypalService;
-use Illuminate\Http\Request;
 
+/**
+ * Class PayPalController
+ * Handles HTTP requests for PayPal operations.
+ */
 class PayPalController extends Controller
 {
     protected PaypalService $paypalService;

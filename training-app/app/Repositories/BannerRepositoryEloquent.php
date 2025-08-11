@@ -14,6 +14,7 @@ class BannerRepositoryEloquent extends BaseRepository implements BannerRepositor
 {
     /**
      * Specify Model class name
+     *
      * @return string
      */
     public function model()
@@ -23,6 +24,7 @@ class BannerRepositoryEloquent extends BaseRepository implements BannerRepositor
 
     /**
      * Boot up the repository, pushing criteria
+     *
      * @return void
      */
     public function boot()

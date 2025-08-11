@@ -3,8 +3,6 @@ import { Link } from "react-router-dom";
 import Breadcrumbs from "../ui/breadcrumbs";
 import { useCheckout } from "~/hooks/user/use-checkout";
 import { Information } from "./information";
-import { Shipping } from "./shipping";
-import { Payment } from "./payment";
 import { PayPalButton } from "./paypal-button";
 import { formatPrice } from "~/utils/common";
 

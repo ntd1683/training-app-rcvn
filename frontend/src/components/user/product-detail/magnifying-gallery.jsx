@@ -57,7 +57,7 @@ const MagnifyingGallery = ({image_url, images = []}) => {
                 ref={imageRef}
                 src={currentImage}
                 id="current"
-                alt="Main product image"
+                alt="Main product"
                 className="img-fluid"
                 style={{
                   width: '100%',

@@ -30,16 +30,16 @@ class PaypalService
 
     /**
      * Order constructor.
+     *
      * @param OrderRepository $orderRepository
-     * @param OrderService $orderService
+     * @param OrderService    $orderService
      */
     public function __construct(
         OrderRepository $orderRepository,
         OrderService $orderService,
         PaymentRepository $paymentRepository,
         PaymentTransactionRepository $paymentTransactionRepository
-    )
-    {
+    ) {
         $this->orderRepository = $orderRepository;
         $this->orderService = $orderService;
         $this->paymentRepository = $paymentRepository;
@@ -54,6 +54,7 @@ class PaypalService
 
     /**
      * Create a new order
+     *
      * @param array $data
      * @param $currentUser
      */
@@ -91,17 +92,21 @@ class PaypalService
 
         try {
             $response = $this->client->execute($request);
-            $order->update([
+            $order->update(
+                [
                 'paypal_order_id' => $response->result->id,
                 'status' => OrderStatusEnum::PROCESSING->value,
-            ]);
-            \Log::info('PayPal order created successfully', [
+                ]
+            );
+            \Log::info(
+                'PayPal order created successfully', [
                 'id' => $response->result->id,
                 'status' => $response->result->status,
                 'user_id' => $currentUser->id,
                 'order_id' => $order->id,
                 'full_response' => json_encode($response->result),
-            ]);
+                ]
+            );
             return [
                 'id' => $response->result->id,
                 'status' => $response->result->status,
@@ -115,7 +120,8 @@ class PaypalService
 
     /**
      * capture order
-     * @param int $id
+     *
+     * @param  int $id
      * @return Model
      * @throws Throwable
      */

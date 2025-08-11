@@ -15,6 +15,7 @@ class CustomerRepositoryEloquent extends BaseRepository implements CustomerRepos
 {
     /**
      * Specify Model class name
+     *
      * @return string
      */
     public function model()
@@ -24,6 +25,7 @@ class CustomerRepositoryEloquent extends BaseRepository implements CustomerRepos
 
     /**
      * Boot up the repository, pushing criteria
+     *
      * @return void
      */
     public function boot()
@@ -32,7 +34,8 @@ class CustomerRepositoryEloquent extends BaseRepository implements CustomerRepos
 
     /**
      * Find a user by email
-     * @param string $email
+     *
+     * @param  string $email
      * @return \Illuminate\Database\Eloquent\Model|null
      */
     public function findByEmail($email)

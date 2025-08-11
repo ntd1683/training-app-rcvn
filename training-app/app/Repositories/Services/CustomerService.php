@@ -25,6 +25,7 @@ class CustomerService
 
     /**
      * UserService constructor.
+     *
      * @param CustomerRepository $customerRepository
      */
     public function __construct(CustomerRepository $customerRepository)
@@ -34,6 +35,7 @@ class CustomerService
 
     /**
      * Get all customers
+     *
      * @return Collection
      */
     public function getAllCustomers()
@@ -43,7 +45,8 @@ class CustomerService
 
     /**
      * Find a customer by ID
-     * @param int $id
+     *
+     * @param  int $id
      * @return Model|null
      */
     public function getCustomerById($id)
@@ -58,7 +61,8 @@ class CustomerService
 
     /**
      * Create a new customer
-     * @param array $data
+     *
+     * @param  array $data
      * @return Model
      * @throws Exception|Throwable
      */
@@ -88,8 +92,9 @@ class CustomerService
 
     /**
      * Update a user
-     * @param int $id
-     * @param array $data
+     *
+     * @param  int   $id
+     * @param  array $data
      * @return \Illuminate\Database\Eloquent\Model
      * @throws Exception
      */
@@ -123,8 +128,9 @@ class CustomerService
 
     /**
      * Delete a customer
-     * @param int $id
-     * @param \Illuminate\Contracts\Auth\Authenticatable|null $currentCustomer
+     *
+     * @param  int                                             $id
+     * @param  \Illuminate\Contracts\Auth\Authenticatable|null $currentCustomer
      * @return bool
      * @throws Exception
      */
@@ -145,7 +151,8 @@ class CustomerService
 
     /**
      * Find a customer by email
-     * @param string $email
+     *
+     * @param  string $email
      * @return Model|null
      */
     public function findCustomerByEmail($email)

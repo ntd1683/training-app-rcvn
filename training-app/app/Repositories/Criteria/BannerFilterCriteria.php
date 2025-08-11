@@ -17,6 +17,7 @@ class BannerFilterCriteria implements CriteriaInterface
 
     /**
      * ProductFilterCriteria constructor.
+     *
      * @param array $filters
      */
     public function __construct(array $filters)
@@ -26,8 +27,9 @@ class BannerFilterCriteria implements CriteriaInterface
 
     /**
      * Apply criteria in query repository
-     * @param Builder $model
-     * @param RepositoryInterface $repository
+     *
+     * @param  Builder             $model
+     * @param  RepositoryInterface $repository
      * @return Builder
      */
     public function apply($model, RepositoryInterface $repository)

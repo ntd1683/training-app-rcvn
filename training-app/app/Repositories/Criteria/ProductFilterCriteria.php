@@ -18,6 +18,7 @@ class ProductFilterCriteria implements CriteriaInterface
 
     /**
      * ProductFilterCriteria constructor.
+     *
      * @param array $filters
      */
     public function __construct(array $filters)
@@ -27,18 +28,21 @@ class ProductFilterCriteria implements CriteriaInterface
 
     /**
      * Apply criteria in query repository
-     * @param Builder $model
-     * @param RepositoryInterface $repository
+     *
+     * @param  Builder             $model
+     * @param  RepositoryInterface $repository
      * @return Builder
      */
     public function apply($model, RepositoryInterface $repository)
     {
         $model->withSoldCount();
-        Log::info('Applying ProductFilterCriteria', [
+        Log::info(
+            'Applying ProductFilterCriteria', [
             'filters' => $this->filters,
             'model' => $model->toSql(),
             'bindings' => $model->getBindings()
-        ]);
+            ]
+        );
         if (!empty($this->filters['name'])) {
             $model->where('name', 'like', '%' . $this->filters['name'] . '%');
         }
@@ -58,10 +62,12 @@ class ProductFilterCriteria implements CriteriaInterface
         $status = $this->filters['status'] ?? null;
         if (isset($status)) {
             if(ProductStatusEnum::getBoth($status)) {
-                $model->whereIn('status', [
+                $model->whereIn(
+                    'status', [
                     ProductStatusEnum::SELLING,
                     ProductStatusEnum::OUT_OF_STOCK
-                ]);
+                    ]
+                );
                 $model->orderBy('status');
             } else {
                 $model->where('status', $this->filters['status']);
@@ -75,11 +81,13 @@ class ProductFilterCriteria implements CriteriaInterface
             $sortOrder = 'desc';
         }
         $model->orderBy($sortBy, $sortOrder);
-        \Log::info('ProductFilterCriteria: Applying sorting', [
+        \Log::info(
+            'ProductFilterCriteria: Applying sorting', [
             'sort_by' => $sortBy,
             'sort_order' => $sortOrder,
             'model' => $model->get()->toArray(),
-        ]);
+            ]
+        );
         return $model;
     }
 }
