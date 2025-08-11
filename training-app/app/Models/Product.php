@@ -78,28 +78,14 @@ class Product extends Model
         return $this->hasMany(OrderDetail::class, 'product_id');
     }
 
-    /**
-     * Get the number of successful products sold
-     *
-     * @return string|null
-     */
-    public function getSoldCountAttribute()
-    {
-        return $this->orderDetails()
-            ->whereHas('order', function ($query) {
-                $query->where('status', '2');
-            })
-            ->count();
-    }
-
     public function scopeWithSoldCount($query)
     {
-        return $query->withCount([
+        return $query->withSum([
             'orderDetails as sold_count' => function ($query) {
                 $query->whereHas('order', function ($subQuery) {
                     $subQuery->where('status', OrderStatusEnum::COMPLETED);
                 });
             }
-        ]);
+        ], 'quantity');
     }
 }

@@ -5,6 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AuthCustomerController;
 use App\Http\Controllers\BannerController;
 use App\Http\Controllers\LogoutController;
+use App\Http\Controllers\PayPalController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\RoleController;
@@ -87,4 +88,9 @@ Route::middleware('auth:customer')->group(function () {
     Route::post('/email/resend', [AuthCustomerController::class, 'resendEmail'])
         ->middleware('throttle:6,1')
         ->name('api.customer.verification.resend');
+    Route::prefix('orders')->group(function () {
+        Route::post('/paypal/create', [PayPalController::class, 'createOrder'])
+            ->name('paypal.create.order');
+        Route::post('/paypal/approve', [PayPalController::class, 'captureOrder']);
+    });
 });

@@ -25,10 +25,19 @@ class Order extends Model
         'id',
         'customer_id',
         'order_code',
+        'paypal_order_id',
         'total_amount',
-        'payment_status',
         'payment_transaction_id',
         'status',
+        'recipient_name',
+        'recipient_phone',
+        'recipient_address',
+        'recipient_ward',
+        'recipient_district',
+        'recipient_province',
+        'recipient_country',
+        'post_code',
+        'note',
     ];
 
     public function customer()
@@ -36,13 +45,25 @@ class Order extends Model
         return $this->belongsTo(Customer::class, 'customer_id');
     }
 
-    public function paymentTransaction()
+    public function paymentTransactions()
     {
-        return $this->belongsTo(PaymentTransaction::class, 'payment_transaction_id');
+        return $this->hasMany(PaymentTransaction::class, 'order_id', 'id');
     }
 
     public function orderDetails()
     {
         return $this->hasMany(OrderDetail::class, 'order_id');
+    }
+
+    public function products()
+    {
+        return $this->hasManyThrough(
+            Product::class,
+            OrderDetail::class,
+            'order_id',
+            'id',
+            'id',
+            'product_id'
+        );
     }
 }

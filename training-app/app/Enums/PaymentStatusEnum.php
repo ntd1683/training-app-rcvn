@@ -15,6 +15,7 @@ enum PaymentStatusEnum: int
     case PENDING = 0;
     case PROCESSING = 1;
     case COMPLETED = 2;
+    case FAILED = -1;
 
     public static function fromValue(int $value): self
     {
@@ -22,6 +23,7 @@ enum PaymentStatusEnum: int
             0 => self::PENDING,
             1 => self::PROCESSING,
             2 => self::COMPLETED,
+            -1 => self::FAILED,
             default => throw new ValueError("Giá trị $value không hợp lệ cho PaymentStatus"),
         };
     }
@@ -32,6 +34,7 @@ enum PaymentStatusEnum: int
             self::PENDING->value,
             self::PROCESSING->value,
             self::COMPLETED->value,
+            self::FAILED->value,
         ];
     }
 }
