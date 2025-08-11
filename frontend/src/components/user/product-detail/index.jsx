@@ -4,6 +4,7 @@ import MagnifyingGallery from './magnifying-gallery';
 import { formatPrice, stripHtmlAndTruncate, sanitizeContent } from '~/utils/common';
 import { NumberInput } from '../ui/number-input';
 import { useProductDetail } from '~/hooks/user/use-product-detail';
+import ProductStatus from '~/constants/product-status';
 
 const ProductDetail = () => {
     const {
@@ -13,6 +14,9 @@ const ProductDetail = () => {
         error,
         quantity,
         setQuantity,
+        handleAddToCart,
+        isAddedToCart,
+        errorAdd,
     } = useProductDetail();
 
     return (
@@ -54,31 +58,58 @@ const ProductDetail = () => {
                                     <div className="col-lg-6 col-md-12 col-12">
                                         <div className="product-info">
                                             <h2 className="title">{currentProduct?.name}</h2>
-                                            {/* <p className="category"><i className="lni lni-tag"></i> Drones:<a href="javascript:void(0)">Action
-                                                cameras</a></p> */}
+                                            <p className="category">
+                                                <i className="lni lni-shopping-basket"></i> Số lượng:
+                                                <a href="#">{currentProduct?.quantity}</a>
+                                            </p>
                                             <h3 className="price">{formatPrice(currentProduct?.price)}<span>{formatPrice(currentProduct?.old_price)}</span></h3>
                                             <p className="info-text">{stripHtmlAndTruncate(currentProduct?.description, 50)}</p>
                                             <div className="form-group quantity">
                                                 <div className="row">
-                                                    <div className="col-lg-4 col-md-4 col-12">
-                                                        <NumberInput value={quantity} setValue={setQuantity} className="h-100"/>
-                                                    </div>
-                                                    <div className="col-lg-4 col-md-4 col-12 mt-3 mt-md-0">
-                                                        <div className="button cart-button h-100 px-1">
-                                                            <button className="btn w-100 h-100">
-                                                                <i className="lni lni-cart"></i> Thêm vào giỏ hàng
-                                                            </button>
-                                                        </div>
-                                                    </div>
-                                                    <div className="col-lg-4 col-md-4 col-12">
-                                                        <div className="wish-button px-1">
-                                                            <button className="btn" style={{ height: "fit-content" }}>
-                                                                <i className="lni lni-heart"></i> Thêm vào yêu thích
-                                                            </button>
-                                                        </div>
-                                                    </div>
+                                                    {(currentProduct?.quantity > 0 && currentProduct.status === ProductStatus.SELLING) ? (
+                                                        <>
+                                                            <div className="col-lg-4 col-md-4 col-12">
+                                                                <NumberInput value={quantity} setValue={setQuantity} className="h-100" />
+                                                            </div>
+                                                            <div className="col-lg-4 col-md-4 col-12 mt-3 mt-md-0">
+                                                                <div className="button cart-button h-100 px-1">
+                                                                    <button
+                                                                        className={`btn w-100 h-100 ${isAddedToCart ? 'btn-success' : ''}`}
+                                                                        onClick={handleAddToCart}
+                                                                        disabled={currentProduct?.quantity === 0 || isAddedToCart}>
+                                                                        <i className={`lni ${isAddedToCart ? 'lni-checkmark' : 'lni-cart'}`}></i> 
+                                                                        {isAddedToCart ? 'Đã thêm vào giỏ hàng' : 'Thêm vào giỏ hàng'}
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                            <div className="col-lg-4 col-md-4 col-12">
+                                                                <div className="wish-button px-1">
+                                                                    <button className="btn" style={{ height: "fit-content" }}>
+                                                                        <i className="lni lni-heart"></i> Thêm vào yêu thích
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        </>
+                                                    ) : (
+                                                        <>
+                                                            <div className="col-lg-5 col-md-5 col-12">
+                                                                <div className="h-100 px-1 fw-bold d-flex align-items-center justify-content-center fs-6">
+                                                                    HẾT HÀNG
+                                                                </div>
+                                                            </div><div className="col-lg-7 col-md-7 col-12">
+                                                                <div className="wish-button px-1">
+                                                                    <button className="btn" style={{ height: "fit-content" }}>
+                                                                        <i className="lni lni-heart"></i> Thêm vào yêu thích
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        </>
+                                                    )}
                                                 </div>
                                             </div>
+                                            <p className="text-danger mt-3 fs-6 fw-bold">
+                                                {errorAdd}
+                                            </p>
                                         </div>
                                     </div>
                                 </div>
@@ -89,7 +120,7 @@ const ProductDetail = () => {
                                         <div className="info-body custom-responsive-margin">
                                             <h4>Details</h4>
                                             {currentProduct.description && (
-                                                <div style={{ overflowWrap: "break-word"}} dangerouslySetInnerHTML={{ __html: sanitizeContent(currentProduct.description) }} />
+                                                <div style={{ overflowWrap: "break-word" }} dangerouslySetInnerHTML={{ __html: sanitizeContent(currentProduct.description) }} />
                                             )}
                                         </div>
                                     </div>

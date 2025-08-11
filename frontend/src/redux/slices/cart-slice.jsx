@@ -54,7 +54,29 @@ const cartSlice = createSlice({
       state.lastUpdated = Date.now();
       state.isAddToCart = false;
     },
+    addToCartWithQuantity: (state, action) => {
+      state.isAddToCart = true;
+      const { product, quantity } = action.payload;
+      const price = typeof product.price === 'string' ? parseFloat(product.price) : product.price;
+      const existingItem = state.items.find(item => item.id === product.id);
 
+      if (!existingItem) {
+        const validatedItem = validateCartItem({
+          ...product,
+          price,
+          quantity: Math.max(1, parseInt(quantity) || 1),
+          totalPrice: price * Math.max(1, parseInt(quantity) || 1),
+        });
+        state.items.push(validatedItem);
+      } else {
+        existingItem.quantity += Math.max(1, parseInt(quantity) || 1);
+        existingItem.totalPrice += price * Math.max(1, parseInt(quantity) || 1);
+      }
+
+      recalculateCartTotals(state);
+      state.lastUpdated = Date.now();
+      state.isAddToCart = false;
+    },
     removeFromCart: (state, action) => {
       const id = action.payload;
       const existingItem = state.items.find(item => item.id === id);
@@ -128,6 +150,7 @@ export const {
   addToCart,
   removeFromCart,
   deleteFromCart,
+  addToCartWithQuantity,
   updateCartItemQuantity,
   clearCart,
   restoreCart,

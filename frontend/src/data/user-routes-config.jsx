@@ -10,6 +10,9 @@ const ChangeResetPassword = lazy(() => import('../components/user/auth/change-re
 const ProfilePage = lazy(() => import('../components/user/profile/profile-page'));
 const Products = lazy(() => import('../components/user/products'));
 const ProductDetail = lazy(() => import('../components/user/product-detail'));
+const Cart = lazy(() => import('../components/user/cart'));
+const Checkout = lazy(() => import('../components/user/checkout'));
+const LocationSelector = lazy(() => import('../components/user/test'));
 
 export const userRoutesConfig = [
     {
@@ -77,10 +80,17 @@ export const userRoutesConfig = [
     },
     {
         path: '/gio-hang',
-        element: lazy(() => import('../components/user/cart-display')),
+        element: Cart,
         requireAuth: false,
         layout: true,
         title: 'Giỏ Hàng',
+    },
+    {
+        path: '/thanh-toan',
+        element: Checkout,
+        requireAuth: true,
+        layout: true,
+        title: 'Thanh Toán',
     },
     {
         path: '/khong-co-quyen',

@@ -77,7 +77,7 @@ const Layout = React.memo(({ children }) => {
 
     return (
         <>
-            <header className={`header navbar-area sticky-navbar ${isScrolled ? 'scrolled' : ''}`} style={{ zIndex: '100' }}>
+            <header className={`header navbar-area sticky-navbar ${isScrolled ? 'scrolled' : ''}`} style={{ zIndex: '110' }}>
                 <div className="header-middle">
                     <div className="container">
                         <div className="row align-items-center mx-0 custom-width">
@@ -114,12 +114,12 @@ const Layout = React.memo(({ children }) => {
                                     </div>
 
                                     {/* Hotline - ẩn trên mobile để tiết kiệm không gian */}
-                                    <div className="nav-hotline d-none d-lg-block">
+                                    <a className="nav-hotline d-none d-lg-block" href="tel:+1001234567890">
                                         <i className="lni lni-phone"></i>
                                         <h3>Hotline:
                                             <span>(+100) 123 456 7890</span>
                                         </h3>
-                                    </div>
+                                    </a>
 
                                     <div className="navbar-cart">
                                         <div className="wishlist">

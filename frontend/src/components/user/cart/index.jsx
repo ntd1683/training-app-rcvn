@@ -1,33 +1,12 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { useSelector, useDispatch } from 'react-redux';
-import {
-    selectCartItems,
-    selectCartTotalAmount,
-} from '~/redux/selectors/cart-selector';
-import { updateCartItemQuantity, deleteFromCart } from '~/redux/slices/cart-slice';
-import Breadcrumbs from './ui/breadcrumbs';
+import Breadcrumbs from '../ui/breadcrumbs';
+import { NumberInput } from '../ui/number-input';
 import { formatPrice } from '~/utils/common';
-import { NumberInput } from './ui/number-input';
+import { useCart } from '~/hooks/user/use-cart';
 
-const CartDisplay = () => {
-    // Todo: Implement fee logic if needed
-    // eslint-disable-next-line
-    const [fee, setFee] = React.useState(0);
-
-    const dispatch = useDispatch();
-    const cartItems = useSelector(selectCartItems);
-    const totalAmount = useSelector(selectCartTotalAmount);
-
-    // Hàm cập nhật số lượng sản phẩm
-    const handleQuantityChange = (itemId, newQuantity) => {
-        dispatch(updateCartItemQuantity({ id: itemId, quantity: newQuantity }));
-    };
-
-    // Hàm xóa sản phẩm khỏi giỏ hàng
-    const handleDeleteItem = (itemId) => {
-        dispatch(deleteFromCart(itemId));
-    };
+const Cart = () => {
+    const { cartItems, totalAmount, fee, handleQuantityChange, handleDeleteItem } = useCart();
 
     return (
         <>
@@ -145,4 +124,4 @@ const CartDisplay = () => {
     );
 };
 
-export default CartDisplay;
+export default Cart;
