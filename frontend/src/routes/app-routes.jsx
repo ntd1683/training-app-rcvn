@@ -19,11 +19,13 @@ const AppRoutes = () => {
       removeCSS('/src/assets/css/user/main.css');
       removeCSS('/src/assets/css/user/line-icon.css');
       removeCSS('/src/assets/css/user/pre-loader.css');
+      removeCSS('/src/assets/css/user/search.css');
     } else {
       // Load user CSS
       loadCSS('/src/assets/css/user/main.css');
       loadCSS('/src/assets/css/user/line-icon.css');
       loadCSS('/src/assets/css/user/pre-loader.css');
+      loadCSS('/src/assets/css/user/search.css');
 
       // Remove admin CSS
       removeCSS('/src/assets/css/admin/core.css');

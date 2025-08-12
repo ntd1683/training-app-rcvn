@@ -36,13 +36,6 @@ class ProductFilterCriteria implements CriteriaInterface
     public function apply($model, RepositoryInterface $repository)
     {
         $model->withSoldCount();
-        Log::info(
-            'Applying ProductFilterCriteria', [
-            'filters' => $this->filters,
-            'model' => $model->toSql(),
-            'bindings' => $model->getBindings()
-            ]
-        );
         if (!empty($this->filters['name'])) {
             $model->where('name', 'like', '%' . $this->filters['name'] . '%');
         }
@@ -81,13 +74,6 @@ class ProductFilterCriteria implements CriteriaInterface
             $sortOrder = 'desc';
         }
         $model->orderBy($sortBy, $sortOrder);
-        \Log::info(
-            'ProductFilterCriteria: Applying sorting', [
-            'sort_by' => $sortBy,
-            'sort_order' => $sortOrder,
-            'model' => $model->get()->toArray(),
-            ]
-        );
         return $model;
     }
 }

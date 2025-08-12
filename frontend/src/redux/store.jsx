@@ -9,6 +9,7 @@ import productsReducer from './slices/products-slice';
 import bannersReducer from './slices/banners-slice';
 import cartReducer from './slices/cart-slice';
 import wishlistReducer from './slices/wishlist-slice';
+import searchReducer from './slices/search-slice'
 import { cartPersistConfig, wishlistPersistConfig, persistConfig } from './persist-config';
 
 const rootReducer = combineReducers({
@@ -16,6 +17,7 @@ const rootReducer = combineReducers({
   auth_customer: authCustomerReducer,
   products: productsReducer,
   banners: bannersReducer,
+  search: searchReducer,
   cart: persistReducer(cartPersistConfig, cartReducer),
   wishlist: persistReducer(wishlistPersistConfig, wishlistReducer),
 });

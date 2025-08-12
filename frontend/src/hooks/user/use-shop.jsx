@@ -17,6 +17,7 @@ import {
 import {
     selectProducts,
     selectPagination,
+    selectMeta,
     selectCurrentFilters,
     selectLoadingStates,
     selectErrorStates,
@@ -28,18 +29,17 @@ export const useShop = () => {
     const dispatch = useDispatch();
     const [searchParams, setSearchParams] = useSearchParams();
     const isInitialMount = useRef(true);
+    const prevSearchParams = useRef(searchParams.toString());
 
-    // Selectors
     const data = useSelector(selectProducts);
     const pagination = useSelector(selectPagination);
     const currentFilters = useSelector(selectCurrentFilters);
     const loadingStates = useSelector(selectLoadingStates);
     const errorStates = useSelector(selectErrorStates);
     const tableKey = useSelector(selectTableKey);
+    const meta = useSelector(selectMeta);
     const sorting = useSelector(selectSorting);
 
-    // Default values for price range
-    // eslint-disable-next-line no-unused-vars
     const [defaultPriceRange, setDefaultPriceRange] = useState({
         min: 0,
         max: 50000,
@@ -48,7 +48,6 @@ export const useShop = () => {
     const [inputPriceFrom, setInputPriceFrom] = useState('');
     const [inputPriceTo, setInputPriceTo] = useState('');
 
-    // Destructure for easier access
     const {
         filterName,
         filterPriceTo,
@@ -67,7 +66,6 @@ export const useShop = () => {
         error,
     } = errorStates;
 
-    // Load products with filters
     const handleLoadProducts = useCallback((page = 1, perPage = 10, filters = {}) => {
         if (filters.filterStatus === undefined || filters.filterStatus === null || filters.filterStatus === '') {
             filters.filterStatus = 3;
@@ -78,68 +76,85 @@ export const useShop = () => {
         dispatch(loadProducts({ page, perPage, filters }));
     }, [dispatch]);
 
+    const loadDataFromParams = useCallback(() => {
+        const page = parseInt(searchParams.get('page')) || 1;
+        const perPage = parseInt(searchParams.get('per_page')) || 10;
+        const filterNameUrl = searchParams.get('name') || '';
+        const filterPriceFromUrl = searchParams.get('price_from') || '';
+        const filterPriceToUrl = searchParams.get('price_to') || '';
+        let filterStatusFromUrl = searchParams.get('status') || '';
+        let sortNameFromUrl = searchParams.get('sort_name') || '';
+
+        if (filterStatusFromUrl === '') {
+            filterStatusFromUrl = 3;
+        }
+
+        dispatch(setFilters({
+            name: filterNameUrl,
+            priceFrom: filterPriceFromUrl,
+            priceTo: filterPriceToUrl,
+            status: filterStatusFromUrl,
+        }));
+        setInputSearch(filterNameUrl);
+        setInputPriceFrom(filterPriceFromUrl);
+        setInputPriceTo(filterPriceToUrl);
+
+        let sortByFromUrl = '';
+        let sortOrderFromUrl = '';
+        if (sortNameFromUrl === '') {
+            sortNameFromUrl = 'popular';
+            sortByFromUrl = 'popular';
+        } else if (sortNameFromUrl) {
+            if (sortNameFromUrl === 'created_at') {
+                sortByFromUrl = 'created_at';
+                sortOrderFromUrl = 'desc';
+            } else if (sortNameFromUrl === 'popular') {
+                sortByFromUrl = 'popular';
+            } else {
+                sortByFromUrl = sortNameFromUrl.split('_')[0];
+                sortOrderFromUrl = sortNameFromUrl.split('_')[1] || 'desc';
+            }
+        }
+
+        dispatch(setSorting({
+            sortName: sortNameFromUrl,
+            sortBy: sortByFromUrl,
+            sortOrder: sortOrderFromUrl,
+        }));
+
+        handleLoadProducts(page, perPage, {
+            filterName: filterNameUrl,
+            filterPriceFrom: filterPriceFromUrl,
+            filterPriceTo: filterPriceToUrl,
+            filterStatus: filterStatusFromUrl,
+            sortBy: sortByFromUrl,
+            sortOrder: sortOrderFromUrl,
+        });
+    }, [searchParams, dispatch, handleLoadProducts]);
+
     useEffect(() => {
         if (isInitialMount.current) {
-            const page = parseInt(searchParams.get('page')) || 1;
-            const perPage = parseInt(searchParams.get('per_page')) || 10;
-            const filterNameUrl = searchParams.get('name') || '';
-            const filterPriceFromUrl = searchParams.get('price_from') || '';
-            const filterPriceToUrl = searchParams.get('price_to') || '';
-            let filterStatusFromUrl = searchParams.get('status') || '';
-            let sortNameFromUrl = searchParams.get('sort_name') || '';
-
-            if (filterStatusFromUrl === '') {
-                filterStatusFromUrl = 3;
-            }
-
-            // Set filters in Redux
-            dispatch(setFilters({
-                name: filterNameUrl,
-                priceFrom: filterPriceFromUrl,
-                priceTo: filterPriceToUrl,
-                status: filterStatusFromUrl,
-            }));
-            setInputSearch(filterNameUrl);
-            setInputPriceFrom(filterPriceFromUrl);
-            setInputPriceTo(filterPriceToUrl);
-
-            // Set sorting in Redux
-            let sortByFromUrl = '';
-            let sortOrderFromUrl = '';
-            if (sortNameFromUrl === '') {
-                sortNameFromUrl = 'popular';
-
-                sortByFromUrl = 'popular';
-            } else if (sortNameFromUrl) {
-                if (sortNameFromUrl === 'created_at') {
-                    sortByFromUrl = 'created_at';
-                    sortOrderFromUrl = 'desc';
-                } else if (sortNameFromUrl === 'popular') {
-                    sortByFromUrl = 'popular';
-                } else {
-                    sortByFromUrl = sortNameFromUrl.split('_')[0];
-                    sortOrderFromUrl = sortNameFromUrl.split('_')[1] || 'desc';
-                }
-            }
-
-            dispatch(setSorting({
-                sortName: sortNameFromUrl,
-                sortBy: sortByFromUrl,
-                sortOrder: sortOrderFromUrl,
-            }));
-
-            handleLoadProducts(page, perPage, {
-                filterName: filterNameUrl,
-                filterPriceFrom: filterPriceFromUrl,
-                filterPriceTo: filterPriceToUrl,
-                filterStatus: filterStatusFromUrl,
-                sortBy: sortByFromUrl,
-                sortOrder: sortOrderFromUrl,
-            });
-
+            loadDataFromParams();
             isInitialMount.current = false;
         }
-    }, [searchParams, dispatch, handleLoadProducts]);
+        
+        setDefaultPriceRange({
+            min: meta.min || 0,
+            max: meta.max || 50000,
+        });
+    }, [loadDataFromParams, meta]);
+
+    useEffect(() => {
+        const currentParams = searchParams.toString();
+        // Only reload if params actually changed and it's not the initial mount
+        if (!isInitialMount.current && currentParams !== prevSearchParams.current) {
+            loadDataFromParams();
+            prevSearchParams.current = currentParams;
+        } else if (!isInitialMount.current) {
+            // Update ref even if no reload needed
+            prevSearchParams.current = currentParams;
+        }
+    }, [searchParams, loadDataFromParams]);
 
     // Update search params
     const updateSearchParams = useCallback(() => {
