@@ -16,10 +16,9 @@ class PaymentsTableSeeder extends Seeder
         foreach (range(1, 50) as $index) {
             Payment::create([
                 'customer_id' => $customers->random()->id,
-                'card_token' => $faker->uuid,
-                'last_four_digits' => $faker->randomNumber(4),
-                'expiry_date' => $faker->dateTimeBetween('now', '+3 years')->format('Y-m-d'),
-                'card_type' => $faker->randomElement(['Visa', 'MasterCard', 'JCB']),
+                'payment_method_token' => $faker->uuid,
+                'payment_method_type' => $faker->randomElement(['credit_card', 'paypal', 'bank_transfer']),
+                'status' => $faker->randomElement(['fail', 'active', 'inactive']),
                 'is_default' => $index === 1,
             ]);
         }

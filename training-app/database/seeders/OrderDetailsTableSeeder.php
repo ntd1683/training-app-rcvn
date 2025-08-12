@@ -28,6 +28,7 @@ class OrderDetailsTableSeeder extends Seeder
                     'order_id' => $order->id,
                     'product_id' => $products->random()->id,
                     'price' => $faker->randomFloat(2, 10, 100),
+                    'quantity' => $faker->numberBetween(1, 5),
                 ]);
             }
         }

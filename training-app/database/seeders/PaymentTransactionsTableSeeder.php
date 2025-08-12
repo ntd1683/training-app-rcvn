@@ -34,7 +34,7 @@ class PaymentTransactionsTableSeeder extends Seeder
                 'payer_id' => $faker->uuid,
                 'order_id' => $order->id,
                 'payment_id' => $payment->id,
-                'payer_email' => $faker->email,
+                'transaction_id' => $faker->uuid,
                 'amount' => $order->total_amount,
                 'currency' => 'VND',
                 'payment_status' => $faker->randomElement($paymentStatus),
