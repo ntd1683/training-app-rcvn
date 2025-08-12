@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { setIsOpen } from '~/redux/slices/search-slice';
 import placeholderImg from '~/assets/images/placeholder.jpg';
+import { sanitizeContent } from '~/utils/common';
 
 export const SearchResultItem = ({ product, toggleMobileSearch }) => {
   const dispatch = useDispatch();
@@ -49,15 +50,15 @@ export const SearchResultItem = ({ product, toggleMobileSearch }) => {
   };
 
   return (
-    <div 
+    <div
       className="px-3 py-2 cursor-pointer hover-bg-light border-bottom"
       onClick={handleClick}
       style={{ cursor: 'pointer' }}
     >
       <div className="row align-items-center">
         <div className="col-2">
-          <img 
-            src={product.image || placeholderImg} 
+          <img
+            src={product.image || placeholderImg}
             alt={product.name}
             className="img-fluid rounded"
             style={{ width: '50px', height: '50px', objectFit: 'cover' }}
@@ -66,7 +67,7 @@ export const SearchResultItem = ({ product, toggleMobileSearch }) => {
             }}
           />
         </div>
-        
+
         {/* Product Info */}
         <div className="col-10">
           <div className="d-flex justify-content-between align-items-start">
@@ -74,26 +75,27 @@ export const SearchResultItem = ({ product, toggleMobileSearch }) => {
               <h6 className="mb-1" style={{ fontSize: '14px', lineHeight: '1.3' }}>
                 {truncateText(product.name, 60)}
               </h6>
-              
+
               {/* Description */}
               {product.description && (
-                <p className="mb-1 text-muted" style={{ fontSize: '12px', lineHeight: '1.2' }}>
-                  {truncateText(product.description, 80)}
-                </p>
+                <p
+                  className="mb-1 text-muted"
+                  style={{ fontSize: '12px', lineHeight: '1.2', overflowWrap: "break-word" }}
+                  dangerouslySetInnerHTML={{ __html: truncateText(sanitizeContent(product.description), 100) }} />
               )}
-              
+
               <div className="d-flex align-items-center gap-2 mb-1">
                 <span className="text-primary fw-bold" style={{ fontSize: '14px' }}>
                   {formatPrice(product.price, product.currency)}
                 </span>
                 {getStatusBadge(product.status)}
               </div>
-              
+
               <div className="d-flex justify-content-between align-items-center">
                 <small className="text-muted">
                   Còn lại: <span className="fw-bold">{product.quantity || 0}</span>
                 </small>
-                
+
                 {/* Sold count */}
                 {product.soldCount > 0 && (
                   <small className="text-success">
@@ -102,7 +104,7 @@ export const SearchResultItem = ({ product, toggleMobileSearch }) => {
                 )}
               </div>
             </div>
-            
+
             {/* Arrow Icon */}
             <div className="ms-2">
               <i className="lni lni-chevron-right text-muted"></i>
@@ -110,6 +112,6 @@ export const SearchResultItem = ({ product, toggleMobileSearch }) => {
           </div>
         </div>
       </div>
-    </div>
+    </div >
   );
 };

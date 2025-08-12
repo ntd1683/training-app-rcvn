@@ -1,4 +1,4 @@
-import '../../../assets/css/user/pre-loader.css';
+import '~/assets/css/user/pre-loader.css';
 
 const PreLoader = () => {
 

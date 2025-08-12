@@ -58,12 +58,6 @@ const Checkout = () => {
                                     <li>
                                         {/* <h6 className="title collapsed" data-bs-toggle="collapse" data-bs-target="#collapsefive"
                                             aria-controls="collapsefive">Thông tin ví</h6> */}
-                                        {/* <PayPalButton
-                                                handleCreateOrder={handleCreateOrder}
-                                                handleApproveOrder={handleApproveOrder}
-                                                handleCancelOrder={handleCancelOrder}
-                                                handleErrorOrder={handleErrorOrder}
-                                            /> */}
                                         {/* <Payment /> */}
                                     </li>
                                 </ul>
@@ -83,11 +77,11 @@ const Checkout = () => {
                                     ))}
 
                                     <div className="sub-total-price">
-                                            <div className="total-price">
-                                                <p className="value">Phí nền tảng</p>
-                                                <p className="price">{fee ? formatPrice(parseFloat(fee)) : 'Free'}</p>
-                                            </div>
+                                        <div className="total-price">
+                                            <p className="value">Phí nền tảng</p>
+                                            <p className="price">{fee ? formatPrice(parseFloat(fee)) : 'Free'}</p>
                                         </div>
+                                    </div>
 
                                     <div className="total-payable">
                                         {totalAmount && (
@@ -98,19 +92,19 @@ const Checkout = () => {
                                         )}
                                     </div>
                                     <div className="price-table-btn button">
-                                        {!checkout ? (
-                                            <button className="btn btn-alt w-100 mb-3" onClick={handleCheckout}>
-                                                Thanh Toán
-                                            </button>
-                                        ) : (
-                                            <PayPalButton
-                                                handleCreateOrder={handleCreateOrder}
-                                                handleApproveOrder={handleApproveOrder}
-                                                handleCancelOrder={handleCancelOrder}
-                                                handleErrorOrder={handleErrorOrder}
-                                            />
-                                        )}
-
+                                        {console.log(checkout)}
+                                        <button
+                                            className={`btn btn-alt w-100 mb-3 ${checkout ? "d-none" : "d-block"}`}
+                                            onClick={handleCheckout}>
+                                            Thanh Toán
+                                        </button>
+                                        <PayPalButton
+                                            handleCreateOrder={handleCreateOrder}
+                                            handleApproveOrder={handleApproveOrder}
+                                            handleCancelOrder={handleCancelOrder}
+                                            handleErrorOrder={handleErrorOrder}
+                                            className={checkout ? "d-block" : "d-none"}
+                                        />
                                     </div>
                                 </div>
                                 <div className="checkout-sidebar-banner mt-30">
