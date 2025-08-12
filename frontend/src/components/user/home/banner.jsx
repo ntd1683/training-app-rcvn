@@ -63,7 +63,7 @@ const Banner = () => {
                             <div className="hero-slider">
                                 {sliders.map((item) => (
                                     <div className="single-slider" key={item.id}
-                                        style={{ backgroundImage: `url(${item.image_url})` }}>
+                                        style={{ backgroundImage: `url(${item.image_url})`, borderRadius: '10px' }}>
                                         <div className="content">
                                             <h2><span>{item.header}</span>
                                                 {item.title}

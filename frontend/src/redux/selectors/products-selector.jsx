@@ -22,6 +22,11 @@ export const selectPagination = createSelector(
   (productState) => productState.pagination
 );
 
+export const selectMeta = createSelector(
+  [selectProductState],
+  (productState) => productState.meta
+);
+
 export const selectFilters = createSelector(
   [selectProductState],
   (productState) => productState.filters

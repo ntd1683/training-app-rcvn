@@ -3,13 +3,16 @@
 namespace App\Models;
 
 use App\Enums\OrderStatusEnum;
+use App\Enums\ProductStatusEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Laravel\Scout\Searchable;
 
 class Product extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes, Searchable;
 
     /**
      * Indicates if the IDs are auto-incrementing.
@@ -53,7 +56,7 @@ class Product extends Model
     /**
      * The attributes that should be appended to the model's array form.
      *
-     * @var array<string>
+     * @return HasOne
      */
     public function image()
     {
@@ -73,11 +76,25 @@ class Product extends Model
         return null;
     }
 
+    /**
+     * Get the OrderDetails for the product.
+     *
+     * @return string|null
+     */
     public function orderDetails()
     {
         return $this->hasMany(OrderDetail::class, 'product_id');
     }
 
+    /**
+     * Scope a query to include the sold count of products.
+     *
+     * This scope calculates the total quantity sold for each product
+     * by summing the quantity from order details where the order status is completed.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
     public function scopeWithSoldCount($query)
     {
         return $query->withSum([
@@ -87,5 +104,35 @@ class Product extends Model
                 });
             }
         ], 'quantity');
+    }
+
+    public function searchableAs(): string
+    {
+        return 'products_index';
+    }
+
+    public function toSearchableArray(): array
+    {
+        $array = $this->toArray();
+
+        $array['image_url'] = $this->image_url;
+
+        $this->loadSum(['orderDetails as sold_count' => function ($query) {
+            $query->whereHas('order', function ($subQuery) {
+                $subQuery->where('status', OrderStatusEnum::COMPLETED);
+            });
+        }], 'quantity');
+        $array['sold_count'] = $this->sold_count ?? 0;
+
+        unset($array['deleted_at'], $array['image_id']);
+        return $array;
+    }
+
+    /**
+     * Determine if the model should be searchable.
+     */
+    public function shouldBeSearchable()
+    {
+        return $this->status !== ProductStatusEnum::STOPPED;
     }
 }

@@ -1964,6 +1964,12 @@ ol {
     background-color: white;
 }
 
+.header .navbar-cart .profile:hover .main-btn {
+    color: #fff;
+    background-color: #0167F3;
+    border-color: transparent;
+}
+
 .profile {
     position: relative;
     display: inline-block;
@@ -2075,7 +2081,7 @@ ol {
 
 .mobile-search-content .close-search {
   position: absolute;
-  right: 0;
+  right: -5px;
   top: 10%;
   transform: translateY(-50%);
   background: none;

@@ -37,7 +37,7 @@ const MagnifyingGallery = ({image_url, images = []}) => {
   };
 
   return (
-    <div className="container mt-4">
+    <div className="mt-4">
       <main id="gallery">
         {/* Main Image with Magnifying Effect */}
         <div className="row justify-content-center">

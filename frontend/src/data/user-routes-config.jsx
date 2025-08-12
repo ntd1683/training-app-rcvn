@@ -12,6 +12,7 @@ const Products = lazy(() => import('../components/user/products'));
 const ProductDetail = lazy(() => import('../components/user/product-detail'));
 const Cart = lazy(() => import('../components/user/cart'));
 const Checkout = lazy(() => import('../components/user/checkout'));
+const Test = lazy(() => import('../components/user/algolia/test'));
 
 export const userRoutesConfig = [
     {
@@ -88,6 +89,13 @@ export const userRoutesConfig = [
         path: '/thanh-toan',
         element: Checkout,
         requireAuth: true,
+        layout: true,
+        title: 'Thanh Toán',
+    },
+    {
+        path: '/test',
+        element: Test,
+        requireAuth: false,
         layout: true,
         title: 'Thanh Toán',
     },

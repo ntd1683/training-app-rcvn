@@ -29,7 +29,7 @@ A web application to manage users and products, designed for admin.
 #### Backend (Laravel API with Sail)
 
 ```bash
-cd backend
+cd training-app
 cp .env.example .env
 ./vendor/bin/sail up -d
 ./vendor/bin/sail artisan key:generate
@@ -46,7 +46,8 @@ npm run dev
 
 ## Usage
 
-- Access the React app in your browser (usually at http://localhost:5173).
+- Access the React app in your browser (usually at http://localhost:3000).
+- Access the Laravel API (usually at http://localhost:80).
 - Login as admin or editor to manage users and products.
 
 ## License

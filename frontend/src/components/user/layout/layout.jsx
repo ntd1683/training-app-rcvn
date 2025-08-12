@@ -2,8 +2,10 @@ import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import Navbar from "./navbar";
 import Footer from "./footer";
-import { useUserInfo } from '~/hooks/user/use-auth.jsx';
+import { useUserInfo } from '~/hooks/user/use-auth';
 import { CartLayout } from './cart-layout';
+import { SearchDesktop } from '~/components/user/algolia/search-desktop';
+import SearchMobile from '../algolia/search-mobile';
 
 const Layout = React.memo(({ children }) => {
     const [isProfileOpen, setIsProfileOpen] = useState(false);
@@ -12,7 +14,6 @@ const Layout = React.memo(({ children }) => {
     const { user } = useUserInfo();
     const memoizedUser = useMemo(() => user, [user]);
 
-    // Toggle profile dropdown
     const toggleProfileDropdown = useCallback(() => {
         setIsProfileOpen(prev => !prev);
     }, []);
@@ -77,7 +78,7 @@ const Layout = React.memo(({ children }) => {
 
     return (
         <>
-            <header className={`header navbar-area sticky-navbar ${isScrolled ? 'scrolled' : ''}`} style={{ zIndex: '110' }}>
+            <header className={`user header navbar-area sticky-navbar ${isScrolled ? 'scrolled' : ''}`} style={{ zIndex: '110' }}>
                 <div className="header-middle">
                     <div className="container">
                         <div className="row align-items-center mx-0 custom-width">
@@ -86,19 +87,7 @@ const Layout = React.memo(({ children }) => {
                                     <img src="/logo192.png" alt="Logo" style={{ width: 'auto', height: '45px' }} />
                                 </Link>
                             </div>
-                            {/* Desktop Search */}
-                            <div className="col-lg-5 col-md-7 d-none d-md-block">
-                                <div className="main-menu-search">
-                                    <div className="navbar-search search-style-5">
-                                        <div className="search-input">
-                                            <input type="text" placeholder="Tìm Kiếm..." />
-                                        </div>
-                                        <div className="search-btn">
-                                            <button><i className="lni lni-search-alt"></i></button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                            <SearchDesktop />
 
                             <div className="col-lg-5 col-md-3 col-sm-5 col-9 pe-0">
                                 <div className="middle-right-area">
@@ -150,27 +139,7 @@ const Layout = React.memo(({ children }) => {
 
                 {/* Mobile Search Bar */}
                 {isMobileSearchOpen && (
-                    <div className="mobile-search-overlay d-md-none">
-                        <div className="container">
-                            <div className="mobile-search-content">
-                                <div className="navbar-search search-style-5 d-flex">
-                                    <div className="search-input">
-                                        <input type="text" placeholder="Tìm kiếm..." autoFocus />
-                                    </div>
-                                    <div className="search-btn">
-                                        <button className="main-btn"><i className="lni lni-search-alt"></i></button>
-                                    </div>
-                                    <button
-                                        className="close-search"
-                                        onClick={toggleMobileSearch}
-                                        aria-label="Close search"
-                                    >
-                                        <i className="lni lni-close"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <SearchMobile toggleMobileSearch={toggleMobileSearch} />
                 )}
 
                 <div className="container social-links">

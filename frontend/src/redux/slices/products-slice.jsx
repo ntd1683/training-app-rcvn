@@ -17,7 +17,11 @@ export const loadProducts = createAsyncThunk(
                         last_page: response.pagination?.last_page || 1,
                         from: response.pagination?.from || 0,
                         to: response.pagination?.to || 0,
-                    }
+                    },
+                    meta: {
+                        min: response.meta?.min || 0,
+                        max: response.meta?.max || 50000,
+                    },
                 };
             } else {
                 throw new Error('Lỗi khi lấy danh sách sản phẩm');
@@ -88,6 +92,10 @@ const initialState = {
         last_page: 1,
         from: 0,
         to: 0,
+    },
+    meta: {
+        min: 0,
+        max: 50000,
     },
     filters: {
         name: '',
@@ -244,6 +252,7 @@ const productSlice = createSlice({
                 state.isLoading = false;
                 state.data = action.payload.data;
                 state.pagination = action.payload.pagination;
+                state.meta = action.payload.meta;
                 state.error = null;
             })
             .addCase(loadProducts.rejected, (state, action) => {
