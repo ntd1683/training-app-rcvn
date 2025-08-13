@@ -8706,3 +8706,72 @@ a.anchor:hover {
     font-size: 1.1em;
     font-weight: bold;
 }
+
+.order .nav.nav-pills {
+    border: 1px solid #eee;
+    border-radius: 5px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.order .nav.nav-pills .nav-item.active {
+    border-bottom: 1px solid #0d6efd;
+}
+
+.order .nav.nav-pills .nav-item.active .nav-link {
+    color: #0d6efd;
+    background-color: transparent;
+}
+
+.order .nav.nav-pills .nav-item .nav-link {
+    color: black;
+}
+
+.order .nav.nav-pills .nav-item .nav-link:hover {
+    color: #0d6efd;
+}
+
+.order .input-group .input-group-text {
+    border: var(--bs-border-width) solid var(--bs-border-color);
+    background-color: transparent;
+}
+
+.input-group:hover .input-group-text {
+    border-color: var(--bs-gray-600) !important;
+}
+
+.border-success {
+    border: 1px solid;
+    border-color: rgba(var(--bs-success-rgb),var(--bs-text-opacity))!important;
+}
+
+.arrow-line::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    right: 0;
+    transform: translateY(-50%);
+    width: 0;
+    height: 0;
+    border-top: 5px transparent solid;
+    border-bottom: 5px transparent solid;
+    border-left: 8px solid #28a745; /* Matches Bootstrap's bg-success color */
+}
+
+.border-secondary {
+    border: 1px solid;
+    border-color: rgba(var(--bs-secondary-rgb),var(--bs-text-opacity))!important;
+}
+
+.border-danger {
+    border: 1px solid;
+    border-color: rgba(var(--bs-danger-rgb),var(--bs-text-opacity))!important;
+}
+
+.order-detail .btn-comback:hover {
+    --bs-text-opacity: 1;
+    color: rgba(var(--bs-primary-rgb), var(--bs-text-opacity)) !important;
+}
+
+.products-info a:hover h6, .products-info a:hover p, .products-info a:hover small {
+    color: rgba(var(--bs-primary-rgb), var(--bs-text-opacity)) !important;
+}

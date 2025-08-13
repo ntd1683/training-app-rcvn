@@ -26,7 +26,7 @@ const InputPassword = ({label, name, value, onChange, disabled, isRequired, erro
                 />
                 <span
                     className="input-group-text cursor-pointer bg-white"
-                    style={{zIndex: 1}}
+                    style={{zIndex: 1, padding: '5px 10px', border: 'var(--bs-border-width) solid var(--bs-border-color)'}}
                     onClick={togglePasswordVisibility}
                 >
                     <Icon icon={showPassword ? 'bx:hide' : 'bx:show'} />

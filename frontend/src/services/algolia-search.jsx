@@ -1,4 +1,3 @@
-// services/algoliaService.js
 import { algoliasearch } from 'algoliasearch';
 
 export const client = algoliasearch(
@@ -29,19 +28,19 @@ export const searchProducts = async (query) => {
           'currency',
           'sold_count'
         ],
-        filters: 'status:1 OR status:2' // Only show SELLING and OUT_OF_STOCK
+        filters: 'status:1 OR status:2'
       }]
     });
 
     const hits = results[0].hits;
 
     return hits.map(hit => ({
-      id: hit.id || hit.objectID, // Use custom id field first, fallback to objectID
+      id: hit.id || hit.objectID,
       objectID: hit.objectID,
       name: hit.name,
       description: hit.description,
-      image: hit.image_url, // Map image_url to image
-      price: parseFloat(hit.price), // Convert string to number
+      image: hit.image_url,
+      price: parseFloat(hit.price),
       quantity: hit.quantity,
       status: hit.status,
       currency: hit.currency,
@@ -76,7 +75,6 @@ export const getSearchSuggestions = async (query) => {
   }
 };
 
-// Search with filters
 export const searchProductsWithFilters = async (query, filters = {}) => {
   try {
     const { category, priceRange, status } = filters;

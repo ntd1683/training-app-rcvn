@@ -99,7 +99,7 @@ class OrderService
             $dataOrder = [
                 'id' => Str::uuid(),
                 'customer_id' => $customerId,
-                'order_code' => Str::uuid(),
+                'order_code' => Str::upper(Str::random(15)),
                 'total_amount' => 0,
                 'status' => OrderStatusEnum::PENDING->value,
                 'recipient_name' => strip_tags($data['name']),

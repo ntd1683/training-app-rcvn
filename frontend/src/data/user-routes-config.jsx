@@ -12,7 +12,8 @@ const Products = lazy(() => import('../components/user/products'));
 const ProductDetail = lazy(() => import('../components/user/product-detail'));
 const Cart = lazy(() => import('../components/user/cart'));
 const Checkout = lazy(() => import('../components/user/checkout'));
-const Test = lazy(() => import('../components/user/algolia/test'));
+const Order = lazy(() => import('../components/user/order'));
+const OrderDetailPage = lazy(() => import('../components/user/order-detail'));
 
 export const userRoutesConfig = [
     {
@@ -93,11 +94,18 @@ export const userRoutesConfig = [
         title: 'Thanh Toán',
     },
     {
-        path: '/test',
-        element: Test,
-        requireAuth: false,
+        path: '/don-hang',
+        element: Order,
+        requireAuth: true,
         layout: true,
-        title: 'Thanh Toán',
+        title: 'Đơn Hàng',
+    },
+    {
+        path: '/don-hang-chi-tiet/:id',
+        element: OrderDetailPage,
+        requireAuth: true,
+        layout: true,
+        title: 'Chi Tiết Đơn Hàng',
     },
     {
         path: '/khong-co-quyen',
