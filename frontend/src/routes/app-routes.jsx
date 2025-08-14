@@ -10,27 +10,16 @@ const AppRoutes = () => {
   useEffect(() => {
     const isAdminRoute = location.pathname.startsWith('/admin');
     if (isAdminRoute) {
-      // Load admin CSS
-      loadCSS('/src/assets/css/admin/core.css');
-      loadCSS('/src/assets/css/admin/layout.css');
-      loadCSS('/src/assets/css/admin/custom-toast.css');
-
-      // Remove user CSS
-      removeCSS('/src/assets/css/user/main.css');
-      removeCSS('/src/assets/css/user/line-icon.css');
-      removeCSS('/src/assets/css/user/pre-loader.css');
-      removeCSS('/src/assets/css/user/search.css');
+      // Load admin CSS với dynamic import
+      import('../assets/css/admin/core.css');
+      import('../assets/css/admin/layout.css'); 
+      import('../assets/css/admin/custom-toast.css');
     } else {
-      // Load user CSS
-      loadCSS('/src/assets/css/user/main.css');
-      loadCSS('/src/assets/css/user/line-icon.css');
-      loadCSS('/src/assets/css/user/pre-loader.css');
-      loadCSS('/src/assets/css/user/search.css');
-
-      // Remove admin CSS
-      removeCSS('/src/assets/css/admin/core.css');
-      removeCSS('/src/assets/css/admin/layout.css');
-      removeCSS('/src/assets/css/admin/custom-toast.css');
+      // Load user CSS với dynamic import
+      import('../assets/css/user/main.css');
+      import('../assets/css/user/line-icon.css');
+      import('../assets/css/user/pre-loader.css');
+      import('../assets/css/user/search.css');
     }
   }, [location.pathname]);
 

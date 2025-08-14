@@ -27,6 +27,7 @@ class DatabaseSeeder extends Seeder
             OrderDetailsTableSeeder::class,
             PaymentTransactionsTableSeeder::class,
             BannersTableSeeder::class,
+            OrderTimelineTableSeeder::class,
         ]);
     }
 }
