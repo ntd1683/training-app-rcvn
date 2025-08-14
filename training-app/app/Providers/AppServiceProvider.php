@@ -12,6 +12,8 @@ use App\Repositories\OrderDetailRepository;
 use App\Repositories\OrderDetailRepositoryEloquent;
 use App\Repositories\OrderRepository;
 use App\Repositories\OrderRepositoryEloquent;
+use App\Repositories\OrderTimelineRepository;
+use App\Repositories\OrderTimelineRepositoryEloquent;
 use App\Repositories\PaymentRepository;
 use App\Repositories\PaymentRepositoryEloquent;
 use App\Repositories\PaymentTransactionRepository;
@@ -87,13 +89,15 @@ class AppServiceProvider extends ServiceProvider
             return new BannerService($app->make(BannerRepository::class));
         });
 
+        $this->app->bind(OrderTimelineRepository::class, OrderTimelineRepositoryEloquent::class);
         $this->app->bind(OrderDetailRepository::class, OrderDetailRepositoryEloquent::class);
         $this->app->bind(OrderRepository::class, OrderRepositoryEloquent::class);
         $this->app->bind(OrderService::class, function ($app) {
             return new OrderService(
                 $app->make(OrderRepository::class),
                 $app->make(ProductRepository::class),
-                $app->make(OrderDetailRepository::class)
+                $app->make(OrderDetailRepository::class),
+                $app->make(OrderTimelineRepository::class)
             );
         });
 
@@ -104,7 +108,8 @@ class AppServiceProvider extends ServiceProvider
                 $app->make(OrderRepository::class),
                 $app->make(OrderService::class),
                 $app->make(PaymentRepository::class),
-                $app->make(PaymentTransactionRepository::class)
+                $app->make(PaymentTransactionRepository::class),
+                $app->make(OrderTimelineRepository::class)
             );
         });
     }

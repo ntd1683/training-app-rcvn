@@ -2,10 +2,10 @@
 
 namespace Database\Seeders;
 
+use App\Models\Banner;
 use App\Models\Product;
 use Illuminate\Database\Seeder;
 use Faker\Factory as Faker;
-use App\Models\Banner;
 
 class BannersTableSeeder extends Seeder
 {

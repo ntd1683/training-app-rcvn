@@ -18,6 +18,12 @@ abstract class BaseApiResource extends JsonResource
      * Common error codes and messages.
      */
     protected const ERROR_CODES = [
+        400 => ['code' => 400, 'message' => 'Yêu cầu không hợp lệ'],
+        404 => ['code' => 404, 'message' => 'Không tìm thấy tài nguyên'],
+        422 => ['code' => 422, 'message' => 'Dữ liệu không hợp lệ'],
+        401 => ['code' => 401, 'message' => 'Không có quyền truy cập'],
+        403 => ['code' => 403, 'message' => 'Truy cập bị cấm'],
+        500 => ['code' => 500, 'message' => 'Lỗi máy chủ'],
         'NOT_FOUND' => ['code' => 404, 'message' => 'Không tìm thấy tài nguyên'],
         'VALIDATION_FAILED' => ['code' => 422, 'message' => 'Dữ liệu không hợp lệ'],
         'UNAUTHORIZED' => ['code' => 401, 'message' => 'Không có quyền truy cập'],
@@ -36,9 +42,9 @@ abstract class BaseApiResource extends JsonResource
     /**
      * Create a new resource instance.
      *
-     * @param  mixed           $resource
-     * @param  string|null     $message
-     * @param  string|int|null $successKey
+     * @param mixed $resource
+     * @param string|null $message
+     * @param string|int|null $successKey
      * @return void
      */
     public function __construct($resource, ?string $message = null, $successKey = 'OK')
@@ -51,7 +57,7 @@ abstract class BaseApiResource extends JsonResource
     /**
      * Transform the resource into an array.
      *
-     * @param  \Illuminate\Http\Request $request
+     * @param \Illuminate\Http\Request $request
      * @return array
      */
     public function toArray($request)
@@ -62,7 +68,7 @@ abstract class BaseApiResource extends JsonResource
     /**
      * Return a success JSON response.
      *
-     * @param  \Illuminate\Http\Request $request
+     * @param \Illuminate\Http\Request $request
      * @return JsonResponse
      */
     public function toResponse($request)
@@ -73,10 +79,10 @@ abstract class BaseApiResource extends JsonResource
     /**
      * Create a success JSON response.
      *
-     * @param  mixed  $data
-     * @param  string $message
-     * @param  int    $statusCode
-     * @param  string $successKey
+     * @param mixed $data
+     * @param string $message
+     * @param int $statusCode
+     * @param string $successKey
      * @return JsonResponse
      */
     protected function successResponse($data = null, ?string $message = null, string $successKey = 'OK'): JsonResponse
@@ -99,13 +105,14 @@ abstract class BaseApiResource extends JsonResource
     /**
      * Create an error JSON response with predefined error code.
      *
-     * @param  string      $errorKey
-     * @param  mixed       $errors
-     * @param  string|null $customMessage
+     * @param string $errorKey
+     * @param mixed $errors
+     * @param string|null $customMessage
      * @return JsonResponse
      */
     public function errorResponse(string $errorKey, $errors = null, ?string $customMessage = null): JsonResponse
     {
+        \Log::info('Error in BaseApiResource: ' . $errorKey);
         $error = self::ERROR_CODES[$errorKey] ?? self::ERROR_CODES['SERVER_ERROR'];
         $message = $customMessage ?? $error['message'];
 

@@ -4,7 +4,6 @@ namespace App\Repositories\Criteria;
 
 use App\Enums\ProductStatusEnum;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Facades\Log;
 use Prettus\Repository\Contracts\CriteriaInterface;
 use Prettus\Repository\Contracts\RepositoryInterface;
 

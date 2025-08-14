@@ -1,8 +1,15 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { Icon } from '@iconify/react';
 import { CustomBtn } from '../ui/custom-btn';
 
-export const Filters = ({ searchTerm, setSearchTerm, dateFilter, setDateFilter }) => {
+export const Filters = ({ inputName, setInputName, inputDate, setInputDate, onSearch, onResetSearch }) => {
+    const inputDateRef = useRef(null);
+
+    const handleFocus = () => {
+        if (inputDateRef.current) {
+            inputDateRef.current.showPicker(); // Kích hoạt lịch của trình duyệt
+        }
+    };
     return (
         <div className="row mb-4">
             <div className="col-md-6 mb-3">
@@ -14,8 +21,8 @@ export const Filters = ({ searchTerm, setSearchTerm, dateFilter, setDateFilter }
                         type="text"
                         className="form-control"
                         placeholder="Tìm kiếm theo mã đơn hàng, tên khách hàng, số điện thoại..."
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
+                        value={inputName}
+                        onChange={(e) => setInputName(e.target.value)}
                     />
                 </div>
             </div>
@@ -27,18 +34,23 @@ export const Filters = ({ searchTerm, setSearchTerm, dateFilter, setDateFilter }
                     <input
                         type="date"
                         className="form-control"
-                        value={dateFilter}
-                        onChange={(e) => setDateFilter(e.target.value)}
+                        value={inputDate}
+                        onChange={(e) => setInputDate(e.target.value)}
+                        onFocus={handleFocus}
+                        ref={inputDateRef}
                     />
                 </div>
             </div>
             <div className="d-block d-md-flex gap-3 justify-content-md-end">
                 <div className="col-12 col-md-4 mb-3">
-                    <CustomBtn classNameBtn="w-100" >Tìm Kiếm</CustomBtn>
+                    <CustomBtn classNameBtn="w-100" onClick={onSearch}>
+                        Tìm Kiếm
+                    </CustomBtn>
                 </div>
                 <div className="col-12 col-md-4 mb-3">
                     <CustomBtn
                         classNameBtn="w-100 bg-secondary"
+                        onClick={onResetSearch}
                     >Xoá Tìm Kiếm</CustomBtn>
                 </div>
             </div>

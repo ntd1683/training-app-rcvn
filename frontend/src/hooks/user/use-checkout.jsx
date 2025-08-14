@@ -10,7 +10,7 @@ import {
     selectCartItems,
     selectCartTotalAmount,
 } from '~/redux/selectors/cart-selector';
-import { createOrder, approveOrder } from '~/services/api';
+import { createOrder, approveOrder, cancelOrder } from '~/services/api';
 import { toast } from 'react-toastify';
 
 export const useCheckout = () => {
@@ -60,7 +60,7 @@ export const useCheckout = () => {
         if (cartItems.length === 0) {
             navigate('/gio-hang', { state: { error: "Giỏ hàng trống!" } });
         }
-    // eslint-disable-next-line
+        // eslint-disable-next-line
     }, []);
 
     useEffect(() => {
@@ -191,7 +191,7 @@ export const useCheckout = () => {
             const response = await approveOrder(data.orderID);
             if (response.success) {
                 dispatch(clearCart());
-                navigate('/', {state: {success: "Thanh toán thành công!"}});
+                navigate('/', { state: { success: "Thanh toán thành công!" } });
             } else {
                 toast.error('Thanh toán thất bại!');
             }
@@ -200,11 +200,20 @@ export const useCheckout = () => {
         }
     }, [navigate, dispatch]);
 
-    const handleCancelOrder = useCallback(() => {
-        toast.info('Thanh toán đã bị hủy!');
+    const handleCancelOrder = useCallback(async (data) => {
+        try {
+            const response = await cancelOrder(data.orderID);
+            if (response.success) {
+                toast.info('Thanh toán đã bị huỷ!');
+            } else {
+                toast.error('Hủy thanh toán đơn hàng thất bại!');
+            }
+        } catch (error) {
+            toast.error('Có lỗi xảy ra khi hủy thanh toán đơn hàng!');
+        }
     }, []);
 
-    const handleErrorOrder = useCallback(() => {
+    const handleErrorOrder = useCallback((data) => {
         toast.error('Có lỗi xảy ra khi thanh toán!');
     }, []);
 

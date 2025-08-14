@@ -40,6 +40,8 @@ class Order extends Model
         'note',
     ];
 
+    protected $appends = ['products'];
+
     public function customer()
     {
         return $this->belongsTo(Customer::class, 'customer_id');
@@ -47,7 +49,12 @@ class Order extends Model
 
     public function paymentTransactions()
     {
-        return $this->hasMany(PaymentTransaction::class, 'order_id', 'id');
+        return $this->hasMany(PaymentTransaction::class, 'order_id');
+    }
+
+    public function orderTimeline()
+    {
+        return $this->hasMany(OrderTimeline::class, 'order_id');
     }
 
     public function orderDetails()
@@ -65,5 +72,23 @@ class Order extends Model
             'id',
             'product_id'
         );
+    }
+
+    public function getProductsAttribute()
+    {
+        return $this->orderDetails->map(function ($detail) {
+            $product = $detail->product;
+            if ($product) {
+                $productData = $product->toArray();
+                unset($productData['image']);
+
+                $productData['image_url'] = $product->image ? asset('storage/' . $product->image->path) : null;
+                $productData['order_price'] = $detail->price;
+                $productData['order_quantity'] = $detail->quantity;
+
+                return $productData;
+            }
+            return null;
+        })->filter();
     }
 }

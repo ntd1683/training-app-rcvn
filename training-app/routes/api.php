@@ -5,6 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AuthCustomerController;
 use App\Http\Controllers\BannerController;
 use App\Http\Controllers\LogoutController;
+use App\Http\Controllers\OrderCustomerController;
 use App\Http\Controllers\PayPalController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\ProductController;
@@ -89,8 +90,17 @@ Route::middleware('auth:customer')->group(function () {
         ->middleware('throttle:6,1')
         ->name('api.customer.verification.resend');
     Route::prefix('orders')->group(function () {
-        Route::post('/paypal/create', [PayPalController::class, 'createOrder'])
-            ->name('paypal.create.order');
-        Route::post('/paypal/approve', [PayPalController::class, 'captureOrder']);
+        Route::get('/', [OrderCustomerController::class, 'index'])
+            ->name('orders.index');
+        Route::get('/{id}', [OrderCustomerController::class, 'edit'])
+            ->name('orders.edit');
+        Route::prefix('paypal')->group(function () {
+            Route::post('/create', [PayPalController::class, 'createOrder'])
+                ->name('paypal.create.order');
+            Route::post('/approve', [PayPalController::class, 'captureOrder']);
+            Route::post('/repay', [PayPalController::class, 'repay']);
+            Route::post('/cancel', [PayPalController::class, 'cancelOrder'])
+                ->name('paypal.cancel.order');
+        });
     });
-});
+})->middleware('throttle:60,1');

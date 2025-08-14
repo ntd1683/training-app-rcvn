@@ -1,24 +1,30 @@
 import React from 'react';
 import moment from 'moment';
+import OrderTimelineType from '~/constants/order-timeline-type';
 
-const parseDate = (timeString) => {
-    return moment(timeString, 'HH:mm DD-MM-YYYY');
+const formatDate = (timeString) => {
+    return moment(timeString).format('HH:mm:ss DD-MM-YYYY');
 };
 
+const Timeline = ({ timeline = [] }) => {
+    if (!timeline || timeline.length === 0) {
+        return <div className="text-center text-muted">Không có dữ liệu</div>;
+    }
 
-const Timeline = ({ timeline }) => {
     const sortedTimeline = [...timeline].sort((a, b) =>
-        parseDate(b.time) - parseDate(a.time)
+        formatDate(b.created_at) - formatDate(a.created_at)
     );
 
 
     const classColor = (type) => {
         switch (type) {
-            case 'completed':
+            case OrderTimelineType.COMPLETED:
                 return 'success';
-            case 'failed':
+            case OrderTimelineType.PAID:
+                return 'success';
+            case OrderTimelineType.FAILED:
                 return 'danger';
-            case 'pending':
+            case OrderTimelineType.PENDING:
             default:
                 return 'secondary';
         }
@@ -45,7 +51,7 @@ const Timeline = ({ timeline }) => {
                     </div>
                     <div className="flex-grow-1">
                         <div className="d-flex justify-content-between align-items-start mb-1">
-                            <small className="text-muted">{item.time}</small>
+                            <small className="text-muted">{formatDate(item.created_at)}</small>
                             <small className={`fw-bold text-${classColor(item.type)}`}>
                                 {item.note}
                             </small>

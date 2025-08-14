@@ -5,7 +5,7 @@ import { formatPrice } from '~/utils/common';
 const Summary = ({ orderData }) => {
     
     const total_product = () => {
-        return orderData.products.reduce((total, product) => total + product.order_price * product.order_quantity, 0);
+        return orderData.products.reduce((total, product) => total + parseFloat(product.order_price) * product.order_quantity, 0);
     };
 
     return (
@@ -27,12 +27,13 @@ const Summary = ({ orderData }) => {
                                 <hr />
                                 <div className="d-flex justify-content-between mb-3">
                                     <strong>Thành tiền</strong>
-                                    <strong className="text-danger">{formatPrice(orderData.totalAmount)}</strong>
+                                    <strong className="text-danger">{formatPrice(parseFloat(orderData.total_amount))}</strong>
                                 </div>
                                 <div className="text-end">
                                     <small className="text-muted">Phương thức Thanh toán</small><br />
                                     <small className="fw-bold"
-                                    ><Icon icon="mdi:paypal" width="24" /> {orderData.payment_type ?? 'Chưa xác định'}
+                                    ><Icon icon="mdi:paypal" width="24" /> Paypal
+                                    {/* {orderData.payment_type ?? 'Chưa xác định'} */}
                                     </small>
                                 </div>
                             </div>

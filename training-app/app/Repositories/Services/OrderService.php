@@ -3,9 +3,13 @@
 namespace App\Repositories\Services;
 
 use App\Enums\OrderStatusEnum;
+use App\Enums\OrderTimelineStatusEnum;
+use App\Enums\PaymentStatusEnum;
 use App\Enums\ProductStatusEnum;
+use App\Repositories\Criteria\OrderFilterCriteria;
 use App\Repositories\OrderDetailRepository;
 use App\Repositories\OrderRepository;
+use App\Repositories\OrderTimelineRepository;
 use App\Repositories\ProductRepository;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
@@ -24,21 +28,28 @@ class OrderService
     protected OrderRepository $orderRepository;
     protected ProductRepository $productRepository;
     protected OrderDetailRepository $orderDetailRepository;
+    protected OrderTimelineRepository $orderTimelineRepository;
+
     /**
      * Order constructor.
      *
-     * @param OrderRepository   $orderRepository
+     * @param OrderRepository $orderRepository
      * @param ProductRepository $productRepository
+     * @param OrderDetailRepository $orderDetailRepository
+     * @param OrderTimelineRepository $orderTimelineRepository
      * @
      */
     public function __construct(
-        OrderRepository $orderRepository,
-        ProductRepository $productRepository,
-        OrderDetailRepository $orderDetailRepository
-    ) {
+        OrderRepository       $orderRepository,
+        ProductRepository     $productRepository,
+        OrderDetailRepository $orderDetailRepository,
+        OrderTimelineRepository $orderTimelineRepository
+    )
+    {
         $this->orderRepository = $orderRepository;
         $this->productRepository = $productRepository;
         $this->orderDetailRepository = $orderDetailRepository;
+        $this->orderTimelineRepository = $orderTimelineRepository;
     }
 
     /**
@@ -54,19 +65,30 @@ class OrderService
     /**
      * Find a order by ID
      *
-     * @param  int $id
+     * @param int $id
      * @return Model|null
      * @throws Exception
      */
-    public function getOrderById($id)
+    public function getOrderById($id, $customer)
     {
-        $order = $this->orderRepository->find($id);
+        $order = $this->orderRepository
+            ->with([
+                'orderDetails.product.image',
+                'paymentTransactions',
+                'orderTimeline' => function ($query) {
+                    $query->orderBy('created_at', 'desc');
+                }
+            ])->find($id);
         if (!$order) {
             throw new Exception('Không tìm thấy đơn hàng', 404);
         }
 
-        if ($order->is_delete) {
-            throw new Exception('Đơn hàng đã bị xóa', 404);
+        if ($order->deleted_at) {
+            throw new Exception('Đơn hàng đã bị xóa trước đó', 404);
+        }
+
+        if ($order->customer_id !== $customer->id) {
+            throw new Exception('Bạn không có quyền truy cập vào đơn hàng này', 403);
         }
 
         return $order;
@@ -75,7 +97,7 @@ class OrderService
     /**
      * Create a new order
      *
-     * @param  array $data
+     * @param array $data
      * @param  $currentUser
      * @return Model
      * @throws Throwable
@@ -111,6 +133,13 @@ class OrderService
                 'note' => strip_tags($data['note'] ?? ''),
             ];
             $order = $this->orderRepository->create($dataOrder);
+            $timeline = $this->orderTimelineRepository->create(
+                [
+                    'order_id' => $order->id,
+                    'type' => OrderTimelineStatusEnum::PENDING->value,
+                    'note' => 'Đơn hàng mới được tạo',
+                ]
+            );
 
             $totalAmount = 0;
             foreach ($data['products'] as $item) {
@@ -118,11 +147,11 @@ class OrderService
                 $totalAmount += $product['price'] * $item['quantity'];
                 $this->orderDetailRepository->create(
                     [
-                    'id' => Str::uuid(),
-                    'order_id' => $order->id,
-                    'product_id' => $product['id'],
-                    'quantity' => $item['quantity'],
-                    'price' => $product['price'],
+                        'id' => Str::uuid(),
+                        'order_id' => $order->id,
+                        'product_id' => $product['id'],
+                        'quantity' => $item['quantity'],
+                        'price' => $product['price'],
                     ]
                 );
             }
@@ -139,7 +168,7 @@ class OrderService
     /**
      * Update status a order
      *
-     * @param  int $id
+     * @param int $id
      * @return Model
      * @throws Throwable
      */
@@ -159,52 +188,23 @@ class OrderService
     }
 
     /**
-     * Get a product for editing
+     * Get filtered and paginated orders
      *
-     * @param  int $id
-     * @return Model
-     * @throws Exception
-     */
-    public function getProductForEdit($id)
-    {
-        //        $product = $this->productRepository->find($id);
-        //        if (!$product) {
-        //            throw new Exception('Không tìm thấy sản phẩm', 404);
-        //        }
-        //        if ($product->deleted_at) {
-        //            throw new Exception('Sản phẩm đã bị xóa trước đó', 404);
-        //        }
-        //
-        //        $product->image_url = $product->image ? asset('storage/' . $product->image->path) : null;
-        //        return $product;
-    }
-
-    /**
-     * Get filtered and paginated products
-     *
-     * @param  array $filters
+     * @param array $filters
      * @return LengthAwarePaginator
      */
-    public function getFilteredProducts(array $filters)
+    public function getFilteredOrdersForCustomer(array $filters, $customer)
     {
-        //        $query = $this->productRepository->newQuery();
-        //
-        //        $criteria = new ProductFilterCriteria($filters);
-        //        $query = $criteria->apply($query, $this->productRepository);
-        //
-        //        $count = $query->count();
-        //
-        //        $perPage = $count > 20 ? ($filters['per_page'] ?? 10) : 20;
-        //        $currentPage = $filters['page'] ?? 1;
-        //        $products = $query->paginate($perPage, ['*'], 'page', $currentPage);
-        //        $products->getCollection()->transform(function ($item) {
-        //            $item->image_url = $item->image ? asset('storage/' . $item->image->path) : null;
-        //            unset($item->image);
-        //            $item->author = $item->user ? $item->user->name : 'N/A';
-        //            return $item;
-        //        });
-        //        $max = $this->productRepository->max('price');
-        //        $products->max_value = round($max / 100) * 100;
-        //        return $products;
+        $query = $this->orderRepository->newQuery();
+        $criteria = new OrderFilterCriteria($filters);
+        $query->where('customer_id', $customer->id);
+        $query->with([
+            'orderDetails.product.image',
+        ]);
+        $query = $criteria->apply($query, $this->orderRepository);
+        $perPage = $filters['per_page'] ?? 10;
+        $currentPage = $filters['page'] ?? 1;
+        $orders = $query->paginate($perPage, ['*'], 'page', $currentPage);
+        return $orders;
     }
 }

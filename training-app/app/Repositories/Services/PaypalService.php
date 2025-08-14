@@ -3,10 +3,13 @@
 namespace App\Repositories\Services;
 
 use App\Enums\OrderStatusEnum;
+use App\Enums\OrderTimelineStatusEnum;
 use App\Enums\PaymentStatusEnum;
 use App\Repositories\OrderRepository;
+use App\Repositories\OrderTimelineRepository;
 use App\Repositories\PaymentRepository;
 use App\Repositories\PaymentTransactionRepository;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Log;
 use Exception;
@@ -26,6 +29,7 @@ class PaypalService
     protected PaymentRepository $paymentRepository;
     protected PaymentTransactionRepository $paymentTransactionRepository;
     protected OrderService $orderService;
+    protected OrderTimelineRepository $orderTimelineRepository;
     private $client;
 
     /**
@@ -33,12 +37,16 @@ class PaypalService
      *
      * @param OrderRepository $orderRepository
      * @param OrderService    $orderService
+     * @param PaymentRepository $paymentRepository
+     * @param PaymentTransactionRepository $paymentTransactionRepository
+     * @param OrderTimelineRepository $orderTimelineRepository
      */
     public function __construct(
         OrderRepository $orderRepository,
         OrderService $orderService,
         PaymentRepository $paymentRepository,
-        PaymentTransactionRepository $paymentTransactionRepository
+        PaymentTransactionRepository $paymentTransactionRepository,
+        OrderTimelineRepository $orderTimelineRepository
     ) {
         $this->orderRepository = $orderRepository;
         $this->orderService = $orderService;
@@ -50,6 +58,7 @@ class PaypalService
             config('paypal.sandbox.client_secret')
         );
         $this->client = new PayPalHttpClient($environment);
+        $this->orderTimelineRepository = $orderTimelineRepository;
     }
 
     /**
@@ -98,6 +107,14 @@ class PaypalService
                 'status' => OrderStatusEnum::PROCESSING->value,
                 ]
             );
+
+            $this->orderTimelineRepository->create(
+                [
+                    'order_id' => $order->id,
+                    'type' => OrderTimelineStatusEnum::PROCESSING->value,
+                    'note' => 'Đơn hàng đã được tạo và đang chờ thanh toán',
+                ]
+            );
             \Log::info(
                 'PayPal order created successfully', [
                 'id' => $response->result->id,
@@ -134,6 +151,16 @@ class PaypalService
 
         if ($order->deleted_at) {
             throw new Exception('Đơn hàng đã bị xóa', 404);
+        }
+
+        $orderDetails = $order->orderDetails()->with('product')->get();
+        foreach ($orderDetails as $orderDetail) {
+            if ($orderDetail->product) {
+                $currentQuantity = $orderDetail->product->quantity;
+                if ($currentQuantity < $orderDetail->quantity) {
+                    throw new Exception("Sản phẩm {$orderDetail->product->name} không đủ số lượng tồn kho");
+                }
+            }
         }
 
         $request = new OrdersCaptureRequest($order->paypal_order_id);
@@ -174,27 +201,172 @@ class PaypalService
             }
 
             $transaction = $this->paymentTransactionRepository->create($transactionData);
+            $this->orderTimelineRepository->create(
+                [
+                    'order_id' => $orderId,
+                    'type' => $status === 'COMPLETED'
+                        ? OrderTimelineStatusEnum::PAID->value
+                        : OrderTimelineStatusEnum::FAILED->value,
+                    'note' => 'Đơn hàng đã được thanh toán thành công',
+                ]
+            );
 
             if ($response->result->status === 'COMPLETED') {
-                $order->update(['status' => OrderStatusEnum::COMPLETED->value]);
                 $orderDetails = $order->orderDetails()->with('product')->get();
                 foreach ($orderDetails as $orderDetail) {
                     if ($orderDetail->product) {
                         $currentQuantity = $orderDetail->product->quantity;
                         if ($currentQuantity >= $orderDetail->quantity) {
+                            $order->update(['status' => OrderStatusEnum::COMPLETED->value]);
+                            $this->orderTimelineRepository->create(
+                                [
+                                    'order_id' => $orderId,
+                                    'type' => OrderTimelineStatusEnum::COMPLETED->value,
+                                    'note' => 'Đơn hàng đã được hoàn thành',
+                                ]
+                            );
                             $orderDetail->product->decrement('quantity', $orderDetail->quantity);
                         } else {
+                            \Log::info('Sản phẩm không đủ số lượng tồn kho', [
+                                'order_id' => $order->id,
+                                'customer_id' => $customerId,
+                                'product_id' => $orderDetail->product->id,
+                                'required_quantity' => $orderDetail->quantity,
+                                'current_quantity' => $currentQuantity,
+                            ]);
+                            $this->orderTimelineRepository->create(
+                                [
+                                    'order_id' => $orderId,
+                                    'type' => OrderTimelineStatusEnum::FAILED->value,
+                                    'note' => "Sản phẩm {$orderDetail->product->name} không đủ số lượng tồn kho",
+                                ]
+                            );
                             throw new Exception("Sản phẩm {$orderDetail->product->name} không đủ số lượng tồn kho");
                         }
                     }
                 }
 
-                return $transaction;
+                return $order;
             }
             $order->update(['status' => OrderStatusEnum::PAYMENT_FAILED->value]);
             throw new Exception('Payment not completed', 400);
         } catch (\Exception $e) {
             $order->update(['status' => OrderStatusEnum::PAYMENT_FAILED->value]);
+            Log::info('Error updating order: ' . $e->getMessage());
+            throw $e;
+        }
+    }
+
+    /**
+     * Re Payment for an order
+     *
+     * @param string $id
+     * @param $currentUser
+     * @return array
+     * @throws Exception
+     */
+    public function repay($id, $currentUser)
+    {
+
+        $order = $this->orderRepository->find($id);
+
+        if (!$order) {
+            throw new Exception('Không thể tạo đơn hàng', 500);
+        }
+
+        if ($order->total_amount <= 0) {
+            throw new Exception('Số tiền đơn hàng phải lớn hơn 0', 404);
+        }
+
+        if ($order->status === OrderStatusEnum::COMPLETED->value) {
+            throw new Exception('Đơn hàng không ở trạng thái thanh toán thất bại', 400);
+        }
+
+        if ($order->customer_id !== $currentUser->id) {
+            throw new Exception('Bạn không có quyền thanh toán đơn hàng này', 403);
+        }
+
+        $request = new OrdersCreateRequest();
+        $request->prefer('return=representation');
+        $request->body = [
+            'intent' => 'CAPTURE',
+            'purchase_units' => [
+                [
+                    'amount' => [
+                        'currency_code' => config('paypal.currency'),
+                        'value' => $order->total_amount,
+                    ],
+                    'description' => "Order #{$order->order_code}",
+                ],
+            ],
+            'application_context' => [
+                'shipping_preference' => 'NO_SHIPPING',
+                'brand_name' => config('app.name'),
+            ],
+        ];
+
+        try {
+            $response = $this->client->execute($request);
+            $order->update(
+                [
+                    'paypal_order_id' => $response->result->id,
+                    'status' => OrderStatusEnum::PROCESSING->value,
+                ]
+            );
+            $this->orderTimelineRepository->create([
+                'order_id' => $order->id,
+                'type' => OrderTimelineStatusEnum::PROCESSING->value,
+                'note' => 'Đơn hàng đang chờ thanh toán lại',
+            ]);
+            \Log::info(
+                'PayPal order repay successfully', [
+                    'id' => $response->result->id,
+                    'status' => $response->result->status,
+                    'user_id' => $currentUser->id,
+                    'order_id' => $order->id,
+                    'full_response' => json_encode($response->result),
+                ]
+            );
+            return [
+                'id' => $response->result->id,
+                'status' => $response->result->status,
+                'order_id' => $order->id,
+            ];
+        } catch (\Exception $e) {
+            \Log::error('PayPal order repay error', ['error' => $e->getMessage()]);
+            throw $e;
+        }
+    }
+
+    /**
+     * cancel order
+     *
+     * @param  int $id
+     * @return bool
+     * @throws Throwable
+     */
+    public function cancelOrder($id)
+    {
+        $order = $this->orderRepository->findByField('paypal_order_id', $id)->first();
+        if (!$order) {
+            throw new Exception('Không tìm thấy đơn hàng', 404);
+        }
+
+        if ($order->deleted_at) {
+            throw new Exception('Đơn hàng đã bị xóa', 404);
+        }
+
+        try {
+            $this->orderTimelineRepository->create(
+                [
+                    'order_id' => $order->id,
+                    'type' => OrderTimelineStatusEnum::FAILED->value,
+                    'note' => 'Đơn hàng đã bị xoá',
+                ]
+            );
+            $order->delete();
+            return true;
+        } catch (\Exception $e) {
             Log::info('Error updating order: ' . $e->getMessage());
             throw $e;
         }

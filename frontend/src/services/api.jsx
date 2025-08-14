@@ -44,7 +44,7 @@ export const register = async (fullName, email, password, rePassword) => {
 export const sendVerifyEmail = async (isAdmin = false) => {
   const url = isAdmin ? `${prefixApi}/admin/email/resend` : `${prefixApi}/email/resend`;
   const token = localStorage.getItem('token');
-  const response = await api.post(url, null,{
+  const response = await api.post(url, null, {
     headers: { Authorization: `Bearer ${token}` },
   });
   return response.data;
@@ -100,7 +100,7 @@ export const updateProfileData = async (data, isAdmin = false) => {
       new_password: data.newPassword || undefined,
       new_password_confirmation: data.confirmPassword || undefined,
     };
-    
+
     const response = await api.put(url, params, {
       headers: { Authorization: `Bearer ${token}` },
     });
@@ -577,6 +577,49 @@ export const fetchBanners = async (page = 1, perPage = 10, filters = {}) => {
 };
 
 // Order management functions
+export const fetchOrders = async (page = 1, perPage = 10, filters = {}) => {
+  try {
+    const token = localStorage.getItem('token');
+
+    const params = {
+      page,
+      per_page: perPage,
+      name: filters.filterName || undefined,
+      date: filters.filterDate || undefined,
+      status: filters.filterStatus || undefined,
+      sort_by: filters.sortBy,
+      sort_order: filters.sortOrder
+    };
+
+    Object.keys(params).forEach(key => {
+      if (params[key] === undefined) {
+        delete params[key];
+      }
+    });
+
+    const response = await api.get(`${prefixApi}/orders`, {
+      params,
+      headers: { Authorization: `Bearer ${token}` }
+    });
+
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const fetchOrderById = async (id) => {
+  try {
+    const token = localStorage.getItem('token');
+    const response = await api.get(`${prefixApi}/orders/${id}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return response.data.data;
+  } catch (error) {
+    throw error;
+  }
+}
+
 export const createOrder = async (orderData) => {
   try {
     const token = localStorage.getItem('token');
@@ -593,6 +636,42 @@ export const approveOrder = async (orderId) => {
   try {
     const token = localStorage.getItem('token');
     const response = await api.post(`${prefixApi}/orders/paypal/approve`, { 'order_id': orderId }, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const cancelOrder = async (orderId) => {
+  try {
+    const token = localStorage.getItem('token');
+    const response = await api.post(`${prefixApi}/orders/paypal/cancel`, { 'order_id': orderId }, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const errorOrder = async (orderId) => {
+  try {
+    const token = localStorage.getItem('token');
+    const response = await api.post(`${prefixApi}/orders/paypal/error`, { 'order_id': orderId }, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const rePayOrder = async (orderId) => {
+  try {
+    const token = localStorage.getItem('token');
+    const response = await api.post(`${prefixApi}/orders/paypal/repay`, { 'order_id': orderId }, {
       headers: { Authorization: `Bearer ${token}` },
     });
     return response.data;

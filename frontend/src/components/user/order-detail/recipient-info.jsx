@@ -1,4 +1,4 @@
-const RecipientInfo = ({ recipient, postCode }) => {
+const RecipientInfo = ({ recipient }) => {
     return (
         <div className="row mb-4">
             <div className="col-md-6">
@@ -14,7 +14,7 @@ const RecipientInfo = ({ recipient, postCode }) => {
             </div>
             <div className="col-md-6 text-end">
                 <small className="text-muted">Mã bưu điện</small><br />
-                <small className="text-muted">{postCode}</small>
+                <small className="text-muted">{recipient.post_code}</small>
             </div>
         </div>
     );

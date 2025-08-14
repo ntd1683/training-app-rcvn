@@ -92,7 +92,6 @@ const Checkout = () => {
                                         )}
                                     </div>
                                     <div className="price-table-btn button">
-                                        {console.log(checkout)}
                                         <button
                                             className={`btn btn-alt w-100 mb-3 ${checkout ? "d-none" : "d-block"}`}
                                             onClick={handleCheckout}>
