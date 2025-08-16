@@ -6,16 +6,16 @@ import {
 // Async thunks
 export const initializeAuth = createAsyncThunk(
   'auth_user/initializeAuth',
-  async (_, { rejectWithValue }) => {
+  async (_, { rejectWithValue, getState }) => {
     try {
-      const token = localStorage.getItem('token');
+      const state = getState();
+      const persistedToken = state.auth_user.token;
+      const token = persistedToken || localStorage.getItem('customer_token');
+
       if (token) {
         const response = await verifyToken({ isAdmin: true });
-        
         if (response.success) {
           const userData = response.data;
-          localStorage.setItem('permissions', JSON.stringify(userData.permissions || []));
-          localStorage.setItem('user', JSON.stringify(userData));
           return {
             user: userData,
             permissions: userData.permissions || [],
@@ -26,8 +26,10 @@ export const initializeAuth = createAsyncThunk(
         }
       } else {
         // Try to get cached data
-        const cachedPermissions = localStorage.getItem('permissions');
-        const cachedUser = localStorage.getItem('user');
+        const state = getState();
+        const cachedUser = state.auth_user.user || localStorage.getItem('user');
+        const cachedPermissions = localStorage.getItem('user_permissions');
+
         if (cachedPermissions && cachedUser) {
           const parsedUser = JSON.parse(cachedUser);
           const parsedPermissions = JSON.parse(cachedPermissions);
@@ -41,9 +43,8 @@ export const initializeAuth = createAsyncThunk(
       }
     } catch (error) {
       // Clear invalid data
-      localStorage.removeItem('token');
-      localStorage.removeItem('permissions');
-      localStorage.removeItem('user');
+      localStorage.removeItem('user_token');
+      localStorage.removeItem('user_permissions');
       return rejectWithValue(error.message);
     }
   });
@@ -56,9 +57,8 @@ export const loginUser = createAsyncThunk(
       const data = response.data;
 
       if (response.success && data.token) {
-        localStorage.setItem('token', data.token);
-        localStorage.setItem('permissions', JSON.stringify(data.permissions || []));
-        localStorage.setItem('user', JSON.stringify(data));
+        localStorage.setItem('user_token', data.token);
+        localStorage.setItem('user_permissions', JSON.stringify(data.permissions || []));
 
         return {
           user: data,
@@ -79,13 +79,11 @@ export const logoutUser = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       await logout({ isAdmin: true });
-      localStorage.removeItem('token');
-      localStorage.removeItem('permissions');
-      localStorage.removeItem('user');
+      localStorage.removeItem('user_token');
+      localStorage.removeItem('user_permissions');
     } catch (error) {
-      localStorage.removeItem('token');
-      localStorage.removeItem('permissions');
-      localStorage.removeItem('user');
+      localStorage.removeItem('user_token');
+      localStorage.removeItem('user_permissions');
       throw new Error('Đăng xuất thất bại. Vui lòng thử lại.');
     }
   }
@@ -102,6 +100,7 @@ const initialState = {
 
   isLoginLoading: false,
   isRegisterLoading: false,
+  isUpdateLoading: false,
   isLogoutLoading: false,
 };
 
@@ -119,6 +118,10 @@ const authSlice = createSlice({
       state.token = token;
       state.permissions = permissions;
       state.isAuthenticated = true;
+      if (token) {
+        localStorage.setItem('user_token', token);
+        localStorage.setItem('user_permissions', JSON.stringify(permissions || []));
+      }
     },
 
     clearAuthData: (state) => {
@@ -126,9 +129,24 @@ const authSlice = createSlice({
       state.token = null;
       state.permissions = [];
       state.isAuthenticated = false;
-      localStorage.removeItem('token');
-      localStorage.removeItem('permissions');
-      localStorage.removeItem('user');
+      localStorage.removeItem('user_token');
+      localStorage.removeItem('user_permissions');
+    },
+    syncTokenToLocalStorage: (state) => {
+      if (state.token) {
+        localStorage.setItem('user_token', state.token);
+      }
+
+      if (state.permissions) {
+        localStorage.setItem('user_permissions', JSON.stringify(state.permissions || []));
+      }
+    },
+    restoreAuthState: (state) => {
+      if (state.user && state.token && state.permissions) {
+        state.isAuthenticated = true;
+        localStorage.setItem('user_token', state.token);
+        localStorage.setItem('user_permissions', JSON.stringify(state.permissions || []));
+      }
     },
   },
   extraReducers: (builder) => {

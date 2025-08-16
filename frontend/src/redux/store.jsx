@@ -15,11 +15,12 @@ import {
   cartPersistConfig, 
   wishlistPersistConfig, 
   authCustomerPersistConfig,
+  authUserPersistConfig,
   persistConfig
 } from './persist-config';
 
 const rootReducer = combineReducers({
-  auth_user: authUserReducer,
+  auth_user: persistReducer(authUserPersistConfig, authUserReducer),
   auth_customer: persistReducer(authCustomerPersistConfig, authCustomerReducer),
   products: productsReducer,
   banners: bannersReducer,

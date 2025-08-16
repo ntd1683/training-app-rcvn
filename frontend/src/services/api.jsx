@@ -12,7 +12,7 @@ const api = axios.create({
 
 export const getAnalytics = async () => {
   try {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('user_token');
     const response = await api.get(`${prefixApi}/admin/analytics`, {
       headers: { Authorization: `Bearer ${token}` },
     });
@@ -79,7 +79,7 @@ export const getProfileData = async (data, isAdmin = false) => {
   }
 
   try {
-    const token = isAdmin ? localStorage.getItem('token') : localStorage.getItem('customer_token');
+    const token = isAdmin ? localStorage.getItem('user_token') : localStorage.getItem('customer_token');
     const response = await api.get(url, {
       headers: { Authorization: `Bearer ${token}` },
     });
@@ -92,7 +92,7 @@ export const getProfileData = async (data, isAdmin = false) => {
 export const updateProfileData = async (data, isAdmin = false) => {
   const url = isAdmin ? `${prefixApi}/admin/profile` : `${prefixApi}/profile`;
   try {
-    const token = isAdmin ? localStorage.getItem('token') : localStorage.getItem('customer_token');
+    const token = isAdmin ? localStorage.getItem('user_token') : localStorage.getItem('customer_token');
     const params = {
       name: data.name,
       // email: data.email,
@@ -135,7 +135,7 @@ export const verifyToken = async (isAdmin = false) => {
 
 export const getUser = async () => {
   try {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('user_token');
     const response = await api.get(`${prefixApi}/user`, {
       headers: { Authorization: `Bearer ${token}` },
     });
@@ -148,7 +148,7 @@ export const getUser = async () => {
 // User management functions
 export const fetchUsers = async (page = 1, perPage = 10, filters = {}) => {
   try {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('user_token');
 
     const params = {
       page,
@@ -180,7 +180,7 @@ export const fetchUsers = async (page = 1, perPage = 10, filters = {}) => {
 
 export const fetchUserById = async (id) => {
   try {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('user_token');
     const response = await api.get(`${prefixApi}/users/${id}`, {
       headers: { Authorization: `Bearer ${token}` },
     });
@@ -195,7 +195,7 @@ export const createUser = async (userData) => {
     userData.is_active = userData.isActive;
     userData.is_delete = userData.isDelete;
     userData.group_role = userData.groupRole;
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('user_token');
     const response = await api.post(`${prefixApi}/users`, userData, {
       headers: { Authorization: `Bearer ${token}` },
     });
@@ -210,7 +210,7 @@ export const updateUser = async (id, userData) => {
     userData.is_active = userData.isActive;
     userData.is_delete = userData.isDelete;
     userData.group_role = userData.groupRole;
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('user_token');
     const response = await api.put(`${prefixApi}/users/${id}`, userData, {
       headers: { Authorization: `Bearer ${token}` },
     });
@@ -222,7 +222,7 @@ export const updateUser = async (id, userData) => {
 
 export const deleteUser = async (id) => {
   try {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('user_token');
     await api.delete(`${prefixApi}/users/${id}`, {
       headers: { Authorization: `Bearer ${token}` },
     });
@@ -235,7 +235,7 @@ export const deleteUser = async (id) => {
 
 export const toggleUserStatus = async (id) => {
   try {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('user_token');
     await api.patch(`${prefixApi}/users/${id}/toggle-status`, {}, {
       headers: { Authorization: `Bearer ${token}` },
     });
@@ -248,7 +248,7 @@ export const toggleUserStatus = async (id) => {
 // Role management functions
 export const fetchRoles = async (page = 1, perPage = 10, filters = {}) => {
   try {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('user_token');
 
     const params = {
       page,
@@ -278,7 +278,7 @@ export const fetchRoles = async (page = 1, perPage = 10, filters = {}) => {
 
 export const fetchRoleByName = async (name) => {
   try {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('user_token');
     const response = await api.get(`${prefixApi}/roles/${name}`, {
       headers: { Authorization: `Bearer ${token}` },
     });
@@ -290,7 +290,7 @@ export const fetchRoleByName = async (name) => {
 
 export const fetchAllRoles = async () => {
   try {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('user_token');
 
     const response = await api.get(`${prefixApi}/roles/all`, {
       headers: { Authorization: `Bearer ${token}` }
@@ -304,7 +304,7 @@ export const fetchAllRoles = async () => {
 
 export const createRole = async (roleData) => {
   try {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('user_token');
     const response = await api.post(`${prefixApi}/roles`, roleData, {
       headers: { Authorization: `Bearer ${token}` },
     });
@@ -316,7 +316,7 @@ export const createRole = async (roleData) => {
 
 export const updateRole = async (roleName, roleData) => {
   try {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('user_token');
     const response = await api.put(`${prefixApi}/roles/${roleName}`, roleData, {
       headers: { Authorization: `Bearer ${token}` },
     });
@@ -328,7 +328,7 @@ export const updateRole = async (roleName, roleData) => {
 
 export const deleteRole = async (roleName) => {
   try {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('user_token');
     await api.delete(`${prefixApi}/roles/${roleName}`, {
       headers: { Authorization: `Bearer ${token}` },
     });
@@ -342,7 +342,7 @@ export const deleteRole = async (roleName) => {
 // Permission management functions
 export const fetchPermissions = async (page = 1, perPage = 10, filters = {}) => {
   try {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('user_token');
 
     const params = {
       page,
@@ -372,7 +372,7 @@ export const fetchPermissions = async (page = 1, perPage = 10, filters = {}) => 
 
 export const fetchAllPermissions = async () => {
   try {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('user_token');
 
     const response = await api.get(`${prefixApi}/permissions/all`, {
       headers: { Authorization: `Bearer ${token}` }
@@ -386,7 +386,7 @@ export const fetchAllPermissions = async () => {
 
 export const fetchPermission = async (id) => {
   try {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('user_token');
     const response = await api.get(`${prefixApi}/permissions/${id}`, {
       headers: { Authorization: `Bearer ${token}` },
     });
@@ -398,7 +398,7 @@ export const fetchPermission = async (id) => {
 
 export const createPermission = async (permissionData) => {
   try {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('user_token');
     const response = await api.post(`${prefixApi}/permissions`, permissionData, {
       headers: { Authorization: `Bearer ${token}` },
     });
@@ -410,7 +410,7 @@ export const createPermission = async (permissionData) => {
 
 export const updatePermission = async (id, permissionData) => {
   try {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('user_token');
     const response = await api.put(`${prefixApi}/permissions/${id}`, permissionData, {
       headers: { Authorization: `Bearer ${token}` },
     });
@@ -422,7 +422,7 @@ export const updatePermission = async (id, permissionData) => {
 
 export const deletePermission = async (id) => {
   try {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('user_token');
     await api.delete(`${prefixApi}/permissions/${id}`, {
       headers: { Authorization: `Bearer ${token}` },
     });
@@ -436,7 +436,7 @@ export const deletePermission = async (id) => {
 // Product management functions
 export const fetchProducts = async (page = 1, perPage = 10, filters = {}) => {
   try {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('user_token');
 
     const params = {
       page,
@@ -468,7 +468,7 @@ export const fetchProducts = async (page = 1, perPage = 10, filters = {}) => {
 
 export const fetchProductById = async (id) => {
   try {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('user_token');
     const response = await api.get(`${prefixApi}/products/${id}`, {
       headers: { Authorization: `Bearer ${token}` },
     });
@@ -492,7 +492,7 @@ export const createProduct = async (productData) => {
       formData.append('image', productData.image);
     }
 
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('user_token');
     const response = await api.post(`${prefixApi}/products`, formData, {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -520,7 +520,7 @@ export const updateProduct = async (id, productData) => {
       formData.append('image', productData.image);
     }
 
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('user_token');
     const response = await api.post(`${prefixApi}/products/${id}`, formData, {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -535,7 +535,7 @@ export const updateProduct = async (id, productData) => {
 
 export const deleteProduct = async (id) => {
   try {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('user_token');
     await api.delete(`${prefixApi}/products/${id}`, {
       headers: { Authorization: `Bearer ${token}` },
     });
