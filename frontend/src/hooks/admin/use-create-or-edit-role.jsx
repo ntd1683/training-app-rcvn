@@ -2,8 +2,11 @@ import { useCallback, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { fetchPermissions, fetchAllPermissions, createRole, deleteRole, fetchRoleByName, updateRole } from '~/services/api';
 import { toast } from 'react-toastify';
+import { useUserInfo } from './use-auth';
 
 export const useCreateOrEditRole = () => {
+    const user = useUserInfo().user;
+
     const [selectedItems, setSelectedItems] = useState([]);
     const [inputName, setInputName] = useState('');
     const [errorName, setErrorName] = useState('');
@@ -169,6 +172,7 @@ export const useCreateOrEditRole = () => {
     };
 
     return {
+        user,
         inputName,
         setInputName,
         errorName,

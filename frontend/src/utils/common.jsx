@@ -1,7 +1,8 @@
 import DOMPurify from 'dompurify';
 
-export const checkRoleAndPermission = (permission) => {
-  const user = JSON.parse(localStorage.getItem('user') || '{}');
+export const checkRoleAndPermission = (permission, userInfo) => {
+  if (!userInfo) return false;
+  const user = userInfo;
 
   if (user.group_role === 'Admin' || user.group_role === 'SuperAdmin') {
     return true;

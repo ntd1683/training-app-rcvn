@@ -2,8 +2,11 @@ import { useCallback, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { createPermission, deletePermission, fetchPermission, updatePermission } from '~/services/api';
 import { toast } from 'react-toastify';
+import { useUserInfo } from './use-auth';
 
 export const useCreateOrEditPermission = () => {
+    const user = useUserInfo().user;
+
     const [inputModel, setInputModel] = useState('');
     const [errorModel, setErrorModel] = useState('');
     const [inputPermission, setInputPermission] = useState('');
@@ -173,6 +176,7 @@ export const useCreateOrEditPermission = () => {
     };
 
     return {
+        user,
         inputModel,
         setInputModel,
         errorModel,

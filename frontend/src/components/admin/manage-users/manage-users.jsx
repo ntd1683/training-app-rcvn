@@ -14,6 +14,7 @@ import { checkRoleAndPermission } from '~/utils/common.jsx';
 const ManageUsers = () => {
   const {
     data,
+    user,
     roles,
     isLoading,
     pagination,
@@ -48,7 +49,6 @@ const ManageUsers = () => {
   } = useUserManage();
   const navigate = useNavigate();
 
-  const user = JSON.parse(localStorage.getItem('user') || '{}');
   const currentUserId = user.id;
   const currentUserRole = user.group_role || 'Reviewer';
 
@@ -62,7 +62,7 @@ const ManageUsers = () => {
         <div className="card pb-4">
           <div className="card-header d-flex justify-content-between align-items-center">
             <h5 className="mb-0">Quản lý Users</h5>
-            {checkRoleAndPermission('create_user') && (
+            {checkRoleAndPermission('create_user', user) && (
               <Link to="/admin/users/add" className="btn btn-primary">
                 <Icon icon="bx:plus" className="me-1" />
                 Thêm mới
@@ -98,7 +98,7 @@ const ManageUsers = () => {
           <div className="table-responsive">
             <DataTable
               key={tableKey}
-              columns={columns(navigate, pagination, currentUserId, currentUserRole, setSelectedUser, setShowDeleteModal, setShowLockModal)}
+              columns={columns(navigate, pagination, currentUserId, currentUserRole, setSelectedUser, setShowDeleteModal, setShowLockModal, user)}
               data={data}
               pagination={false}
               customStyles={customStyles}

@@ -2,8 +2,10 @@ import { useSearchParams } from 'react-router-dom';
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { toast } from 'react-toastify';
 import { fetchUsers, deleteUser, toggleUserStatus, fetchAllRoles } from '~/services/api';
+import { useUserInfo } from './use-auth';
 
 export const useUserManage = () => {
+  const user = useUserInfo().user;
 
   // State
   const [data, setData] = useState([]);
@@ -254,6 +256,7 @@ export const useUserManage = () => {
   };
 
   return {
+    user,
     data,
     roles,
     isLoading,

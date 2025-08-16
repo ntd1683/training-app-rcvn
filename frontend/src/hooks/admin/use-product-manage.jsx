@@ -2,8 +2,10 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { fetchProducts, deleteProduct } from '~/services/api';
+import { useUserInfo } from './use-auth';
 
 export const useProductManage = () => {
+  const user = useUserInfo().user;
 
   // State
   const [data, setData] = useState([]);
@@ -230,6 +232,7 @@ export const useProductManage = () => {
 
   return {
     data,
+    user,
     isLoading,
     pagination,
     filterText,

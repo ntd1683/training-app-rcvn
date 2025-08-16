@@ -11,6 +11,7 @@ import { checkRoleAndPermission } from '~/utils/common';
 
 const Roles = () => {
     const {
+        user,
         data,
         isLoading,
         pagination,
@@ -35,13 +36,13 @@ const Roles = () => {
                     <div className="card-header d-block d-sm-flex justify-content-between align-items-center">
                         <h5 className="mb-0">Quản lý vai trò</h5>
                         <div>
-                            {checkRoleAndPermission('roles.store') && (
+                            {checkRoleAndPermission('roles.store', user) && (
                                 <Link to="/admin/permissions" className="btn btn-primary mt-sm-0 mt-3 d-flex d-sm-inline-flex align-items-center">
                                     <Icon icon="bx:blanket" className="me-1" />
                                     Quản Lý Quyền
                                 </Link>
                             )}
-                            {checkRoleAndPermission('roles.store') && (
+                            {checkRoleAndPermission('roles.store', user) && (
                                 <Link to="/admin/roles/add" className="btn btn-primary mt-sm-0 ms-sm-3 mt-3 d-flex d-sm-inline-flex align-items-center">
                                     <Icon icon="mdi:plus" className="me-1" />
                                     Thêm Vai Trò
@@ -66,7 +67,7 @@ const Roles = () => {
                     <div className="table-responsive">
                         <DataTable
                             key={tableKey}
-                            columns={columns(navigate, pagination)}
+                            columns={columns(navigate, pagination, user)}
                             data={data}
                             pagination={false}
                             customStyles={customStyles}

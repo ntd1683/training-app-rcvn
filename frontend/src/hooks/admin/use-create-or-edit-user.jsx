@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { fetchUserById, deleteUser, createUser, updateUser, fetchAllRoles } from '~/services/api';
 import { toast } from 'react-toastify';
 import RoleMain from '../../constants/role-main';
+import { useUserInfo } from './use-auth';
 
 export const useCreateOrEdit = () => {
     const [user, setUser] = useState({
@@ -28,7 +29,7 @@ export const useCreateOrEdit = () => {
     const [roles, setRoles] = useState([]);
 
     const navigate = useNavigate();
-    const userLocal = JSON.parse(localStorage.getItem('user') || '{}');
+    const userLocal = useUserInfo().user;
     const groupRoleLocal = userLocal.group_role || 'Reviewer';
 
     const path = window.location.pathname;

@@ -37,7 +37,7 @@ const NameWithImageTooltip = ({ row }) => {
     );
 };
 
-export const columns = (navigate, pagination, setSelectedProduct, setShowDeleteModal) => [
+export const columns = (navigate, pagination, setSelectedProduct, setShowDeleteModal, user) => [
     {
         id: 'index',
         name: '#',
@@ -124,14 +124,14 @@ export const columns = (navigate, pagination, setSelectedProduct, setShowDeleteM
         name: '',
         cell: (row) => (
             <div className="d-flex gap-2">
-                { checkRoleAndPermission('products.edit') && (
+                { checkRoleAndPermission('products.edit', user) && (
                     <button type="button" className="btn p-0" onClick={() => {
                         navigate(`/admin/products/edit/${row.id}`);
                     }}>
                         <Icon icon="bx:pen" className="text-primary fs-4" />
                     </button>
                 )}
-                { checkRoleAndPermission('products.delete') && (
+                { checkRoleAndPermission('products.delete', user) && (
                     <button type="button" className="btn p-0" onClick={() => {
                         setSelectedProduct(row);
                         setShowDeleteModal(true);

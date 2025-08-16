@@ -2,7 +2,7 @@ import { Icon } from '@iconify/react';
 import RoleMain from '~/constants/role-main';
 import { checkRoleAndPermission } from '~/utils/common';
 
-export const columns = (navigate, pagination, currentUserId, currentUserRole, setSelectedUser, setShowDeleteModal, setShowLockModal) => [
+export const columns = (navigate, pagination, currentUserId, currentUserRole, setSelectedUser, setShowDeleteModal, setShowLockModal, user) => [
     {
         name: '#',
         cell: (row, index) => index + 1 + (pagination.current_page - 1) * pagination.per_page,
@@ -43,14 +43,14 @@ export const columns = (navigate, pagination, currentUserId, currentUserRole, se
             const isHigherRole = RoleMain.getValue(currentUserRole) > RoleMain.getValue(row.group_role);
             return (isHigherRole && (
                 <div className="d-flex gap-2">
-                    { checkRoleAndPermission('users.edit') && (
+                    { checkRoleAndPermission('users.edit', user) && (
                         <button type="button" className="btn p-0" onClick={() => {
                             navigate(`/admin/users/edit/${row.id}`);
                         }}>
                             <Icon icon="bx:pen" className="text-primary fs-4" />
                         </button>
                     )}
-                    { checkRoleAndPermission('users.delete') && Number(row.id) !== Number(currentUserId) && (
+                    { checkRoleAndPermission('users.delete', user) && Number(row.id) !== Number(currentUserId) && (
                         <button type="button" className="btn p-0" onClick={() => {
                             setSelectedUser(row);
                             setShowDeleteModal(true);
@@ -58,7 +58,7 @@ export const columns = (navigate, pagination, currentUserId, currentUserRole, se
                             <Icon icon="bx:trash" className="text-danger fs-4" />
                         </button>
                     )}
-                    { checkRoleAndPermission('users.update') && (
+                    { checkRoleAndPermission('users.update', user) && (
                         <button type="button" className="btn p-0" onClick={() => {
                             setSelectedUser(row);
                             setShowLockModal(true);

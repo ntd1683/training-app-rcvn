@@ -43,7 +43,7 @@ export const register = async (fullName, email, password, rePassword) => {
 
 export const sendVerifyEmail = async (isAdmin = false) => {
   const url = isAdmin ? `${prefixApi}/admin/email/resend` : `${prefixApi}/email/resend`;
-  const token = isAdmin ? localStorage.getItem('admin_token') : localStorage.getItem('customer_token');
+  const token = isAdmin ? localStorage.getItem('user_token') : localStorage.getItem('customer_token');
   const response = await api.post(url, null, {
     headers: { Authorization: `Bearer ${token}` },
   });
@@ -111,7 +111,7 @@ export const updateProfileData = async (data, isAdmin = false) => {
 };
 
 export const logout = async (isAdmin = false) => {
-  const token = isAdmin ? localStorage.getItem('admin_token') : localStorage.getItem('customer_token');
+  const token = isAdmin ? localStorage.getItem('user_token') : localStorage.getItem('customer_token');
   const url = isAdmin ? `${prefixApi}/admin/logout` : `${prefixApi}/logout`;
   const response = await api.post(url, {}, {
     headers: { Authorization: `Bearer ${token}` },
@@ -122,7 +122,7 @@ export const logout = async (isAdmin = false) => {
 
 export const verifyToken = async (isAdmin = false) => {
   try {
-    const token = isAdmin ? localStorage.getItem('admin_token') : localStorage.getItem('customer_token');
+    const token = isAdmin ? localStorage.getItem('user_token') : localStorage.getItem('customer_token');
     const url = isAdmin ? `${prefixApi}/admin/verify-token` : `${prefixApi}/verify-token`;
     const response = await api.post(url, null, {
       headers: { Authorization: `Bearer ${token}` },

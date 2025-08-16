@@ -7,6 +7,7 @@ import CustomModalDelete from '~/components/admin/ui/custom-modal-delete';
 
 const CreateOrEditRole = () => {
     const {
+        user,
         inputName,
         setInputName,
         errorName,
@@ -77,6 +78,7 @@ const CreateOrEditRole = () => {
                         titleModel="Vai Trò"
                         page="roles"
                         setShowModal={setShowDeleteModal}
+                        user={user}
                     />
                 </form>
             </div>

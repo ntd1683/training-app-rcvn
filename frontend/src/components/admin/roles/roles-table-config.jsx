@@ -53,7 +53,7 @@ const processPermissions = (permissions) => {
     return result;
 };
 
-export const columns = (navigate, pagination) => [
+export const columns = (navigate, pagination, user) => [
     {
         name: '#',
         cell: (row, index) => index + 1 + (pagination.current_page - 1) * pagination.per_page,
@@ -113,7 +113,7 @@ export const columns = (navigate, pagination) => [
         name: 'Hành động',
         cell: (row) => (
             <div className="d-flex gap-2">
-                { checkRoleAndPermission('roles.edit') && (
+                { checkRoleAndPermission('roles.edit', user) && (
                     <button type="button" className="btn p-0" onClick={() => {
                         navigate(`/admin/roles/edit/${row.name}`);
                     }}>

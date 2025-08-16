@@ -3,8 +3,11 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { fetchProductById, deleteProduct, createProduct, updateProduct } from '~/services/api';
 import { toast } from 'react-toastify';
 import DOMPurify from 'dompurify';
+import { useUserInfo } from './use-auth';
 
 export const useCreateOrEditProduct = () => {
+    const user = useUserInfo().user;
+
     const [product, setProduct] = useState({
         name: '',
         description: '',
@@ -205,6 +208,7 @@ export const useCreateOrEditProduct = () => {
     }
 
     return {
+        user,
         product,
         setProduct,
         isEdit,

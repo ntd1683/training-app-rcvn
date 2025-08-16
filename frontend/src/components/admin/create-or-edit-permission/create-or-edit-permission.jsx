@@ -6,6 +6,7 @@ import CustomModalDelete from '~/components/admin/ui/custom-modal-delete';
 
 const CreateOrEditPermission = () => {
     const {
+        user,
         inputModel,
         setInputModel,
         errorModel,
@@ -148,6 +149,7 @@ const CreateOrEditPermission = () => {
                         titleModel="Quyền"
                         page="permissions"
                         setShowModal={setShowDeleteModal}
+                        user={user}
                     />
                 </form>
             </div>

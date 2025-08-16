@@ -47,7 +47,7 @@ const Layout = ({children}) => {
           <div className="menu-inner-shadow"></div>
           <ul className="menu-inner py-1">
             {listNav.map((navItem) => (
-              checkRoleAndPermission(navItem.permission) && (
+              checkRoleAndPermission(navItem.permission, user) && (
                 <li key={navItem.path} className={`menu-item ${isActive(navItem.path)}`}>
                   <Link to={navItem.path} className="menu-link">
                     <Icon icon={navItem.icon} className="menu-icon bx" />
@@ -85,7 +85,7 @@ const Layout = ({children}) => {
             <div className="navbar-nav-right d-flex align-items-center justify-content-end" id="navbar-collapse">
               <ul className="navbar-nav d-none d-sm-flex flex-sm-row justify-content-evenly w-100">
                 {listNav.map((navItem) => (
-                  checkRoleAndPermission(navItem.permission) && (
+                  checkRoleAndPermission(navItem.permission, user) && (
                     <li key={navItem.path} className={`nav-item ${isActive(navItem.path)}`}>
                       <Link to={navItem.path} className="nav-link d-flex align-items-center">
                         <Icon icon={navItem.icon} className="me-2" style={{ fontSize: '1.5rem' }} />

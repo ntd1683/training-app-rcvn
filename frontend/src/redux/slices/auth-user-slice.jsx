@@ -10,7 +10,7 @@ export const initializeAuth = createAsyncThunk(
     try {
       const state = getState();
       const persistedToken = state.auth_user.token;
-      const token = persistedToken || localStorage.getItem('customer_token');
+      const token = persistedToken || localStorage.getItem('user_token');
 
       if (token) {
         const response = await verifyToken({ isAdmin: true });

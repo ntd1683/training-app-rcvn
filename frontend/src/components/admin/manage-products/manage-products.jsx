@@ -14,6 +14,7 @@ import { checkRoleAndPermission } from '~/utils/common';
 const ManageProducts = () => {
   const {
     data,
+    user,
     isLoading,
     pagination,
     filterText,
@@ -53,7 +54,7 @@ const ManageProducts = () => {
         <div className="card pb-4">
           <div className="card-header d-flex justify-content-between align-items-center">
             <h5 className="mb-0">Quản lý Sản Phẩm</h5>
-            {checkRoleAndPermission('products.store') && (
+            {checkRoleAndPermission('products.store', user) && (
               <Link to="/admin/products/add" className="btn btn-primary px-2">
                 <Icon icon="mdi:plus" className="me-1" />
                 Thêm Sản Phẩm
@@ -89,7 +90,7 @@ const ManageProducts = () => {
           <div className="table-responsive">
             <DataTable
               key={tableKey}
-              columns={columns(navigate, pagination, setSelectedProduct, setShowDeleteModal)}
+              columns={columns(navigate, pagination, setSelectedProduct, setShowDeleteModal, user)}
               data={data}
               pagination={false}
               customStyles={customStyles}

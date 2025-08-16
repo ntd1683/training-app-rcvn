@@ -11,6 +11,7 @@ import { checkRoleAndPermission } from '~/utils/common';
 
 const Permissions = () => {
     const {
+        user,
         data,
         isLoading,
         pagination,
@@ -34,7 +35,7 @@ const Permissions = () => {
                 <div className="card pb-4">
                     <div className="card-header d-block d-sm-flex justify-content-between align-items-center">
                         <h5 className="mb-0">Quản lý Quyền</h5>
-                        {checkRoleAndPermission('permissions.store') && (
+                        {checkRoleAndPermission('permissions.store', user) && (
                             <Link to="/admin/permissions/add" className="btn btn-primary mt-sm-0 mt-3 ms-sm-3 d-flex d-sm-inline-flex align-items-center">
                                 <Icon icon="bx:plus" className="me-1" />
                                 Thêm mới
@@ -58,7 +59,7 @@ const Permissions = () => {
                     <div className="table-responsive">
                         <DataTable
                             key={tableKey}
-                            columns={columns(navigate, pagination)}
+                            columns={columns(navigate, pagination, user)}
                             data={data}
                             pagination={false}
                             customStyles={customStyles}

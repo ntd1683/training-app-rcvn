@@ -1,8 +1,10 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { fetchRoles } from '~/services/api';
+import { useUserInfo } from './use-auth';
 
 export const useRoleManage = () => {
+  const user = useUserInfo().user;
 
   // State
   const [data, setData] = useState([]);
@@ -170,6 +172,7 @@ export const useRoleManage = () => {
   };
 
   return {
+    user,
     data,
     isLoading,
     pagination,

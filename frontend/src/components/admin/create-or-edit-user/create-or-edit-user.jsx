@@ -186,6 +186,7 @@ const CreateOrEditUser = () => {
                         titleModel="Thành Viên"
                         page="users"
                         setShowModal={setShowDeleteModal}
+                        user={user}
                     />
                 </form>
             </div>

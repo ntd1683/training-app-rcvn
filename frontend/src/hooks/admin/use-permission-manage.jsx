@@ -1,8 +1,11 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { fetchPermissions } from '~/services/api';
 import { useSearchParams } from 'react-router-dom';
+import { useUserInfo } from './use-auth';
 
 export const usePermissionManage = () => {
+  const user = useUserInfo().user;
+
   // State
   const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -163,6 +166,7 @@ export const usePermissionManage = () => {
 
   return {
     data,
+    user,
     isLoading,
     pagination,
     filterName,

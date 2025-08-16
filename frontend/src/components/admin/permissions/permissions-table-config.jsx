@@ -1,7 +1,7 @@
 import { Icon } from '@iconify/react';
 import { checkRoleAndPermission } from '~/utils/common';
 
-export const columns = (navigate, pagination) => [
+export const columns = (navigate, pagination, user) => [
     {
         name: '#',
         cell: (row, index) => index + 1 + (pagination.current_page - 1) * pagination.per_page,
@@ -24,7 +24,7 @@ export const columns = (navigate, pagination) => [
         name: 'Hành động',
         cell: (row) => (
             <div className="d-flex gap-2">
-                { checkRoleAndPermission('permissions.edit') && (
+                { checkRoleAndPermission('permissions.edit', user) && (
                     <button type="button" className="btn p-0" onClick={() => {
                         navigate(`/admin/permissions/edit/${row.id}`);
                     }}>
