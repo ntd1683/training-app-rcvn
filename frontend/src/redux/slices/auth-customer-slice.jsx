@@ -7,14 +7,16 @@ import {
 // Async thunks
 export const initializeAuth = createAsyncThunk(
   'auth_customer/initializeAuth',
-  async (_, { rejectWithValue }) => {
+  async (_, { rejectWithValue, getState }) => {
     try {
-      const token = localStorage.getItem('token');
+      const state = getState();
+      const persistedToken = state.auth_customer.token;
+      const token = persistedToken || localStorage.getItem('customer_token');
+
       if (token) {
         const response = await verifyToken();
         if (response.success) {
           const userData = response.data;
-          localStorage.setItem('user', JSON.stringify(userData));
           return {
             user: userData,
             token,
@@ -23,21 +25,10 @@ export const initializeAuth = createAsyncThunk(
           throw new Error('Token verification failed');
         }
       } else {
-        // Try to get cached data
-        const cachedUser = localStorage.getItem('user');
-        if (cachedUser) {
-          const parsedUser = JSON.parse(cachedUser);
-          return {
-            user: parsedUser,
-            token: null,
-          };
-        }
-        throw new Error('No auth data found');
+        throw new Error('No token found');
       }
     } catch (error) {
-      // Clear invalid data
-      localStorage.removeItem('token');
-      localStorage.removeItem('user');
+      localStorage.removeItem('customer_token');
       return rejectWithValue(error.message);
     }
   });
@@ -50,8 +41,7 @@ export const loginUser = createAsyncThunk(
       const data = response.data;
 
       if (response.success && data.token) {
-        localStorage.setItem('token', data.token);
-        localStorage.setItem('user', JSON.stringify(data));
+        localStorage.setItem('customer_token', data.token);
 
         return {
           user: data,
@@ -152,16 +142,17 @@ export const changeResetPasswordCustomer = createAsyncThunk(
 
 export const getProfile = createAsyncThunk(
   'auth_customer/getProfile',
-  async (_, { rejectWithValue }) => {
+  async (_, { rejectWithValue, getState }) => {
     try {
-      const token = localStorage.getItem('token');
+      const state = getState();
+      const token = state.auth_customer.token || localStorage.getItem('customer_token');
+
       if (!token) {
         throw new Error('Không có token xác thực');
       }
       const response = await getProfileData();
       if (response.success) {
         const userData = response.data;
-        localStorage.setItem('user', JSON.stringify(userData));
         return {
           user: userData,
         };
@@ -176,12 +167,15 @@ export const getProfile = createAsyncThunk(
 
 export const updateProfile = createAsyncThunk(
   'auth_customer/updateProfile',
-  async ({data}, { rejectWithValue }) => {
+  async ({ data }, { rejectWithValue }) => {
     try {
       const response = await updateProfileData(data);
-      
+
       if (response.success) {
-        return true;
+        const userData = response.data;
+        return {
+          user: userData,
+        };
       } else {
         throw new Error(response.message || 'Lỗi cập nhật thông tin người dùng');
       }
@@ -196,11 +190,9 @@ export const logoutUser = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       await logout();
-      localStorage.removeItem('token');
-      localStorage.removeItem('user');
+      localStorage.removeItem('customer_token');
     } catch (error) {
-      localStorage.removeItem('token');
-      localStorage.removeItem('user');
+      localStorage.removeItem('customer_token');
       throw new Error('Đăng xuất thất bại. Vui lòng thử lại.');
     }
   }
@@ -208,14 +200,15 @@ export const logoutUser = createAsyncThunk(
 
 const initialState = {
   isAuthenticated: false,
-  isLoading: true,
-  user: null,
+  isLoading: false,
+  customer: null,
   token: null,
 
   authError: null,
 
   isLoginLoading: false,
   isRegisterLoading: false,
+  isUpdateLoading: false,
   isLogoutLoading: false,
 };
 
@@ -228,18 +221,33 @@ const authSlice = createSlice({
     },
 
     setAuthData: (state, action) => {
-      const { user, token } = action.payload;
-      state.user = user;
+      const { customer, token } = action.payload;
+      state.customer = customer;
       state.token = token;
       state.isAuthenticated = true;
+      if (token) {
+        localStorage.setItem('customer_token', token);
+      }
     },
 
     clearAuthData: (state) => {
-      state.user = null;
+      state.customer = null;
       state.token = null;
       state.isAuthenticated = false;
-      localStorage.removeItem('token');
-      localStorage.removeItem('user');
+      localStorage.removeItem('customer_token');
+    },
+
+    syncTokenToLocalStorage: (state) => {
+      if (state.token) {
+        localStorage.setItem('customer_token', state.token);
+      }
+    },
+
+    restoreAuthState: (state) => {
+      if (state.customer && state.token) {
+        state.isAuthenticated = true;
+        localStorage.setItem('customer_token', state.token);
+      }
     },
   },
   extraReducers: (builder) => {
@@ -249,14 +257,14 @@ const authSlice = createSlice({
       })
       .addCase(initializeAuth.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.user = action.payload.user;
+        state.customer = action.payload.user;
         state.token = action.payload.token;
         state.isAuthenticated = true;
         state.authError = null;
       })
       .addCase(initializeAuth.rejected, (state, action) => {
         state.isLoading = false;
-        state.user = null;
+        state.customer = null;
         state.token = null;
         state.isAuthenticated = false;
         state.authError = action.payload;
@@ -270,7 +278,7 @@ const authSlice = createSlice({
       })
       .addCase(loginUser.fulfilled, (state, action) => {
         state.isLoginLoading = false;
-        state.user = action.payload.user;
+        state.customer = action.payload.user;
         state.token = action.payload.token;
         state.isAuthenticated = true;
         state.isLoginAdmin = action.payload.isAdmin;
@@ -296,8 +304,8 @@ const authSlice = createSlice({
       })
 
       .addCase(verifyEmailCustomer.fulfilled, (state, action) => {
-        if (state.user) {
-          state.user.email_verified_at = action.payload.email_verified_at;
+        if (state.customer) {
+          state.customer.email_verified_at = action.payload.email_verified_at;
         }
       })
 
@@ -306,21 +314,23 @@ const authSlice = createSlice({
       })
       .addCase(getProfile.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.user = action.payload.user;
+        state.customer = action.payload.user;
       })
       .addCase(getProfile.rejected, (state, action) => {
         state.isLoading = false;
       })
 
       .addCase(updateProfile.pending, (state) => {
-        state.isLoading = true;
+        state.isUpdateLoading = true;
       })
       .addCase(updateProfile.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.user = action.payload.user;
+        state.isUpdateLoading = false;
+        if (state.customer && action.payload) {
+          state.customer = { ...state.customer, ...action.payload };
+        }
       })
       .addCase(updateProfile.rejected, (state, action) => {
-        state.isLoading = false;
+        state.isUpdateLoading = false;
       })
 
       .addCase(logoutUser.pending, (state) => {
@@ -328,14 +338,14 @@ const authSlice = createSlice({
       })
       .addCase(logoutUser.fulfilled, (state) => {
         state.isLogoutLoading = false;
-        state.user = null;
+        state.customer = null;
         state.token = null;
         state.isAuthenticated = false;
         state.authError = null;
       })
       .addCase(logoutUser.rejected, (state) => {
         state.isLogoutLoading = false;
-        state.user = null;
+        state.customer = null;
         state.token = null;
         state.isAuthenticated = false;
       });
@@ -346,6 +356,8 @@ export const {
   clearAuthError,
   setAuthData,
   clearAuthData,
+  restoreAuthState,
+  syncTokenToLocalStorage,
 } = authSlice.actions;
 
 export default authSlice.reducer;

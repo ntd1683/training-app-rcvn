@@ -1,10 +1,10 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from './use-auth';
 import { toast } from 'react-toastify';
 
 export const useProfile = () => {
-    const { isAuthenticated, user, handleUpdateProfile, handleSendVerificationEmail } = useAuth();
+    const { isAuthenticated, customer, handleUpdateProfile, handleSendVerificationEmail } = useAuth();
     const navigate = useNavigate();
 
     const [formData, setFormData] = useState({
@@ -30,30 +30,31 @@ export const useProfile = () => {
 
     const [isChangingPassword, setIsChangingPassword] = useState(false);
     const [errors, setErrors] = useState({});
-    const [isLoading, setIsLoading] = useState(true);
+    const [isLoading, setIsLoading] = useState(false);
     const [userStats, setUserStats] = useState({
         totalOrders: 0,
         totalSpent: 0,
     });
     const [showModal, setShowModal] = useState(false);
     const [isVerifyingEmail, setIsVerifyingEmail] = useState(false);
+    const isMounted = useRef(false);
 
     useEffect(() => {
-        if (user) {
+        if (customer && !isMounted.current) {
             setFormData(prev => ({
                 ...prev,
-                name: user.fullName || user.name || '',
-                email: user.email || '',
-                isVerify: user.email_verified_at || false
+                name: customer.fullName || customer.name || '',
+                email: customer.email || '',
+                isVerify: customer.email_verified_at || false
             }));
             setUserStats(prev => ({
                 ...prev,
-                totalOrders: user.total_products || 0,
-                totalSpent: user.total_price || 0,
+                totalOrders: customer.total_products || 0,
+                totalSpent: customer.total_price || 0,
             }));
             setIsLoading(false);
         }
-    }, [user]);
+    }, [customer]);
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -187,6 +188,7 @@ export const useProfile = () => {
     }, [formData.password, formData.rePassword]);
 
     return {
+        customer,
         formData,
         errors,
         showPasswords,

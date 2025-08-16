@@ -7,6 +7,7 @@ import Modal from '../ui/modal';
 
 const ProfilePage = () => {
   const {
+    customer,
     formData,
     errors,
     showPasswords,
@@ -44,8 +45,8 @@ const ProfilePage = () => {
                     <Icon icon="mdi:user" className="text-white" width={40} />
                   </div>
                 </div>
-                <h2 className="card-title mb-1">{formData.name}</h2>
-                <p className="text-muted">{formData.email}</p>
+                <h2 className="card-title mb-1">{customer?.name}</h2>
+                <p className="text-muted">{customer?.email}</p>
               </div>
             </div>
 

@@ -2,7 +2,7 @@ import { useCallback, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import {
     selectIsAuthenticated,
-    selectUser,
+    selectCustomer,
     selectIsVerifiedEmail,
     selectAuthLoading,
     selectAuthErrors,
@@ -25,7 +25,7 @@ export const useAuth = () => {
 
     // Selectors
     const isAuthenticated = useSelector(selectIsAuthenticated);
-    const user = useSelector(selectUser);
+    const customer = useSelector(selectCustomer);
     const isVerifiedEmail = useSelector(selectIsVerifiedEmail);
     const loading = useSelector(selectAuthLoading);
     const errors = useSelector(selectAuthErrors);
@@ -105,7 +105,7 @@ export const useAuth = () => {
     return {
         // State
         isAuthenticated,
-        user,
+        customer,
         isVerifiedEmail,
         ...loading,
         ...errors,
@@ -125,13 +125,13 @@ export const useAuth = () => {
 };
 
 export const useUserInfo = () => {
-    const user = useSelector(selectUser);
+    const customer = useSelector(selectCustomer);
     const isAuthenticated = useSelector(selectIsAuthenticated);
 
     return useMemo(() => ({
-        user,
+        customer,
         isAuthenticated,
     }), [
-        user, isAuthenticated
+        customer, isAuthenticated
     ]);
 };

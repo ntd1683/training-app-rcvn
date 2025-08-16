@@ -7,9 +7,9 @@ export const selectIsAuthenticated = createSelector(
     (auth) => auth.isAuthenticated
 );
 
-export const selectUser = createSelector(
+export const selectCustomer = createSelector(
     [selectAuthState],
-    (auth) => auth.user
+    (auth) => auth.customer
 );
 
 export const selectPermissions = createSelector(
@@ -23,6 +23,7 @@ export const selectAuthLoading = createSelector(
         isLoading: auth.isLoading,
         isLoginLoading: auth.isLoginLoading,
         isLogoutLoading: auth.isLogoutLoading,
+        isUpdateLoading: auth.isUpdateLoading,
     })
 );
 
@@ -53,26 +54,26 @@ export const selectHasAllPermissions = createSelector(
 );
 
 export const selectAuthInfo = createSelector(
-    [selectIsAuthenticated, selectUser, selectPermissions, selectAuthLoading],
-    (isAuthenticated, user, permissions, loading) => ({
+    [selectIsAuthenticated, selectCustomer, selectPermissions, selectAuthLoading],
+    (isAuthenticated, customer, permissions, loading) => ({
         isAuthenticated,
-        user,
+        customer,
         permissions,
         ...loading,
     })
 );
 
 export const selectIsVerifiedEmail = createSelector(
-    [selectUser],
-    (user) => user && user.email_verified_at !== null
+    [selectCustomer],
+    (customer) => customer && customer.email_verified_at !== null
 );
 
 export const selectTotalProducts = createSelector(
-    [selectUser],
-    (user) => user && user.total_products ? user.total_products : 0
+    [selectCustomer],
+    (customer) => customer && customer.total_products ? customer.total_products : 0
 );
 
 export const selectTotalPrice = createSelector(
-    [selectUser],
-    (user) => user && user.total_price ? user.total_price : 0
+    [selectCustomer],
+    (customer) => customer && customer.total_price ? customer.total_price : 0
 );

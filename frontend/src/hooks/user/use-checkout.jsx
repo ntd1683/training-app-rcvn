@@ -27,12 +27,12 @@ export const useCheckout = () => {
     const [dataWards, setDataWards] = useState([]);
 
 
-    const { user } = useUserInfo();
-    const memoizedUser = useMemo(() => user, [user]);
+    const { customer } = useUserInfo();
+    const memoizedUser = useMemo(() => customer, [customer]);
 
     const [shippingInfo, setShippingInfo] = useState({
-        'name': user?.name || '',
-        'email': user?.email || '',
+        'name': customer?.name || '',
+        'email': customer?.email || '',
         'phone': '',
         'address': '',
         'province': '',

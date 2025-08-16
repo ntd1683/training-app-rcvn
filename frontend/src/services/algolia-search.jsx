@@ -1,13 +1,9 @@
 import { algoliasearch } from 'algoliasearch';
-console.log(import.meta.env.VITE_ALGOLIA_APP_ID, import.meta.env.VITE_ALGOLIA_SEARCH_KEY);
 
 export const client = algoliasearch(
   import.meta.env.VITE_ALGOLIA_APP_ID,
   import.meta.env.VITE_ALGOLIA_SEARCH_KEY
 );
-
-console.log(client);
-
 
 export const searchProducts = async (query) => {
   try {

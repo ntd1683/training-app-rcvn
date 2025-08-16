@@ -11,8 +11,8 @@ const Layout = React.memo(({ children }) => {
     const [isProfileOpen, setIsProfileOpen] = useState(false);
     const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false);
     const [isScrolled, setIsScrolled] = useState(false);
-    const { user } = useUserInfo();
-    const memoizedUser = useMemo(() => user, [user]);
+    const { customer } = useUserInfo();
+    const memoizedUser = useMemo(() => customer, [customer]);
 
     const toggleProfileDropdown = useCallback(() => {
         setIsProfileOpen(prev => !prev);
@@ -55,6 +55,9 @@ const Layout = React.memo(({ children }) => {
                             <li>
                                 <Link to="/trang-ca-nhan" onClick={() => setIsProfileOpen(false)} className="profile-item">
                                     Quản lý trang cá nhân
+                                </Link>
+                                <Link to="/don-hang" onClick={() => setIsProfileOpen(false)} className="profile-item">
+                                    Quản lý Đơn Hàng
                                 </Link>
                             </li>
                             <hr className="divider" />

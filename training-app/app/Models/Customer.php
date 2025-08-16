@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\OrderStatusEnum;
 use App\Notifications\CustomVerifyEmail;
 use App\Notifications\PasswordResetMail;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -78,8 +79,9 @@ class Customer extends Authenticatable implements MustVerifyEmail
      */
     public function getTotalProductsAttribute(): int
     {
-//        Todo: Implement logic to calculate total products purchased by the customer
-        return 125;
+        return $this->orders()
+            ->where('status', OrderStatusEnum::COMPLETED)
+            ->count();
     }
 
     /**
@@ -89,8 +91,9 @@ class Customer extends Authenticatable implements MustVerifyEmail
      */
     public function getTotalPriceAttribute(): float
     {
-//        Todo: Implement logic to calculate total price of orders placed by the customer
-        return 1500.75;
+        return $this->orders()
+            ->where('status', OrderStatusEnum::COMPLETED)
+            ->sum('total_amount');
     }
 
     public function orders()

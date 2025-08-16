@@ -43,7 +43,7 @@ export const register = async (fullName, email, password, rePassword) => {
 
 export const sendVerifyEmail = async (isAdmin = false) => {
   const url = isAdmin ? `${prefixApi}/admin/email/resend` : `${prefixApi}/email/resend`;
-  const token = localStorage.getItem('token');
+  const token = isAdmin ? localStorage.getItem('admin_token') : localStorage.getItem('customer_token');
   const response = await api.post(url, null, {
     headers: { Authorization: `Bearer ${token}` },
   });
@@ -79,7 +79,7 @@ export const getProfileData = async (data, isAdmin = false) => {
   }
 
   try {
-    const token = localStorage.getItem('token');
+    const token = isAdmin ? localStorage.getItem('token') : localStorage.getItem('customer_token');
     const response = await api.get(url, {
       headers: { Authorization: `Bearer ${token}` },
     });
@@ -92,10 +92,10 @@ export const getProfileData = async (data, isAdmin = false) => {
 export const updateProfileData = async (data, isAdmin = false) => {
   const url = isAdmin ? `${prefixApi}/admin/profile` : `${prefixApi}/profile`;
   try {
-    const token = localStorage.getItem('token');
+    const token = isAdmin ? localStorage.getItem('token') : localStorage.getItem('customer_token');
     const params = {
       name: data.name,
-      email: data.email,
+      // email: data.email,
       password: data.password || undefined,
       new_password: data.newPassword || undefined,
       new_password_confirmation: data.confirmPassword || undefined,
@@ -111,7 +111,7 @@ export const updateProfileData = async (data, isAdmin = false) => {
 };
 
 export const logout = async (isAdmin = false) => {
-  const token = localStorage.getItem('token');
+  const token = isAdmin ? localStorage.getItem('admin_token') : localStorage.getItem('customer_token');
   const url = isAdmin ? `${prefixApi}/admin/logout` : `${prefixApi}/logout`;
   const response = await api.post(url, {}, {
     headers: { Authorization: `Bearer ${token}` },
@@ -122,7 +122,7 @@ export const logout = async (isAdmin = false) => {
 
 export const verifyToken = async (isAdmin = false) => {
   try {
-    const token = localStorage.getItem('token');
+    const token = isAdmin ? localStorage.getItem('admin_token') : localStorage.getItem('customer_token');
     const url = isAdmin ? `${prefixApi}/admin/verify-token` : `${prefixApi}/verify-token`;
     const response = await api.post(url, null, {
       headers: { Authorization: `Bearer ${token}` },
@@ -549,7 +549,7 @@ export const deleteProduct = async (id) => {
 // Banner management functions
 export const fetchBanners = async (page = 1, perPage = 10, filters = {}) => {
   try {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('customer_token');
 
     const params = {
       page,
@@ -579,7 +579,7 @@ export const fetchBanners = async (page = 1, perPage = 10, filters = {}) => {
 // Order management functions
 export const fetchOrders = async (page = 1, perPage = 10, filters = {}) => {
   try {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('customer_token');
 
     const params = {
       page,
@@ -610,7 +610,7 @@ export const fetchOrders = async (page = 1, perPage = 10, filters = {}) => {
 
 export const fetchOrderById = async (id) => {
   try {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('customer_token');
     const response = await api.get(`${prefixApi}/orders/${id}`, {
       headers: { Authorization: `Bearer ${token}` },
     });
@@ -622,7 +622,7 @@ export const fetchOrderById = async (id) => {
 
 export const createOrder = async (orderData) => {
   try {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('customer_token');
     const response = await api.post(`${prefixApi}/orders/paypal/create`, orderData, {
       headers: { Authorization: `Bearer ${token}` },
     });
@@ -634,7 +634,7 @@ export const createOrder = async (orderData) => {
 
 export const approveOrder = async (orderId) => {
   try {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('customer_token');
     const response = await api.post(`${prefixApi}/orders/paypal/approve`, { 'order_id': orderId }, {
       headers: { Authorization: `Bearer ${token}` },
     });
@@ -646,7 +646,7 @@ export const approveOrder = async (orderId) => {
 
 export const cancelOrder = async (orderId) => {
   try {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('customer_token');
     const response = await api.post(`${prefixApi}/orders/paypal/cancel`, { 'order_id': orderId }, {
       headers: { Authorization: `Bearer ${token}` },
     });
@@ -658,7 +658,7 @@ export const cancelOrder = async (orderId) => {
 
 export const errorOrder = async (orderId) => {
   try {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('customer_token');
     const response = await api.post(`${prefixApi}/orders/paypal/error`, { 'order_id': orderId }, {
       headers: { Authorization: `Bearer ${token}` },
     });
@@ -670,7 +670,7 @@ export const errorOrder = async (orderId) => {
 
 export const rePayOrder = async (orderId) => {
   try {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('customer_token');
     const response = await api.post(`${prefixApi}/orders/paypal/repay`, { 'order_id': orderId }, {
       headers: { Authorization: `Bearer ${token}` },
     });
