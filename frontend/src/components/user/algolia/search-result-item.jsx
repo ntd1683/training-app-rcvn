@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { setIsOpen } from '~/redux/slices/search-slice';
 import placeholderImg from '~/assets/images/placeholder.jpg';
-import { sanitizeContent } from '~/utils/common';
+import { sanitizeContent, truncateText } from '~/utils/common';
 
 export const SearchResultItem = ({ product, toggleMobileSearch }) => {
   const dispatch = useDispatch();
@@ -42,11 +42,6 @@ export const SearchResultItem = ({ product, toggleMobileSearch }) => {
       default:
         return null;
     }
-  };
-
-  const truncateText = (text, maxLength = 50) => {
-    if (!text) return '';
-    return text.length > maxLength ? text.substring(0, maxLength) + '...' : text;
   };
 
   return (

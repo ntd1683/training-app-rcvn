@@ -30,11 +30,25 @@ const Layout = ({children}) => {
     };
   });
 
+  const layoutClasses = [
+    'layout-wrapper',
+    'layout-content-navbar',
+    isMenuOpen ? 'layout-menu-expanded' : '',
+    'layout-menu-100vh'
+  ].filter(Boolean).join(' ');
+
   return (
-    <div className={`layout-wrapper layout-content-navbar ${isMenuOpen ? "menu-open" : ""}`}>
+    <div className={layoutClasses}>
       <div className="layout-container">
-        <aside id="layout-menu" className={`layout-menu menu-vertical menu bg-menu-theme d-sm-none ${isMenuOpen ? "menu-open" : ""}`}>
-          <div className="app-brand demo position-relative">
+        <aside 
+          id="layout-menu" 
+          className={`layout-menu menu-vertical menu bg-menu-theme d-sm-none position-relative ${isMenuOpen ? 'menu-open' : ''}`}
+          style={{
+            top: 0,
+            height: '100vh',
+          }}
+        >
+          <div className="app-brand demo">
             <Link to="/admin" className="app-brand-link">
               <img src="/logo192.png" alt="logo" className="img-fluid" />
               <p className="mb-0 ms-3 fw-bold fs-3">Website</p>
@@ -49,7 +63,7 @@ const Layout = ({children}) => {
             {listNav.map((navItem) => (
               checkRoleAndPermission(navItem.permission, user) && (
                 <li key={navItem.path} className={`menu-item ${isActive(navItem.path)}`}>
-                  <Link to={navItem.path} className="menu-link">
+                  <Link to={navItem.path} className="menu-link" onClick={() => setIsMenuOpen(false)}>
                     <Icon icon={navItem.icon} className="menu-icon bx" />
                     <div className="text-truncate">
                       {navItem.label}
@@ -72,7 +86,6 @@ const Layout = ({children}) => {
               right: 0,
               zIndex: 1040,
               transition: 'all 0.1s ease-in-out',
-              // boxShadow: isScrolled ? '0 2px 10px rgba(0,0,0,0.1)' : 'none',
               backdropFilter: isScrolled ? 'blur(10px)' : 'none',
               backgroundColor: isScrolled ? 'rgba(255,255,255,0.95)' : 'var(--bs-navbar-bg, #fff)'
             }}
@@ -136,7 +149,7 @@ const Layout = ({children}) => {
           </div>
         </div>
       </div>
-      <div className="layout-overlay layout-menu-toggle" onClick={() => setIsMenuOpen(false)}></div>
+      <div className={`layout-overlay ${isMenuOpen ? "visible-unset" : ""}`} onClick={() => setIsMenuOpen(false)}></div>
     </div>
   );
 };
