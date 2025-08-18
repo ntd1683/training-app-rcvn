@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { Icon } from '@iconify/react';
-import { formatPrice } from '~/utils/common';
+import { formatPrice, truncateText } from '~/utils/common';
 import OrderStatus from '~/constants/order-status';
 import moment from 'moment';
 
@@ -69,7 +69,7 @@ export const OrderList = ({ orders, onLoadMore, hasMore = true, isLoading = fals
                                         <div className="d-flex align-items-center gap-2">
                                             <span className="badge bg-light text-dark border">
                                                 <Icon icon="mdi:package-variant-closed" width={24} height={24} className="me-1" />
-                                                {order.order_code}
+                                                {truncateText(order.order_code, 20)}
                                             </span>
                                         </div>
                                         <div className="text-end">
@@ -97,7 +97,7 @@ export const OrderList = ({ orders, onLoadMore, hasMore = true, isLoading = fals
                                                 </div>
                                             </div>
                                             <div className="flex-grow-1">
-                                                <h6 className="mb-1 text-primary">{product.name}</h6>
+                                                <h6 className="mb-1 text-primary">{truncateText(product.name, 50)}</h6>
                                                 <div className="d-flex align-items-center gap-3">
                                                     <span className="text-muted">x{product.order_quantity}</span>
                                                 </div>

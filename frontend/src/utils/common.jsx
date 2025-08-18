@@ -68,3 +68,8 @@ export const sanitizeContent = (html) => {
     FORBID_ATTR: ['onerror', 'onload', 'onclick', 'onmouseover']
   });
 };
+
+export const truncateText = (text, maxLength = 50) => {
+  if (!text) return '';
+  return text.length > maxLength ? text.substring(0, maxLength) + '...' : text;
+};

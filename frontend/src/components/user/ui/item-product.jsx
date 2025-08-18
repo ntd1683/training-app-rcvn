@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { formatPrice } from "~/utils/common";
 import { useDispatch, useSelector } from "react-redux";
@@ -15,6 +15,7 @@ const isNewProduct = (createdAt, distance = 30) => {
 };
 
 const Item = ({ product, className = "", distanceDayNew = 30 }) => {
+    const [isAddedToCart, setIsAddedToCart] = useState(false);
     const dispatch = useDispatch();
     const navigate = useNavigate()
     const isOutStock = product.status === 2 || product.quantity <= 0;
@@ -35,7 +36,12 @@ const Item = ({ product, className = "", distanceDayNew = 30 }) => {
     const isAddToCart = useSelector(selectIsAddToCart);
     const handleAddToCart = (e) => {
         e.stopPropagation();
+        setIsAddedToCart(false);
         dispatch(addToCart(product));
+        setIsAddedToCart(true);
+        setTimeout(() => {
+            setIsAddedToCart(false);
+        }, 1000);
     };
 
     return (
@@ -53,9 +59,12 @@ const Item = ({ product, className = "", distanceDayNew = 30 }) => {
                     <div className="button">
                         <button
                             onClick={handleAddToCart}
-                            className="btn"
+                            className={`btn ${isAddedToCart ? 'btn-success' : ''}`}
+                            disabled={isAddedToCart || isOutStock}
                         >
-                            <i className="lni lni-cart"></i> Thêm vào giỏ hàng
+
+                            <i className={`lni ${isAddedToCart ? 'lni-checkmark' : 'lni-cart'}`}></i>
+                            {isAddedToCart ? 'Đã thêm vào giỏ hàng' : 'Thêm vào giỏ hàng'}
                         </button>
                     </div>
                 )}
