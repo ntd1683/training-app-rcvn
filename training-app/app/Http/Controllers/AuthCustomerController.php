@@ -139,6 +139,7 @@ class AuthCustomerController extends Controller
     {
         try {
             $email = $request->input('email');
+            \Log::info('Send reset link email to: ' . $email);
             if (!$email) {
                 return (new AuthResource(null))->errorResponse(
                     'BAD_REQUEST',

@@ -8775,3 +8775,7 @@ a.anchor:hover {
 .products-info a:hover h6, .products-info a:hover p, .products-info a:hover small {
     color: rgba(var(--bs-primary-rgb), var(--bs-text-opacity)) !important;
 }
+
+.cursor-pointer {
+  cursor: pointer !important;
+}

@@ -115,12 +115,14 @@ export const useChangeResetPassword = () => {
             if (response.success) {
                 navigate('/dang-nhap', { state: { success: 'Đổi mật khẩu thành công' } });
             } else {
+                let message = response.message || 'Có lỗi xảy ra, vui lòng thử lại!';
                 setErrors({
-                    all: 'Có lỗi xảy ra, vui lòng thử lại!',
+                    all: message,
                 });
-                toast.error('Có lỗi xảy ra, vui lòng thử lại!');
+                toast.error(message);
             }
         } catch (error) {
+            console.log('Error during password change:', error);
             setErrors({
                 all: 'Có lỗi xảy ra, vui lòng thử lại!',
             })

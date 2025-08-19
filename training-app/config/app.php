@@ -214,4 +214,30 @@ return [
         // 'ExampleClass' => App\Example\ExampleClass::class,
     ])->toArray(),
 
+
+    /*
+     * --------------------------------------------------------------------------
+     * E2E Testing Configuration
+     * --------------------------------------------------------------------------
+     *
+     * This section contains configuration for the E2E testing endpoints that are used
+     * to interact with Playwright. These endpoints are used to facilitate
+     * end-to-end testing of the application.
+     *
+     */
+    'e2e' => [
+        /**
+         * The prefix for the testing endpoints that are used to interact with Playwright
+         * Make sure to change `use.laravelBaseUrl` in playwright.config.ts if you change this
+         */
+        'prefix' => 'playwright',
+
+        /**
+         * The environments in which the testing endpoints are enabled
+         * CAUTION: Enabling the testing endpoints in production can be a critical security issue
+         */
+        'environments' => ['local', 'testing'],
+
+    ],
+
 ];
