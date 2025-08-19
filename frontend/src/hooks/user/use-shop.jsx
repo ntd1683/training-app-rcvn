@@ -11,6 +11,7 @@ import {
     setFilters,
     setSorting,
     clearErrors,
+    resetFilters,
 } from '~/redux/slices/products-slice';
 
 // Selectors
@@ -76,7 +77,9 @@ export const useShop = () => {
         dispatch(loadProducts({ page, perPage, filters }));
     }, [dispatch]);
 
-    const loadDataFromParams = useCallback(() => {
+    const loadDataFromParams = useCallback(async () => {
+        console.log('data param run', searchParams.toString(), currentFilters);
+        
         const page = parseInt(searchParams.get('page')) || 1;
         const perPage = parseInt(searchParams.get('per_page')) || 10;
         const filterNameUrl = searchParams.get('name') || '';
@@ -132,32 +135,10 @@ export const useShop = () => {
         });
     }, [searchParams, dispatch, handleLoadProducts]);
 
-    useEffect(() => {
-        if (isInitialMount.current) {
-            loadDataFromParams();
-            isInitialMount.current = false;
-        }
-        
-        setDefaultPriceRange({
-            min: meta.min || 0,
-            max: meta.max || 50000,
-        });
-    }, [loadDataFromParams, meta]);
-
-    useEffect(() => {
-        const currentParams = searchParams.toString();
-        // Only reload if params actually changed and it's not the initial mount
-        if (!isInitialMount.current && currentParams !== prevSearchParams.current) {
-            loadDataFromParams();
-            prevSearchParams.current = currentParams;
-        } else if (!isInitialMount.current) {
-            // Update ref even if no reload needed
-            prevSearchParams.current = currentParams;
-        }
-    }, [searchParams, loadDataFromParams]);
-
     // Update search params
     const updateSearchParams = useCallback(() => {
+        console.log('123', filterName, searchParams.toString());
+        
         const params = {};
 
         if (filterName) params.name = filterName;
@@ -173,10 +154,38 @@ export const useShop = () => {
 
     useEffect(() => {
         if (!isInitialMount.current) {
+            console.log('Updating search params:', searchParams.toString(), pagination.current_page, pagination.per_page, sortBy, sortOrder);
             updateSearchParams();
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [pagination.current_page, pagination.per_page, sortBy, sortOrder]);
+
+    useEffect(() => {
+        console.log('init mount', isInitialMount.current, searchParams.toString());
+        if (isInitialMount.current) {
+            loadDataFromParams();
+            isInitialMount.current = false;
+        }
+        
+        setDefaultPriceRange({
+            min: meta.min || 0,
+            max: meta.max || 50000,
+        });
+    }, [loadDataFromParams, meta]);
+
+    useEffect(() => {
+        const currentParams = searchParams.toString();
+        console.log('Current search params:', currentParams, isInitialMount.current, prevSearchParams.current);
+        // Only reload if params actually changed and it's not the initial mount
+        if (!isInitialMount.current && currentParams !== prevSearchParams.current) {
+            console.log('Search params changed :', currentParams);
+            loadDataFromParams();
+            prevSearchParams.current = currentParams;
+        } else if (!isInitialMount.current) {
+            // Update ref even if no reload needed
+            prevSearchParams.current = currentParams;
+        }
+    }, [searchParams, loadDataFromParams]);
 
     // Filter handlers
     const handleSetFilterName = useCallback((value) => {

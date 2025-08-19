@@ -36,7 +36,9 @@ class ProductFilterCriteria implements CriteriaInterface
     {
         $model->withSoldCount();
         if (!empty($this->filters['name'])) {
-            $model->where('name', 'like', '%' . $this->filters['name'] . '%');
+            $model->where('name', 'like', '%' . $this->filters['name'] . '%')
+                ->orWhere('description', 'like', '%' . $this->filters['name'] . '%')
+                ->orWhere('id', 'like', '%' . $this->filters['name'] . '%');
         }
 
         if (isset($this->filters['price_from'])) {
