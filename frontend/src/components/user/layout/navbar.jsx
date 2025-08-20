@@ -5,6 +5,7 @@ const listNavbar = [
     { name: 'Trang chủ', path: '/' },
     { name: 'Cửa Hàng', path: '/shop' },
     { name: 'Giỏ Hàng', path: '/gio-hang' },
+    { name: 'Danh Sách Yêu Thích', path: '/danh-sach-yeu-thich' },
     { name: 'Quản Lý Đơn Hàng', path: '/don-hang' },
 ]
 

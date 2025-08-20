@@ -56,7 +56,7 @@ const MagnifyingGallery = ({image_url, images = []}) => {
               <img
                 ref={imageRef}
                 src={currentImage}
-                id="current"
+                id="current_image"
                 alt="Main product"
                 className="img-fluid"
                 style={{
@@ -70,7 +70,7 @@ const MagnifyingGallery = ({image_url, images = []}) => {
               {/* Zoomed Image Display - Sử dụng background-image */}
               {showZoom && (
                 <div
-                  className="position-absolute border border-white rounded shadow-lg"
+                  className="position-absolute border border-white rounded shadow-lg zoom-image-display"
                   style={{
                     top: '10px',
                     right: '10px',

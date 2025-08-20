@@ -1,6 +1,6 @@
 import React from 'react';
 
-export const NumberInput = ({ value, setValue, className = "" }) => {
+export const NumberInput = ({ value, setValue, className = "", name="" }) => {
     const handleIncrement = () => {
         setValue(value + 1);
     };
@@ -43,6 +43,7 @@ export const NumberInput = ({ value, setValue, className = "" }) => {
                 value={value}
                 onChange={handleChange}
                 onBlur={handleBlur}
+                name={name}
                 min="1"
                 style={{ zIndex: 5 }}
             />

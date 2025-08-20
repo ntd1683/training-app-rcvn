@@ -73,7 +73,12 @@ const ProductDetail = () => {
                                                     {(currentProduct?.quantity > 0 && currentProduct.status === ProductStatus.SELLING) ? (
                                                         <>
                                                             <div className="col-lg-4 col-md-4 col-12">
-                                                                <NumberInput value={quantity} setValue={setQuantity} className="h-100" />
+                                                                <NumberInput
+                                                                    value={quantity}
+                                                                    setValue={setQuantity}
+                                                                    className="h-100"
+                                                                    name="quantity"
+                                                                />
                                                             </div>
                                                             <div className="col-lg-4 col-md-4 col-12 mt-3 mt-md-0">
                                                                 <div className="button cart-button h-100 px-1">
