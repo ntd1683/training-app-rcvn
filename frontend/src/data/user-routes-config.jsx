@@ -11,6 +11,7 @@ const ProfilePage = lazy(() => import('../components/user/profile/profile-page')
 const Products = lazy(() => import('../components/user/products'));
 const ProductDetail = lazy(() => import('../components/user/product-detail'));
 const Cart = lazy(() => import('../components/user/cart'));
+const Wishlist = lazy(() => import('../components/user/wishlist'));
 const Checkout = lazy(() => import('../components/user/checkout'));
 const Order = lazy(() => import('../components/user/order'));
 const OrderDetailPage = lazy(() => import('../components/user/order-detail'));
@@ -85,6 +86,13 @@ export const userRoutesConfig = [
         requireAuth: false,
         layout: true,
         title: 'Giỏ Hàng',
+    },
+    {
+        path: '/danh-sach-yeu-thich',
+        element: Wishlist,
+        requireAuth: false,
+        layout: true,
+        title: 'Danh Sách Yêu Thích',
     },
     {
         path: '/thanh-toan',

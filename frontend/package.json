@@ -43,7 +43,6 @@
     "preview": "vite preview"
   },
   "eslintConfig": {
-    "files": ["tests/**"],
     "extends": [
       "react-app",
       "react-app/jest"

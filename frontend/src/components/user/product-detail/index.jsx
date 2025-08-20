@@ -17,6 +17,10 @@ const ProductDetail = () => {
         handleAddToCart,
         isAddedToCart,
         errorAdd,
+        handleToggleWishlist,
+        isAddedToWishlist,
+        errorWishlist,
+        addingToWishlist,
     } = useProductDetail();
 
     return (
@@ -84,8 +88,14 @@ const ProductDetail = () => {
                                                             </div>
                                                             <div className="col-lg-4 col-md-4 col-12">
                                                                 <div className="wish-button px-1">
-                                                                    <button className="btn" style={{ height: "fit-content" }}>
-                                                                        <i className="lni lni-heart"></i> Thêm vào yêu thích
+                                                                    <button
+                                                                        className={`btn w-100 h-100 ${addingToWishlist ? 'btn-success' : ''}`}
+                                                                        onClick={handleToggleWishlist}
+                                                                        disabled={addingToWishlist}
+                                                                        style={{ height: "fit-content" }}
+                                                                    >
+                                                                        <i className={`lni ${isAddedToWishlist ? 'lni-heart-filled' : 'lni-heart'}`}></i> 
+                                                                        {isAddedToWishlist ? 'Xoá yêu thích' : 'Thêm vào yêu thích'}
                                                                     </button>
                                                                 </div>
                                                             </div>
@@ -98,8 +108,14 @@ const ProductDetail = () => {
                                                                 </div>
                                                             </div><div className="col-lg-7 col-md-7 col-12">
                                                                 <div className="wish-button px-1">
-                                                                    <button className="btn" style={{ height: "fit-content" }}>
-                                                                        <i className="lni lni-heart"></i> Thêm vào yêu thích
+                                                                    <button
+                                                                        className={`btn w-100 h-100 ${addingToWishlist ? 'btn-success' : ''}`}
+                                                                        onClick={handleToggleWishlist}
+                                                                        disabled={addingToWishlist}
+                                                                        style={{ height: "fit-content" }}
+                                                                    >
+                                                                        <i className={`lni ${isAddedToWishlist ? 'lni-heart-filled' : 'lni-heart'}`}></i> 
+                                                                        {isAddedToWishlist ? 'Xoá yêu thích' : 'Thêm vào yêu thích'}
                                                                     </button>
                                                                 </div>
                                                             </div>
@@ -109,6 +125,7 @@ const ProductDetail = () => {
                                             </div>
                                             <p className="text-danger mt-3 fs-6 fw-bold">
                                                 {errorAdd}
+                                                {errorWishlist}
                                             </p>
                                         </div>
                                     </div>
