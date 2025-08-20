@@ -1,7 +1,8 @@
 import {test, expect} from '@playwright/test';
 
 test('Email Blank', async ({ page }) => {
-  await page.goto('http://localhost:3000/dang-nhap');
+  const urlLogin = (process.env.TEST_URL || 'http://localhost:3000') + '/dang-nhap';
+  await page.goto(urlLogin);
   await page.fill('input[name="email"]', '');
   const loginButton = page.getByRole('button', { name: 'Đăng Nhập' });
   await expect(loginButton).toBeVisible();

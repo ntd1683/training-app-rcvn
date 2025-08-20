@@ -1,7 +1,8 @@
 import {test, expect} from '@playwright/test';
 
 test('Register Customer', async ({ page }) => {
-  await page.goto('http://localhost:3000/dang-ky');
+  const urlRegister = (process.env.TEST_URL || 'http://localhost:3000') + '/dang-ky';
+  await page.goto(urlRegister);
   await page.fill('input[name="fullName"]', 'Testing');
   await page.fill('input[name="email"]', 'test@example.com');
   await page.fill('input[name="password"]', 'password');

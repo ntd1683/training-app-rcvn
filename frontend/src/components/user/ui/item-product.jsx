@@ -94,7 +94,7 @@ const Item = ({ product, className = "", distanceDayNew = 30 }) => {
                                 <span className="discount-price">{formatPrice(parseFloat(product.discountPrice))}</span>
                             )}
                         </div>
-                        <span className="ms-3" style={{ opacity: "80%" }}>{product.sold_count} đã bán</span>
+                        <span className="ms-3 product-item-quantity" style={{ opacity: "80%" }}>{product.sold_count} đã bán</span>
                     </div>
                 )}
             </div>

@@ -29,6 +29,7 @@ export const SearchMobile = ({ toggleMobileSearch }) => {
             <div className="search-input">
               <input
                 type="text"
+                name="search_mobile"
                 placeholder="Tìm Kiếm..."
                 value={localQuery}
                 onChange={handleInputChange}

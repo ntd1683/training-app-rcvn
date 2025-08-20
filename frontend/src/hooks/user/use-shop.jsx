@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useEffect, useRef, useState } from 'react';
+import { useCallback, useMemo, useEffect, useRef, useState, use } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useSearchParams } from 'react-router-dom';
 
@@ -48,6 +48,7 @@ export const useShop = () => {
     const [inputSearch, setInputSearch] = useState('');
     const [inputPriceFrom, setInputPriceFrom] = useState('');
     const [inputPriceTo, setInputPriceTo] = useState('');
+    const [isUpdateParam, setIsUpdateParam] = useState(false);
 
     const {
         filterName,
@@ -78,8 +79,6 @@ export const useShop = () => {
     }, [dispatch]);
 
     const loadDataFromParams = useCallback(async () => {
-        console.log('data param run', searchParams.toString(), currentFilters);
-        
         const page = parseInt(searchParams.get('page')) || 1;
         const perPage = parseInt(searchParams.get('per_page')) || 10;
         const filterNameUrl = searchParams.get('name') || '';
@@ -137,10 +136,8 @@ export const useShop = () => {
 
     // Update search params
     const updateSearchParams = useCallback(() => {
-        console.log('123', filterName, searchParams.toString());
-        
+        setIsUpdateParam(true);
         const params = {};
-
         if (filterName) params.name = filterName;
         if (filterPriceFrom && filterPriceFrom !== defaultPriceRange.min) params.price_from = filterPriceFrom;
         if (filterPriceTo && filterPriceTo !== defaultPriceRange.max) params.price_to = filterPriceTo;
@@ -154,14 +151,12 @@ export const useShop = () => {
 
     useEffect(() => {
         if (!isInitialMount.current) {
-            console.log('Updating search params:', searchParams.toString(), pagination.current_page, pagination.per_page, sortBy, sortOrder);
             updateSearchParams();
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [pagination.current_page, pagination.per_page, sortBy, sortOrder]);
 
     useEffect(() => {
-        console.log('init mount', isInitialMount.current, searchParams.toString());
         if (isInitialMount.current) {
             loadDataFromParams();
             isInitialMount.current = false;
@@ -174,11 +169,14 @@ export const useShop = () => {
     }, [loadDataFromParams, meta]);
 
     useEffect(() => {
+        if (isUpdateParam) {
+            setIsUpdateParam(false);
+            return;
+        }
+        
         const currentParams = searchParams.toString();
-        console.log('Current search params:', currentParams, isInitialMount.current, prevSearchParams.current);
         // Only reload if params actually changed and it's not the initial mount
         if (!isInitialMount.current && currentParams !== prevSearchParams.current) {
-            console.log('Search params changed :', currentParams);
             loadDataFromParams();
             prevSearchParams.current = currentParams;
         } else if (!isInitialMount.current) {

@@ -2,7 +2,8 @@ import {test, expect} from '@playwright/test';
 
 test('token invalid', async ({ page }) => {
   let token = '1376884366155ac51135e60682997c967e1b7647a7ac6f59fe411cb797e8f670';
-  await page.goto('http://localhost:3000/khoi-phuc-mat-khau/' + token);
+  const urlResetPassword = (process.env.TEST_URL || 'http://localhost:3000') + '/khoi-phuc-mat-khau/' + token;
+  await page.goto(urlResetPassword);
   await page.fill('input[name="email"]', 'test@example.com');
   await page.fill('input[name="password"]', 'password');
   await page.fill('input[name="rePassword"]', 'password');

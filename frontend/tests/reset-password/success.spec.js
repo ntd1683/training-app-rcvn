@@ -2,7 +2,8 @@ import {test, expect} from '@playwright/test';
 
 test('Reset Password', async ({ page }) => {
   let token = 'a9e005c2b6ee1f65ef1ae6ec6b73cc513ad697963610e752c2731423a1ae5b6d';
-  await page.goto('http://localhost:3000/khoi-phuc-mat-khau/' + token);
+  const urlResetPassword = (process.env.TEST_URL || 'http://localhost:3000') + '/khoi-phuc-mat-khau/' + token;
+  await page.goto(urlResetPassword);
   await page.fill('input[name="email"]', 'test@example.com');
   await page.fill('input[name="password"]', 'password');
   await page.fill('input[name="rePassword"]', 'password');

@@ -122,7 +122,6 @@ export const useChangeResetPassword = () => {
                 toast.error(message);
             }
         } catch (error) {
-            console.log('Error during password change:', error);
             setErrors({
                 all: 'Có lỗi xảy ra, vui lòng thử lại!',
             })

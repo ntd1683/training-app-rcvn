@@ -29,6 +29,7 @@ export const Filter = ({
                 <form action="#" onSubmit={(e) => e.preventDefault()}>
                     <input
                         type="text"
+                        name='search_name'
                         value={inputSearch}
                         onChange={(e) => setInputSearch(e.target.value)}
                         placeholder="Nhập tên sản phẩm hoặc từ khóa..."
@@ -39,7 +40,7 @@ export const Filter = ({
                 </form>
             </div>
             <div className="single-widget range">
-                <h3>Price Range</h3>
+                <h3>Giá Tiền</h3>
                 <DualRangeSlider
                     min={priceMin}
                     max={priceMax}

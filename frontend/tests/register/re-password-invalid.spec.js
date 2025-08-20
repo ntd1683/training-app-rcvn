@@ -1,7 +1,8 @@
 import {test, expect} from '@playwright/test';
 
 test('Repassword Invalid', async ({ page }) => {
-  await page.goto('http://localhost:3000/dang-ky');
+  const urlRegister = (process.env.TEST_URL || 'http://localhost:3000') + '/dang-ky';
+  await page.goto(urlRegister);
   await page.fill('input[name="password"]', '12345');
   await page.fill('input[name="rePassword"]', '');
   const registerButton = page.getByRole('button', { name: 'Đăng Ký' });
