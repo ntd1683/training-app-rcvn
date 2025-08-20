@@ -209,11 +209,18 @@ class AuthService
             $data,
             function ($customer, $password) {
                 $customer->password = bcrypt($password);
+                $customer->email_verified_at = now();
                 $customer->save();
             }
         );
 
-        if ($status !== Password::PASSWORD_RESET) {
+        if($status === Password::INVALID_USER) {
+            throw new Exception('Email không tồn tại trong hệ thống');
+        } else if ($status === Password::INVALID_TOKEN) {
+            throw new Exception('Token không hợp lệ hoặc đã hết hạn');
+        } else if ($status === Password::RESET_THROTTLED) {
+            throw new Exception('Bạn đã gửi quá nhiều yêu cầu đặt lại mật khẩu. Vui lòng thử lại sau.');
+        } else if ($status !== Password::PASSWORD_RESET) {
             throw new Exception(__($status));
         }
 

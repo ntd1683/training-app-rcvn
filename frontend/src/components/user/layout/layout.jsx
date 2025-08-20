@@ -6,6 +6,8 @@ import { useUserInfo } from '~/hooks/user/use-auth';
 import { CartLayout } from './cart-layout';
 import { SearchDesktop } from '~/components/user/algolia/search-desktop';
 import SearchMobile from '../algolia/search-mobile';
+import { useSelector } from 'react-redux';
+import { selectWishlistCount } from '~/redux/selectors/wish-list-selector';
 
 const Layout = React.memo(({ children }) => {
     const [isProfileOpen, setIsProfileOpen] = useState(false);
@@ -13,6 +15,8 @@ const Layout = React.memo(({ children }) => {
     const [isScrolled, setIsScrolled] = useState(false);
     const { customer } = useUserInfo();
     const memoizedUser = useMemo(() => customer, [customer]);
+
+    const countWishlistItems = useSelector(selectWishlistCount);
 
     const toggleProfileDropdown = useCallback(() => {
         setIsProfileOpen(prev => !prev);
@@ -115,10 +119,10 @@ const Layout = React.memo(({ children }) => {
 
                                     <div className="navbar-cart">
                                         <div className="wishlist">
-                                            <a href="#">
-                                                <i className="lni lni-heart"></i>
-                                                <span className="total-items">0</span>
-                                            </a>
+                                            <Link to="/danh-sach-yeu-thich">
+                                                <i className={`lni ${countWishlistItems > 0 ? 'lni-heart-filled' : 'lni-heart'}`}></i>
+                                                <span className="total-items">{countWishlistItems}</span>
+                                            </Link>
                                         </div>
                                         <CartLayout />
                                         {/* Profile */}

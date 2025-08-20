@@ -18,7 +18,8 @@ export const SearchDesktop = () => {
         <div className="navbar-search search-style-5 position-relative" ref={searchRefDesktop}>
           <div className="search-input">
             <input 
-              type="text" 
+              type="text"
+              name="search_desktop"
               placeholder="Tìm Kiếm..." 
               value={localQuery}
               onChange={handleInputChange}

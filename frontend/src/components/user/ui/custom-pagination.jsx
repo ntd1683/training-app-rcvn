@@ -81,7 +81,7 @@ export const CustomPagination = ({
             <div className="d-flex align-items-center gap-2">
               <span className="text-muted">Hiển thị</span>
               <select
-                className="form-select form-select-sm"
+                className="form-select form-perpage form-select-sm"
                 value={rowsPerPage}
                 onChange={(e) => handleRowsPerPageChange(Number(e.target.value))}
                 style={{ width: 'auto', minWidth: '70px' }}

@@ -49,7 +49,7 @@ export const SearchDropdown = ({toggleMobileSearch}) => {
 
   return (
     <div className="search-dropdown position-absolute w-100 bg-white border rounded shadow-lg mt-1" 
-         style={{ zIndex: 1050, maxHeight: '450px', overflowY: 'auto' }}>
+         style={{ zIndex: 1050, overflowY: 'auto' }}>
       
       {/* Loading State */}
       {isLoading && (

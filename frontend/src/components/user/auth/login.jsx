@@ -73,7 +73,7 @@ const Login = () => {
                                                     onChange={(e) => handleInputChange('rememberMe', e.target.checked)}
                                                     disabled={isLoginLoading}
                                                 />
-                                                <label className="form-check-label" htmlFor="remember-me">
+                                                <label className="form-check-label cursor-pointer" htmlFor="remember-me">
                                                     Ghi nhớ đăng nhập
                                                 </label>
                                             </div>

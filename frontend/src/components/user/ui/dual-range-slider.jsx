@@ -138,6 +138,7 @@ const DualRangeSlider = ({
         <div className="range-input-group">
           <input
             type="text"
+            name='search_min'
             className={`range-input ${formatType}`}
             value={formatNumber(minValue)}
             onChange={handleMinInputChange}
@@ -149,6 +150,7 @@ const DualRangeSlider = ({
         <div className="range-input-group">
           <input
             type="text"
+            name='search_max'
             className={`range-input ${formatType}`}
             value={formatNumber(maxValue)}
             onChange={handleMaxInputChange}

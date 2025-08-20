@@ -104,8 +104,8 @@ const initialState = {
         status: '',
     },
     sorting: {
-        sortName: '',
-        sortBy: '',
+        sortName: 'popular',
+        sortBy: 'popular',
         sortOrder: '',
         sortClickCount: {},
         lastSortedColumn: '',

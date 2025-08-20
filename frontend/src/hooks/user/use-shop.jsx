@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useEffect, useRef, useState } from 'react';
+import { useCallback, useMemo, useEffect, useRef, useState, use } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useSearchParams } from 'react-router-dom';
 
@@ -11,6 +11,7 @@ import {
     setFilters,
     setSorting,
     clearErrors,
+    resetFilters,
 } from '~/redux/slices/products-slice';
 
 // Selectors
@@ -47,6 +48,7 @@ export const useShop = () => {
     const [inputSearch, setInputSearch] = useState('');
     const [inputPriceFrom, setInputPriceFrom] = useState('');
     const [inputPriceTo, setInputPriceTo] = useState('');
+    const [isUpdateParam, setIsUpdateParam] = useState(false);
 
     const {
         filterName,
@@ -76,7 +78,7 @@ export const useShop = () => {
         dispatch(loadProducts({ page, perPage, filters }));
     }, [dispatch]);
 
-    const loadDataFromParams = useCallback(() => {
+    const loadDataFromParams = useCallback(async () => {
         const page = parseInt(searchParams.get('page')) || 1;
         const perPage = parseInt(searchParams.get('per_page')) || 10;
         const filterNameUrl = searchParams.get('name') || '';
@@ -132,34 +134,10 @@ export const useShop = () => {
         });
     }, [searchParams, dispatch, handleLoadProducts]);
 
-    useEffect(() => {
-        if (isInitialMount.current) {
-            loadDataFromParams();
-            isInitialMount.current = false;
-        }
-        
-        setDefaultPriceRange({
-            min: meta.min || 0,
-            max: meta.max || 50000,
-        });
-    }, [loadDataFromParams, meta]);
-
-    useEffect(() => {
-        const currentParams = searchParams.toString();
-        // Only reload if params actually changed and it's not the initial mount
-        if (!isInitialMount.current && currentParams !== prevSearchParams.current) {
-            loadDataFromParams();
-            prevSearchParams.current = currentParams;
-        } else if (!isInitialMount.current) {
-            // Update ref even if no reload needed
-            prevSearchParams.current = currentParams;
-        }
-    }, [searchParams, loadDataFromParams]);
-
     // Update search params
     const updateSearchParams = useCallback(() => {
+        setIsUpdateParam(true);
         const params = {};
-
         if (filterName) params.name = filterName;
         if (filterPriceFrom && filterPriceFrom !== defaultPriceRange.min) params.price_from = filterPriceFrom;
         if (filterPriceTo && filterPriceTo !== defaultPriceRange.max) params.price_to = filterPriceTo;
@@ -177,6 +155,35 @@ export const useShop = () => {
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [pagination.current_page, pagination.per_page, sortBy, sortOrder]);
+
+    useEffect(() => {
+        if (isInitialMount.current) {
+            loadDataFromParams();
+            isInitialMount.current = false;
+        }
+        
+        setDefaultPriceRange({
+            min: meta.min || 0,
+            max: meta.max || 50000,
+        });
+    }, [loadDataFromParams, meta]);
+
+    useEffect(() => {
+        if (isUpdateParam) {
+            setIsUpdateParam(false);
+            return;
+        }
+        
+        const currentParams = searchParams.toString();
+        // Only reload if params actually changed and it's not the initial mount
+        if (!isInitialMount.current && currentParams !== prevSearchParams.current) {
+            loadDataFromParams();
+            prevSearchParams.current = currentParams;
+        } else if (!isInitialMount.current) {
+            // Update ref even if no reload needed
+            prevSearchParams.current = currentParams;
+        }
+    }, [searchParams, loadDataFromParams]);
 
     // Filter handlers
     const handleSetFilterName = useCallback((value) => {

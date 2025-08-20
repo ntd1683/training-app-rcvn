@@ -69,7 +69,12 @@ const Products = () => {
                                 <div className="tab-content" id="nav-tabContent">
                                     <div className="tab-pane active" id="nav-grid" role="tabpanel" aria-labelledby="nav-grid-tab">
                                         {isLoading ? (
-                                            <div>Đang tải sản phẩm...</div>
+                                            <div className="p-3 text-center">
+                                                <div className="spinner-border spinner-border-sm text-primary" role="status">
+                                                    <span className="visually-hidden">Đang tìm kiếm...</span>
+                                                </div>
+                                                <span className="ms-2">Đang tìm kiếm...</span>
+                                            </div>
                                         ) : error ? (
                                             <div>Lỗi: {error}</div>
                                         ) : (
@@ -81,7 +86,7 @@ const Products = () => {
                                                         </div>
                                                     ))
                                                 ) : (
-                                                    <div>Không có sản phẩm nào.</div>
+                                                    <div className='not-found'>Không có sản phẩm nào.</div>
                                                 )}
                                             </div>
                                         )}

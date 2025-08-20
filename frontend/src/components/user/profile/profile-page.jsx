@@ -250,7 +250,7 @@ const ProfilePage = () => {
 
       <Modal
         isOpen={showModal}
-        onClose={() => (false)}
+        onClose={() => setShowModal(false)}
         title={`Xác minh email của bạn`}
         showCloseButton={true}
         backdrop={true}

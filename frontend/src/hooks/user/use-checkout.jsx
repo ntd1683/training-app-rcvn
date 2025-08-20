@@ -114,9 +114,6 @@ export const useCheckout = () => {
         } else if (shippingInfo.name.length < 3) {
             newErrors.name = 'Tên đầy đủ phải có ít nhất 3 ký tự';
             isValid = false;
-        } else if (/^[a-zA-Z\s]*$/.test(shippingInfo.name)) {
-            newErrors.name = 'Tên đầy đủ không được chứa kí tự đặc biệt';
-            isValid = false;
         }
 
         if (!shippingInfo.phone) {

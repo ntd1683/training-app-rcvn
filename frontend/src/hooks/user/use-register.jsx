@@ -71,9 +71,6 @@ export const useRegister = () => {
         } else if (formData.fullName.length < 3) {
             newErrors.fullName = 'Tên đầy đủ phải có ít nhất 3 ký tự';
             isValid = false;
-        } else if (/^[a-zA-Z\s]*$/.test(formData.fullName)) {
-            newErrors.fullName = 'Tên đầy đủ không được chứa kí tự đặc biệt';
-            isValid = false;
         }
 
         if (!formData.email) {

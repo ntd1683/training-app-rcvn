@@ -38,12 +38,12 @@ class OrderFilterCriteria implements CriteriaInterface
             $searchTerm = '%' . $this->filters['name'] . '%';
             $model->where(function ($query) use ($searchTerm) {
                 $query->where('recipient_name', 'like', $searchTerm)
-                    ->where('recipient_phone', 'like', $searchTerm)
+                    ->orWhere('recipient_phone', 'like', $searchTerm)
                     ->orWhere('order_code', 'like', $searchTerm)
                     ->orWhereHas('orderDetails.product', function ($productQuery) use ($searchTerm) {
                         $productQuery->where('name', 'like', $searchTerm)
                             ->orWhere('description', 'like', $searchTerm);
-                    });;
+                    });
             });
         }
 

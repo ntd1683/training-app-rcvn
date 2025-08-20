@@ -78,7 +78,7 @@ const Register = () => {
                                             type="button"
                                             onClick={(e) => handleSubmit(e)}
                                             disabled={isLoading}
-                                        >Đăng Ký</button>
+                                        >{isLoading ? 'Đang Đăng Ký' : 'Đăng Ký'}</button>
                                     </div>
                                     <p className="outer-link">Bạn đã có tài khoản? <Link to="/dang-nhap">Đăng nhập tại đây</Link>
                                     </p>
