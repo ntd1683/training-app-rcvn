@@ -2,12 +2,15 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const validateCartItem = (item) => {
   return {
-    id: item.id || '',
-    name: item.name || 'Unknown Product',
-    price: typeof item.price === 'string' ? parseFloat(item.price) : (item.price || 0),
-    image: item.image_url || item.image || '',
-    description: item.description || '',
-    quantity: Math.max(1, parseInt(item.quantity) || 1),
+    productInfo: {
+      id: item.id || '',
+      name: item.name || 'Unknown Product',
+      price: typeof item.price === 'string' ? parseFloat(item.price) : (item.price || 0),
+      image: item.image_url || item.image || '',
+      description: item.description || '',
+      quantity: item.quantity || 1,
+    },
+    quantity: Math.max(1, parseInt(item.addQuantity) || 1),
     totalPrice: typeof item.totalPrice === 'string' ? parseFloat(item.totalPrice) : (item.totalPrice || 0),
   };
 };
@@ -35,13 +38,13 @@ const cartSlice = createSlice({
       state.isAddToCart = true;
       const newItem = action.payload;
       const price = typeof newItem.price === 'string' ? parseFloat(newItem.price) : newItem.price;
-      const existingItem = state.items.find(item => item.id === newItem.id);
+      const existingItem = state.items.find(item => item.productInfo.id === newItem.id);
 
       if (!existingItem) {
         const validatedItem = validateCartItem({
           ...newItem,
           price,
-          quantity: 1,
+          addQuantity: 1,
           totalPrice: price,
         });
         state.items.push(validatedItem);
@@ -58,13 +61,13 @@ const cartSlice = createSlice({
       state.isAddToCart = true;
       const { product, quantity } = action.payload;
       const price = typeof product.price === 'string' ? parseFloat(product.price) : product.price;
-      const existingItem = state.items.find(item => item.id === product.id);
+      const existingItem = state.items.find(item => item.productInfo.id === product.id);
 
       if (!existingItem) {
         const validatedItem = validateCartItem({
           ...product,
           price,
-          quantity: Math.max(1, parseInt(quantity) || 1),
+          addQuantity: Math.max(1, parseInt(quantity) || 1),
           totalPrice: price * Math.max(1, parseInt(quantity) || 1),
         });
         state.items.push(validatedItem);
@@ -79,14 +82,14 @@ const cartSlice = createSlice({
     },
     removeFromCart: (state, action) => {
       const id = action.payload;
-      const existingItem = state.items.find(item => item.id === id);
+      const existingItem = state.items.find(item => item.productInfo.id === id);
 
       if (existingItem) {
         if (existingItem.quantity === 1) {
-          state.items = state.items.filter(item => item.id !== id);
+          state.items = state.items.filter(item => item.productInfo.id !== id);
         } else {
           existingItem.quantity -= 1;
-          existingItem.totalPrice -= existingItem.price;
+          existingItem.totalPrice -= existingItem.productInfo.price;
         }
         
         recalculateCartTotals(state);
@@ -97,7 +100,7 @@ const cartSlice = createSlice({
     // Xóa hoàn toàn một item khỏi cart
     deleteFromCart: (state, action) => {
       const id = action.payload;
-      state.items = state.items.filter(item => item.id !== id);
+      state.items = state.items.filter(item => item.productInfo.id !== id);
       recalculateCartTotals(state);
       state.lastUpdated = Date.now();
     },
@@ -105,12 +108,12 @@ const cartSlice = createSlice({
     // Update số lượng cụ thể
     updateCartItemQuantity: (state, action) => {
       const { id, quantity } = action.payload;
-      const existingItem = state.items.find(item => item.id === id);
+      const existingItem = state.items.find(item => item.productInfo.id === id);
       
       if (existingItem) {
         const newQuantity = Math.max(1, parseInt(quantity) || 1);
         existingItem.quantity = newQuantity;
-        existingItem.totalPrice = existingItem.price * newQuantity;
+        existingItem.totalPrice = existingItem.productInfo.price * newQuantity;
         recalculateCartTotals(state);
         state.lastUpdated = Date.now();
       }

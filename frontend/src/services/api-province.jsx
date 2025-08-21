@@ -12,18 +12,26 @@ const api = axios.create({
   },
 });
 
-export const getProvinces = async () => {
+export const getProvinces = async (limit = 1000) => {
   try {
-    const response = await api.get('/new-provinces');
+    const response = await api.get('/new-provinces', {
+      params: {
+        limit: limit
+      }
+    });
     return response.data;
   } catch (error) {
     throw error;
   }
 }
 
-export const getWardsByProvince = async (provinceCode) => {
+export const getWardsByProvince = async (provinceCode, limit = 1000) => {
   try {
-    const response = await api.get(`/new-provinces/${provinceCode}/wards`);
+    const response = await api.get(`/new-provinces/${provinceCode}/wards`, {
+      params: {
+        limit: limit
+      }
+    });
     return response.data;
   } catch (error) {
     throw error;

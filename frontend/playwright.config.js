@@ -42,10 +42,8 @@ export default defineConfig({
     //   },
     // },
     {
-      name: 'Microsoft Edge',
-      use: { 
-        ...devices['Desktop Edge'],
-      },
+      name: 'chromium',
+      use: { ...devices['Desktop Chrome'] },
     },
   ],
 });
