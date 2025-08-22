@@ -115,7 +115,7 @@ const ProfilePage = () => {
                       </label>
                       {!formData.isVerify && (
                         <a
-                          className="anchor text-primary cursor-pointer"
+                          className="anchor verify-email text-primary cursor-pointer"
                           style={{ fontSize: '0.875rem' }}
                           onClick={() => setShowModal(true)}
                         >Xác minh email</a>

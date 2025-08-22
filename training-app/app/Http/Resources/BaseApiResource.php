@@ -112,7 +112,6 @@ abstract class BaseApiResource extends JsonResource
      */
     public function errorResponse(string $errorKey, $errors = null, ?string $customMessage = null): JsonResponse
     {
-        \Log::info('Error in BaseApiResource: ' . $errorKey);
         $error = self::ERROR_CODES[$errorKey] ?? self::ERROR_CODES['SERVER_ERROR'];
         $message = $customMessage ?? $error['message'];
 

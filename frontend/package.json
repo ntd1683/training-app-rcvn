@@ -47,6 +47,15 @@
       "react-app",
       "react-app/jest"
     ],
+    "ignorePatterns": [
+      "build",
+      "dist",
+      "node_modules",
+      ".cache",
+      ".next",
+      "coverage",
+      "tests"
+    ],
     "rules": {
       "jsx-a11y/anchor-is-valid": "off",
       "testing-library/prefer-screen-queries": "off"

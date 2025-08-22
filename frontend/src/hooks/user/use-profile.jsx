@@ -111,7 +111,6 @@ export const useProfile = () => {
         e.preventDefault();
         setIsLoading(true);
         if (!validateForm()) {
-            toast.error('Vui lòng sửa các lỗi trong biểu mẫu');
             setIsLoading(false);
             return;
         }

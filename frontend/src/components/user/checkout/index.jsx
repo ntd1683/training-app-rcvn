@@ -70,8 +70,8 @@ const Checkout = () => {
                                     {products.map((product, index) => (
                                         <div className="sub-total-price" key={index}>
                                             <div className="total-price">
-                                                <p className="value">{product.name.slice(0, 50)}...</p>
-                                                <p className="price">{formatPrice(parseFloat(product.price))}</p>
+                                                <p className="value">{product.productInfo.name.slice(0, 50)}...</p>
+                                                <p className="price">{formatPrice(parseFloat(product.totalPrice))}</p>
                                             </div>
                                         </div>
                                     ))}

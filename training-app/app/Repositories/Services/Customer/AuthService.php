@@ -8,6 +8,7 @@ use App\Repositories\CustomerRepository;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Auth\Events\Verified;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 
@@ -237,7 +238,8 @@ class AuthService
      */
     public function updateProfile($customer, array $data)
     {
-        $customer->fill($data);
+        $safeData = Arr::except($data, ['password']);
+        $customer->fill($safeData);
         if (isset($data['password']) && isset($data['new_password'])) {
             if (!\Hash::check($data['password'], $customer->password)) {
                 throw new \Exception('Mật khẩu hiện tại không đúng');

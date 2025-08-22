@@ -23,9 +23,11 @@ export default defineConfig({
   timeout: 60 * 1000,
   reporter: [['html', { open: 'never' }]],
   use: {
+    trace: 'retain-on-failure',
+    video: 'retain-on-failure',
     laravelBaseUrl: process.env.API_URL + '/playwright' || 'http://localhost:80/playwright',
     baseURL: process.env.TEST_URL || 'http://localhost:3000',
-    headless: true,
+    headless: false,
     viewport: { width: 1280, height: 720 },
     ignoreHTTPSErrors: true,
   },
@@ -42,10 +44,8 @@ export default defineConfig({
     //   },
     // },
     {
-      name: 'Microsoft Edge',
-      use: { 
-        ...devices['Desktop Edge'],
-      },
+      name: 'chromium',
+      use: { ...devices['Desktop Edge'] },
     },
   ],
 });

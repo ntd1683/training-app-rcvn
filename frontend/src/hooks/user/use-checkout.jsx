@@ -93,9 +93,10 @@ export const useCheckout = () => {
             }
         };
         if (shippingInfo.province) {
-            fetchWards(shippingInfo.province);
+            const selectedProvince = dataProvinces.find(p => p.name === shippingInfo.province);
+            fetchWards(selectedProvince.code);
         }
-    }, [shippingInfo.province]);
+    }, [shippingInfo.province, dataProvinces]);
 
     const handleShippingInfoChange = (name, value) => {
         setShippingInfo((prevInfo) => ({
@@ -119,7 +120,7 @@ export const useCheckout = () => {
         if (!shippingInfo.phone) {
             newErrors.phone = 'Số điện thoại không được bỏ trống';
             isValid = false;
-        } else if (isNaN(shippingInfo.phone) || shippingInfo.phone.length < 10 || shippingInfo.phone.length > 11) {
+        } else if (isNaN(shippingInfo.phone) || shippingInfo.phone.length < 5 || shippingInfo.phone.length > 12) {
             newErrors.phone = 'Số điện thoại không hợp lệ';
             isValid = false;
         }
@@ -135,12 +136,12 @@ export const useCheckout = () => {
         }
 
         if (!shippingInfo.ward || shippingInfo.ward === '') {
-            newErrors.ward = 'Quận/Huyện không được bỏ trống';
+            newErrors.ward = 'Phường không được bỏ trống';
             isValid = false;
         }
 
         if (!shippingInfo.postCode) {
-            newErrors.postCode = 'Mã bưu chính không được bỏ trống';
+            newErrors.postCode = 'Mã bưu điện không được bỏ trống';
             isValid = false;
         }
 
@@ -165,8 +166,12 @@ export const useCheckout = () => {
         }
 
         try {
+            const productsRequest = cartItems.map(item => ({
+                id: item.productInfo.id,
+                quantity: item.quantity,
+            }));
             const response = await createOrder({
-                products: cartItems,
+                products: productsRequest,
                 name: shippingInfo.name,
                 phone: shippingInfo.phone,
                 address: shippingInfo.address,
