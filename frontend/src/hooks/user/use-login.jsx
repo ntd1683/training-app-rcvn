@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from './use-auth';
 import '~/assets/css/admin/page-auth.css';
 import { toast } from 'react-toastify';
+import { useGoogleOneTapLogin } from '@react-oauth/google';
 
 export const useLogin = () => {
     const [formData, setFormData] = useState({
@@ -17,14 +18,37 @@ export const useLogin = () => {
         password: '',
     });
 
-    const { isAuthenticated, isLoginLoading, handleLogin } = useAuth();
+    const { isAuthenticated, isLoginLoading, handleLogin, handleVerifyTokenOauth2 } = useAuth();
     const navigate = useNavigate();
+
+    const googleIdClient = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 
     useEffect(() => {
         if (isAuthenticated) {
             navigate('/', { state: { success: 'Bạn đang đăng nhập' } });
         }
     }, [isAuthenticated, navigate]);
+
+    useGoogleOneTapLogin({
+        onSuccess: async (credentialResponse) => {
+            try {
+                const response = await handleVerifyTokenOauth2(credentialResponse.credential);
+
+                if (response.success) {
+                    navigate('/', { state: { success: 'Đăng nhập bằng Google thành công' } });
+                } else {
+                    toast.error('Đăng nhập bằng Google thất bại!');
+                }
+            } catch (error) {
+                toast.error('Đăng nhập bằng Google thất bại!');
+            }
+        },
+        onError: () => {
+            toast.error('Đăng nhập bằng Google thất bại, Vui lòng thử lại sau!');
+        },
+        disabled: isAuthenticated,
+        auto_select: false,
+    });
 
     const handleInputChange = (field, value) => {
         setFormData(prev => ({
@@ -95,6 +119,20 @@ export const useLogin = () => {
         }
     };
 
+    const handleSuccess = async (credentialResponse) => {
+        try {
+            const response = await handleVerifyTokenOauth2(credentialResponse.credential);
+
+            if (response.success) {
+                navigate('/', { state: { success: 'Đăng nhập bằng Google thành công' } });
+            } else {
+                toast.error('Đăng nhập bằng Google thất bại!');
+            }
+        } catch (error) {
+            toast.error('Đăng nhập bằng Google thất bại!');
+        }
+    };
+
     return {
         formData,
         errors,
@@ -102,5 +140,7 @@ export const useLogin = () => {
         handleInputChange,
         togglePassword,
         handleSubmit,
+        googleIdClient,
+        handleSuccess,
     };
 };

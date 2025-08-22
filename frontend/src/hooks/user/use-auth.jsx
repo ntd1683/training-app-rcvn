@@ -18,6 +18,7 @@ import {
     changeResetPasswordCustomer,
     getProfile,
     updateProfile,
+    oauth2TokenVerify,
 } from '../../redux/slices/auth-customer-slice';
 
 export const useAuth = () => {
@@ -40,6 +41,15 @@ export const useAuth = () => {
         return {
             success: loginUser.fulfilled.match(result),
             message: result.payload?.message || (loginUser.rejected.match(result) ? result.payload : null)
+        };
+    }, [dispatch]);
+
+    const handleVerifyTokenOauth2 = useCallback(async (idToken) => {
+        const result = await dispatch(oauth2TokenVerify(idToken));
+        dispatch(initializeAuth());
+        return {
+            success: oauth2TokenVerify.fulfilled.match(result),
+            message: result.payload?.message || (oauth2TokenVerify.rejected.match(result) ? result.payload : null)
         };
     }, [dispatch]);
 
@@ -113,6 +123,7 @@ export const useAuth = () => {
         // Actions
         initialize,
         handleLogin,
+        handleVerifyTokenOauth2,
         handleRegister,
         handleVerifyEmailCustomer,
         handleResetPassword,

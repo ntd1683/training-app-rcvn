@@ -27,7 +27,7 @@ class ImageService
     protected $imageRepository;
 
     /**
-     * UserService constructor.
+     * ImageService constructor.
      *
      * @param ImageRepository $imageRepository
      */

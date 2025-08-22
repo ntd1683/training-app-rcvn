@@ -34,7 +34,7 @@ class LogoutController extends Controller
             }
         } catch (\Exception $e) {
             return (new AuthResource(null))->errorResponse(
-                'SERVER_ERROR',
+                $e->getCode() ?: 'SERVER_ERROR',
                 null,
                 'Có lỗi xảy ra: ' . $e->getMessage()
             );

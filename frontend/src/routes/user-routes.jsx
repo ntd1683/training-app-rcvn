@@ -7,6 +7,7 @@ import { userRoutesConfig } from '../data/user-routes-config';
 import PreLoader from '../components/user/ui/pre-loader';
 import Layout from '../components/user/layout/layout';
 import Logout from '../components/user/auth/logout';
+import OauthToken from '../components/user/auth/oauth-token';
 import { useAuth } from '../hooks/user/use-auth';
 
 const UserRoutes = () => {
@@ -28,6 +29,7 @@ const UserRoutes = () => {
     >
       <Routes>
         <Route path="/dang-xuat" element={<Logout />} />
+        <Route path="/auth/google/:token" element={<OauthToken />} />
 
         {userRoutesConfig.map((route, index) => {
           const { path, element: Component, requireAuth, layout } = route;

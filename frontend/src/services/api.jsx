@@ -33,6 +33,14 @@ export const login = async (email, password, remember, isAdmin) => {
   return response.data;
 };
 
+export const verifyTokenOauth2 = async (idToken) => {
+  const response = await api.post(`${prefixApi}/auth/google/verify`, {
+    id_token: idToken,
+  });
+
+  return response.data;
+};
+
 export const register = async (fullName, email, password, rePassword) => {
   const response = await api.post(
     `${prefixApi}/register`,
