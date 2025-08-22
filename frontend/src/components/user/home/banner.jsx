@@ -55,7 +55,7 @@ const Banner = () => {
     }, [sliders, isLoadingSlide]);
 
     return (
-        <section className="hero-area">
+        <section className="hero-area" style={{ minHeight: '400px' }}>
             <div className="container">
                 <div className="row">
                     <div className="col-lg-8 col-12 custom-padding-right">

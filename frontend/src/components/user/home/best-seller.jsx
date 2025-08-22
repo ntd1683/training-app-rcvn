@@ -20,7 +20,7 @@ const BestSellerProducts = () => {
     if (error) return <ErrorComponent message={error} />;
 
     return (
-        <section className="trending-product section">
+        <section className="trending-product section" style={{ minHeight: '400px' }}>
             <div className="container">
                 <div className="row">
                     <div className="col-12">
