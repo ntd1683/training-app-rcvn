@@ -182,6 +182,7 @@ export const useOrders = () => {
 
         if (inputName) params.name = inputName;
         if (inputDate && inputDate !== '') params.date = inputDate;
+        if (filterStatus) params.status = filterStatus;
         
         dispatch(setFilters({
             name: inputName,
@@ -208,7 +209,6 @@ export const useOrders = () => {
         dispatch(setFilters({
             name: '',
             date: '',
-            status: '',
         }));
         
         dispatch(setSorting({
@@ -223,12 +223,16 @@ export const useOrders = () => {
         // Reset orders and load fresh data
         dispatch(resetOrders());
 
-        setSearchParams({}, { replace: true });
+        const params = {};
+
+        if (filterStatus) params.status = filterStatus;
+        setSearchParams(params, { replace: true });
         handleLoadOrders(1, 8, {
+            filterStatus: filterStatus,
             sortBy: 'created_at',
             sortOrder: 'desc',
         });
-    }, [dispatch, setSearchParams, handleLoadOrders]);
+    }, [dispatch, setSearchParams, filterStatus, handleLoadOrders]);
 
     // Pagination handler (for traditional pagination if needed)
     const handlePageChange = useCallback((page) => {

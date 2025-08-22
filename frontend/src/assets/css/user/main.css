@@ -8767,7 +8767,7 @@ a.anchor:hover {
     border-color: rgba(var(--bs-danger-rgb),var(--bs-text-opacity))!important;
 }
 
-.order-detail .btn-comback:hover {
+.order-detail .btn-comeback:hover {
     --bs-text-opacity: 1;
     color: rgba(var(--bs-primary-rgb), var(--bs-text-opacity)) !important;
 }

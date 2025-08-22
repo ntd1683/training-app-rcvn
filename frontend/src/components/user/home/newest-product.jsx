@@ -2,15 +2,17 @@ import React, { useEffect } from "react";
 import 'tiny-slider/dist/tiny-slider.css';
 import { tns } from 'tiny-slider/src/tiny-slider';
 import { useSelector, useDispatch } from 'react-redux';
-import { selectProductsNewest, selectIsLoading, selectError } from '~/redux/selectors/products-selector';
+import { selectProductsNewest, selectIsLoading, selectErrorNewest } from '~/redux/selectors/products-selector';
 import { loadProductsNewest } from '~/redux/slices/products-slice';
 import Item from "../ui/item-product";
+import LoadingComponent from "../ui/loading-component";
+import ErrorComponent from "../ui/error-component";
 
 const NewestProduct = () => {
     const dispatch = useDispatch();
     const newestProducts = useSelector(selectProductsNewest);
     const isLoading = useSelector(selectIsLoading);
-    const error = useSelector(selectError);
+    const error = useSelector(selectErrorNewest);
 
     useEffect(() => {
         dispatch(loadProductsNewest({ limit: 8 }));
@@ -48,8 +50,8 @@ const NewestProduct = () => {
         }
     }, [newestProducts]);
 
-    if (isLoading) return <div>Đang tải sản phẩm mới nhất...</div>;
-    if (error) return <div>Lỗi: {error}</div>;
+    if (isLoading) return <LoadingComponent message="Đang tải sản phẩm mới nhất..." />;
+    if (error) return <ErrorComponent message={error} />;
 
     return (
         <section className="newest-product section">

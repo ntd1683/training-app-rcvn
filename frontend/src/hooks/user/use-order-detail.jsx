@@ -46,6 +46,7 @@ export const useOrderDetail = () => {
 
     const handleCancelOrder = useCallback(() => {
         toast.info('Thanh toán đã bị huỷ!');
+        setShowModal(false);
     }, []);
 
     const handleErrorOrder = useCallback((data) => {

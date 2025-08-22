@@ -82,19 +82,19 @@ export const CartLayout = () => {
                             <Link 
                                 className="remove" 
                                 title="Xóa sản phẩm" 
-                                onClick={handleDeleteItem(item.id)}
+                                onClick={handleDeleteItem(item.productInfo.id)}
                             >
                                 <i className="lni lni-close"></i>
                             </Link>
                             <div className="cart-img-head">
                                 <Link 
                                     className="cart-img" 
-                                    to={`/san-pham/${item.id}`}
+                                    to={`/san-pham/${item.productInfo.id}`}
                                     onClick={handleLinkClick}
                                 >
-                                    <img src={item.image} alt={item.name.length > 50
-                                        ? item.name.slice(0, 50) + '...'
-                                        : item.name} />
+                                    <img src={item.productInfo.image} alt={item.productInfo.name.length > 50
+                                        ? item.productInfo.name.slice(0, 50) + '...'
+                                        : item.productInfo.name} />
                                 </Link>
                             </div>
 
@@ -104,15 +104,15 @@ export const CartLayout = () => {
                                         to={`/san-pham/${item.id}`}
                                         onClick={handleLinkClick}
                                     >
-                                        {item.name.length > 50
-                                            ? item.name.slice(0, 50) + '...'
-                                            : item.name}
+                                        {item.productInfo.name.length > 50
+                                            ? item.productInfo.name.slice(0, 50) + '...'
+                                            : item.productInfo.name}
                                     </Link>
                                 </h4>
                                 <p className="quantity d-flex justify-content-between">
                                     <span>{item.quantity}x</span>
                                     <span className="amount">
-                                        {formatPrice(parseFloat(item.price))}
+                                        {formatPrice(parseFloat(item.productInfo.price))}
                                     </span>
                                 </p>
                             </div>

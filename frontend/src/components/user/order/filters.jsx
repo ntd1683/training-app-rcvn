@@ -19,10 +19,17 @@ export const Filters = ({ inputName, setInputName, inputDate, setInputDate, onSe
                     </span>
                     <input
                         type="text"
+                        name='order_search'
                         className="form-control"
                         placeholder="Tìm kiếm theo mã đơn hàng, tên khách hàng, số điện thoại..."
                         value={inputName}
                         onChange={(e) => setInputName(e.target.value)}
+                        onKeyDown={(e) => {
+                            if (e.key === 'Enter') {
+                                e.preventDefault();
+                                onSearch();
+                            }
+                        }}
                     />
                 </div>
             </div>
@@ -33,6 +40,7 @@ export const Filters = ({ inputName, setInputName, inputDate, setInputDate, onSe
                     </span>
                     <input
                         type="date"
+                        name='order_date'
                         className="form-control"
                         value={inputDate}
                         onChange={(e) => setInputDate(e.target.value)}
@@ -43,13 +51,13 @@ export const Filters = ({ inputName, setInputName, inputDate, setInputDate, onSe
             </div>
             <div className="d-block d-md-flex gap-3 justify-content-md-end">
                 <div className="col-12 col-md-4 mb-3">
-                    <CustomBtn classNameBtn="w-100" onClick={onSearch}>
+                    <CustomBtn classNameBtn="w-100 btn-search-orders" onClick={onSearch}>
                         Tìm Kiếm
                     </CustomBtn>
                 </div>
                 <div className="col-12 col-md-4 mb-3">
                     <CustomBtn
-                        classNameBtn="w-100 bg-secondary"
+                        classNameBtn="w-100 bg-secondary btn-reset-orders"
                         onClick={onResetSearch}
                     >Xoá Tìm Kiếm</CustomBtn>
                 </div>

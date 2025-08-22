@@ -48,7 +48,7 @@ export const Shipping = ({ shippingInfo, handleShippingInfoChange, dataProvinces
                             >
                                 <option value="">-- Chọn tỉnh/thành phố --</option>
                                 {dataProvinces.map((province) => (
-                                    <option key={province.code} value={province.code}>
+                                    <option key={province.code} value={province.name}>
                                         {province.name}
                                     </option>
                                 ))}
@@ -65,11 +65,11 @@ export const Shipping = ({ shippingInfo, handleShippingInfoChange, dataProvinces
                                 className="form-control"
                                 name="ward"
                                 value={shippingInfo.ward}
-                                onChange={(e) => handleShippingInfoChange('ward', e.target.value)}
+                                onChange={(e) => handleShippingInfoChange('ward', e.target.value, )}
                             >
                                 <option value="">-- Chọn phường --</option>
                                 {dataWards.map((ward) => (
-                                    <option key={ward.code} value={ward.code}>
+                                    <option key={ward.code} value={ward.name}>
                                         {ward.name}
                                     </option>
                                 ))}

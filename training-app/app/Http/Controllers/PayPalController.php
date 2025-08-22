@@ -35,6 +35,7 @@ class PayPalController extends Controller
             $order = $this->paypalService->createOrder($validated, $currentUser);
             return new PaypalResource($order, null, 'CREATED');
         } catch (\Exception $e) {
+            \Log::error('Error in createOrder: ' . $e->getMessage());
             return (new PaypalResource(null))->errorResponse(
                 $e->getCode() ?: 'SERVER_ERROR',
                 null,
