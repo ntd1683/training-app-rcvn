@@ -62,6 +62,21 @@ export const selectError = createSelector(
   (productState) => productState.error
 );
 
+export const selectErrorProducts = createSelector(
+  [selectError],
+  (error) => error.products
+);
+
+export const selectErrorNewest = createSelector(
+  [selectError],
+  (error) => error.newest
+);
+
+export const selectErrorBestSeller = createSelector(
+  [selectError],
+  (error) => error.bestSeller
+);
+
 export const selectTableKey = createSelector(
   [selectProductState],
   (productState) => productState.tableKey

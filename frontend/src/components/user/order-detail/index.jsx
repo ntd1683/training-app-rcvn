@@ -96,7 +96,7 @@ const OrderDetailPage = () => {
             <Modal
                 isOpen={showModal}
                 onClose={() => setShowModal(false)}
-                title={`Xác minh email của bạn`}
+                title={`Thanh toán đơn hàng cũ`}
                 showCloseButton={true}
                 backdrop={true}
                 keyboard={true}
@@ -119,7 +119,7 @@ const OrderDetailPage = () => {
                 }
             >
                 <p className='mb-0'>
-                    Bạn có chắc chắn muốn gửi email xác minh đến địa chỉ email của bạn? Vui lòng kiểm tra hộp thư đến của bạn sau khi gửi.
+                    Bạn chắc chắn muốn thanh toán lại đơn hàng <strong>{currentOrder.order_code}</strong> này? Đơn hàng sẽ được xử lý lại và bạn sẽ nhận được email xác nhận mới.
                 </p>
             </Modal>
         </>

@@ -111,7 +111,11 @@ const initialState = {
         lastSortedColumn: '',
     },
     isLoading: false,
-    error: null,
+    error: {
+        products: null,
+        newest: null,
+        bestSeller: null,
+    },
     tableKey: 0,
 
     currentProduct: {
@@ -207,7 +211,11 @@ const productSlice = createSlice({
 
         // Error actions
         clearErrors: (state) => {
-            state.error = null;
+            state.error = {
+                products: null,
+                newest: null,
+                bestSeller: null,
+            };
         },
 
         updateProductInList: (state, action) => {
@@ -246,49 +254,49 @@ const productSlice = createSlice({
             // Load products
             .addCase(loadProducts.pending, (state) => {
                 state.isLoading = true;
-                state.error = null;
+                state.error.products = null;
             })
             .addCase(loadProducts.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.data = action.payload.data;
                 state.pagination = action.payload.pagination;
                 state.meta = action.payload.meta;
-                state.error = null;
+                state.error.products = null;
             })
             .addCase(loadProducts.rejected, (state, action) => {
                 state.isLoading = false;
                 state.data = [];
-                state.error = action.payload;
+                state.error.products = action.payload;
             })
 
             .addCase(loadProductsNewest.pending, (state) => {
                 state.isLoading = true;
-                state.error = null;
+                state.error.newest = null;
             })
             .addCase(loadProductsNewest.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.dataNewest = action.payload.data;
-                state.error = null;
+                state.error.newest = null;
             })
             .addCase(loadProductsNewest.rejected, (state, action) => {
                 state.isLoading = false;
                 state.dataNewest = [];
-                state.error = action.payload;
+                state.error.newest = action.payload;
             })
 
             .addCase(loadProductsBestSeller.pending, (state) => {
                 state.isLoading = true;
-                state.error = null;
+                state.error.bestSeller = null;
             })
             .addCase(loadProductsBestSeller.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.dataBestSeller = action.payload.data;
-                state.error = null;
+                state.error.bestSeller = null;
             })
             .addCase(loadProductsBestSeller.rejected, (state, action) => {
                 state.isLoading = false;
                 state.dataBestSeller = [];
-                state.error = action.payload;
+                state.error.bestSeller = action.payload;
             })
 
             // Load single product

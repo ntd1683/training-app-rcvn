@@ -69,7 +69,7 @@ export const OrderList = ({ orders, onLoadMore, hasMore = true, isLoading = fals
                                         <div className="d-flex align-items-center gap-2">
                                             <span className="badge bg-light text-dark border">
                                                 <Icon icon="mdi:package-variant-closed" width={24} height={24} className="me-1" />
-                                                {truncateText(order.order_code, 20)}
+                                                <span className='order-code'>{truncateText(order.order_code, 20)}</span>
                                             </span>
                                         </div>
                                         <div className="text-end">

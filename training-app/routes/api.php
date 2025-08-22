@@ -59,15 +59,17 @@ Route::middleware('auth:sanctum')->group(function () {
             Route::delete('/{id}', [ProductController::class, 'destroy'])->name('products.delete');
         });
     });
-})->middleware('throttle:60,1');
+})->middleware('throttle:300,1');
 
-Route::prefix('products')->group(function () {
-    Route::get('/', [ProductController::class, 'index'])->name('products.index');
-    Route::get('/{id}', [ProductController::class, 'edit'])->name('products.edit');
-});
+Route::middleware('throttle:600,1')->group(function () {
+    Route::prefix('products')->group(function () {
+        Route::get('/', [ProductController::class, 'index'])->name('products.index');
+        Route::get('/{id}', [ProductController::class, 'edit'])->name('products.edit');
+    });
 
-Route::prefix('banners')->group(function () {
-    Route::get('/', [BannerController::class, 'index'])->name('banners.index');
+    Route::prefix('banners')->group(function () {
+        Route::get('/', [BannerController::class, 'index'])->name('banners.index');
+    });
 });
 
 Route::post('/login', [AuthCustomerController::class, 'login'])->middleware('throttle:10,1');
@@ -103,4 +105,4 @@ Route::middleware('auth:customer')->group(function () {
                 ->name('paypal.cancel.order');
         });
     });
-})->middleware('throttle:60,1');
+})->middleware('throttle:300,1');

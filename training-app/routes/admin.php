@@ -26,6 +26,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('verify-token', [AuthController::class, 'verifyToken'])->name('verify.token');
     Route::get('profile', [AuthController::class, 'profile'])->name('profile.update');
     Route::post('/logout', [LogoutController::class, 'logout']);
-})->middleware('throttle:60,1');
+})->middleware('throttle:300,1');
 
 Route::post('login', [AuthController::class, 'login'])->middleware('throttle:10,1');
