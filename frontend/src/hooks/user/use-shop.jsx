@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useEffect, useRef, useState, use } from 'react';
+import { useCallback, useMemo, useEffect, useRef, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useSearchParams } from 'react-router-dom';
 
@@ -11,19 +11,17 @@ import {
     setFilters,
     setSorting,
     clearErrors,
-    resetFilters,
 } from '~/redux/slices/products-slice';
 
-// Selectors
 import {
     selectProducts,
     selectPagination,
     selectMeta,
     selectCurrentFilters,
     selectLoadingStates,
-    selectErrorStates,
     selectTableKey,
     selectSorting,
+    selectErrorProducts,
 } from '~/redux/selectors/products-selector';
 
 export const useShop = () => {
@@ -36,7 +34,7 @@ export const useShop = () => {
     const pagination = useSelector(selectPagination);
     const currentFilters = useSelector(selectCurrentFilters);
     const loadingStates = useSelector(selectLoadingStates);
-    const errorStates = useSelector(selectErrorStates);
+    const error = useSelector(selectErrorProducts);
     const tableKey = useSelector(selectTableKey);
     const meta = useSelector(selectMeta);
     const sorting = useSelector(selectSorting);
@@ -63,10 +61,6 @@ export const useShop = () => {
     const {
         isLoading,
     } = loadingStates;
-
-    const {
-        error,
-    } = errorStates;
 
     const handleLoadProducts = useCallback((page = 1, perPage = 10, filters = {}) => {
         if (filters.filterStatus === undefined || filters.filterStatus === null || filters.filterStatus === '') {
@@ -183,6 +177,7 @@ export const useShop = () => {
             // Update ref even if no reload needed
             prevSearchParams.current = currentParams;
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [searchParams, loadDataFromParams]);
 
     // Filter handlers
