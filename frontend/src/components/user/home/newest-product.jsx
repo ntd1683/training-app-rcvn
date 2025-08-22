@@ -54,7 +54,7 @@ const NewestProduct = () => {
     if (error) return <ErrorComponent message={error} />;
 
     return (
-        <section className="newest-product section">
+        <section className="newest-product section" style={{ minHeight: '400px' }}>
             <div className="container">
                 <div className="row">
                     <div className="col-12">
