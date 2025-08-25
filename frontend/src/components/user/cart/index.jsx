@@ -43,22 +43,22 @@ const Cart = () => {
                             <div className="cart-single-list" key={index}>
                                 <div className="row align-items-center">
                                     <div className="col-lg-2 col-md-2 col-12">
-                                        <Link to={`/san-pham/${item.productInfo.id}`}>
-                                            <img src={item.productInfo.image} alt={item.productInfo.name.length > 50
-                                                ? item.productInfo.name.slice(0, 50) + '...'
-                                                : item.productInfo.name} />
+                                        <Link to={`/san-pham/${item?.productInfo?.id}`}>
+                                            <img src={item?.productInfo?.image} alt={item?.productInfo?.name.length > 50
+                                                ? item?.productInfo?.name.slice(0, 50) + '...'
+                                                : item?.productInfo?.name} />
                                         </Link>
                                     </div>
                                     <div className="col-lg-5 col-md-4 col-12">
                                         <h5 className="product-name">
-                                            <Link to={`/san-pham/${item.productInfo.id}`}>
+                                            <Link to={`/san-pham/${item?.productInfo?.id}`}>
                                                 <p>
-                                                    {item.productInfo.name.length > 50
-                                                        ? item.productInfo.name.slice(0, 50) + '...'
-                                                        : item.productInfo.name}
+                                                    {item?.productInfo?.name.length > 50
+                                                        ? item?.productInfo?.name.slice(0, 50) + '...'
+                                                        : item?.productInfo?.name}
                                                 </p>
                                                 <p style={{ opacity: '65%' }}>
-                                                    Còn lại : {item.productInfo.quantity}
+                                                    Còn lại : {item?.productInfo?.quantity}
                                                 </p>
                                             </Link>
                                         </h5>
@@ -66,15 +66,15 @@ const Cart = () => {
                                     <div className="col-lg-2 col-md-3 col-12">
                                         <div className="count-input">
                                             <NumberInput
-                                                value={item.quantity}
-                                                setValue={(newQuantity) => handleQuantityChange(item.productInfo.id, newQuantity)}
+                                                value={item?.quantity}
+                                                setValue={(newQuantity) => handleQuantityChange(item?.productInfo?.id, newQuantity)}
                                                 name={`quantity-${index}`}
-                                                max={item.productInfo.quantity}
+                                                max={item?.productInfo?.quantity}
                                             />
                                         </div>
                                     </div>
                                     <div className="col-lg-2 col-md-2 col-12">
-                                        <p>{formatPrice(parseFloat(item.totalPrice))}</p>
+                                        <p>{formatPrice(parseFloat(item?.totalPrice))}</p>
                                     </div>
                                     <div className="col-lg-1 col-md-1 col-12">
                                         <Link
@@ -82,7 +82,7 @@ const Cart = () => {
                                             to='#'
                                             onClick={(e) => {
                                                 e.preventDefault();
-                                                handleDeleteItem(item.productInfo.id);
+                                                handleDeleteItem(item?.productInfo?.id);
                                             }}
                                         >
                                             <i className="lni lni-close"></i>
