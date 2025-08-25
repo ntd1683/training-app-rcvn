@@ -2,18 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\Repositories\Services\ImageService;
+use App\Repositories\Services\Oauth2Service;
 
 class ImageController extends Controller
 {
-    protected ImageService $imageService;
+    protected Oauth2Service $imageService;
 
     /**
      * ImageController constructor.
      *
-     * @param ImageService $imageService
+     * @param Oauth2Service $imageService
      */
-    public function __construct(ImageService $imageService)
+    public function __construct(Oauth2Service $imageService)
     {
         $this->imageService = $imageService;
     }

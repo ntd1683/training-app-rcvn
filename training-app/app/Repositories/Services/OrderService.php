@@ -20,7 +20,7 @@ use Illuminate\Support\Str;
 use Throwable;
 
 /**
- * Class Product Service
+ * Class Order Service
  * Handles business logic for Product operations.
  */
 class OrderService
@@ -31,7 +31,7 @@ class OrderService
     protected OrderTimelineRepository $orderTimelineRepository;
 
     /**
-     * Order constructor.
+     * Order Service constructor.
      *
      * @param OrderRepository $orderRepository
      * @param ProductRepository $productRepository

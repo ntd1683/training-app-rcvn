@@ -1,6 +1,9 @@
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '~/hooks/user/use-auth';
 import { useEffect, useState } from 'react';
+import LoadingComponent from '../ui/loading-component';
+import ErrorComponent from '../ui/error-component';
+import { googleLogout } from '@react-oauth/google';
 
 const Logout = () => {
   const navigate = useNavigate();
@@ -17,6 +20,7 @@ const Logout = () => {
     const performLogout = async () => {
       try {
         await handleLogout();
+        await googleLogout();
         setTimeout(() => {
           navigate("/dang-nhap", { state: { success: 'Đăng xuất thành công' } });
         }, 100);
@@ -34,13 +38,8 @@ const Logout = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [navigate, handleLogout]);
 
-  if (isLoading) {
-    return <div>Đang đăng xuất...</div>;
-  }
-
-  if (error) {
-    return <div>{error}</div>;
-  }
+  if (isLoading) return <LoadingComponent message="Đang đăng xuất..." />;
+  if (error) return <ErrorComponent message={error} />;
 
   return null;
 };

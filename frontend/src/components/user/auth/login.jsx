@@ -4,6 +4,8 @@ import InputPassword from '../ui/input-password'
 import InputText from "../ui/input-text";
 import { useLogin } from "~/hooks/user/use-login";
 import Breadcrumbs from "../ui/breadcrumbs"
+import { GoogleLogin } from "@react-oauth/google";
+import { toast } from "react-toastify";
 
 const Login = () => {
     const {
@@ -11,14 +13,16 @@ const Login = () => {
         errors,
         isLoginLoading,
         handleInputChange,
-        handleSubmit
+        handleSubmit,
+        handleSuccess,
     } = useLogin();
+
     return (
         <>
             <Breadcrumbs
                 title="Đăng Nhập"
                 items={[
-                    { icon: 'lni lni-home',label: "Trang chủ", link: "/" },
+                    { icon: 'lni lni-home', label: "Trang chủ", link: "/" },
                     { label: "Đăng Nhập", link: "/dang-nhap" }
                 ]}
             />
@@ -30,14 +34,16 @@ const Login = () => {
                                 <div className="card-body">
                                     <div className="title">
                                         <h3>Đăng Nhập</h3>
-                                        <p style={{ opacity: "70%"}}>Bạn có thể đăng nhập bằng tài khoản mạng xã hội hoặc địa chỉ email của mình.</p>
+                                        <p style={{ opacity: "70%" }}>Bạn có thể đăng nhập bằng tài khoản mạng xã hội hoặc địa chỉ email của mình.</p>
                                     </div>
                                     <div className="social-login">
                                         <div className="d-flex justify-content-center">
                                             <div className="col-md-6 col-12">
-                                                <Link className="btn google-btn" to="#">
-                                                    <i className="lni lni-google"></i> Google
-                                                </Link>
+                                                <GoogleLogin
+                                                    onSuccess={handleSuccess}
+                                                    onError={() => toast.error('Đăng nhập bằng Google thất bại, Vui lòng thử lại sau!')}
+                                                    useOneTap={false}
+                                                />
                                             </div>
                                         </div>
                                     </div>

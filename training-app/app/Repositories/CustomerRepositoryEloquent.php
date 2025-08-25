@@ -4,12 +4,13 @@ namespace App\Repositories;
 
 use App\Models\Customer;
 use App\Repositories\Criteria\UserFilterCriteria;
+use Illuminate\Database\Eloquent\Model;
 use Prettus\Repository\Eloquent\BaseRepository;
 use App\Models\User;
 
 /**
- * Class UserRepositoryEloquent
- * Eloquent implementation of User repository.
+ * Class CustomerRepositoryEloquent
+ * Eloquent implementation of Customer repository.
  */
 class CustomerRepositoryEloquent extends BaseRepository implements CustomerRepository
 {
@@ -33,13 +34,24 @@ class CustomerRepositoryEloquent extends BaseRepository implements CustomerRepos
     }
 
     /**
-     * Find a user by email
+     * Find a customer by email
      *
      * @param  string $email
-     * @return \Illuminate\Database\Eloquent\Model|null
+     * @return Model|null
      */
     public function findByEmail($email)
     {
         return $this->findWhere(['email' => $email])->first();
+    }
+
+    /**
+     * Find a customer by provider ID
+     *
+     * @param  string $providerId
+     * @return Model|null
+     */
+    public function findByProviderId(string $providerId)
+    {
+        return $this->findWhere(['provider_id' => $providerId])->first();
     }
 }

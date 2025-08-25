@@ -21,6 +21,9 @@ class AuthResource extends BaseApiResource
      */
     public function toArray($request)
     {
+        \Log::info('AuthResource toArray called', [
+            'resource' => $this->resource,
+        ]);
         if (is_null($this->resource)) {
             return [];
         }

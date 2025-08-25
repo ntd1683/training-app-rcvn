@@ -28,6 +28,7 @@ use App\Repositories\Services\Admin\AuthService;
 use App\Repositories\Services\BannerService;
 use App\Repositories\Services\CustomerService;
 use App\Repositories\Services\ImageService;
+use App\Repositories\Services\Oauth2Service;
 use App\Repositories\Services\OrderService;
 use App\Repositories\Services\PaypalService;
 use App\Repositories\Services\PermissionService;
@@ -55,6 +56,10 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(CustomerRepository::class, CustomerRepositoryEloquent::class);
         $this->app->bind(CustomerService::class, function ($app) {
             return new CustomerService($app->make(CustomerRepository::class));
+        });
+
+        $this->app->bind(Oauth2Service::class, function ($app) {
+            return new Oauth2Service($app->make(CustomerRepository::class));
         });
 
         $this->app->bind(ImageRepository::class, ImageRepositoryEloquent::class);

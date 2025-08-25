@@ -23,7 +23,7 @@ class ProductService
     protected ImageService $imageService;
 
     /**
-     * UserService constructor.
+     * ProductService constructor.
      *
      * @param ProductRepository $productRepository
      * @param ImageService      $imageService
