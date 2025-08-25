@@ -140,10 +140,12 @@ const cartSlice = createSlice({
       state.lastUpdated = Date.now();
     },
 
-    // Thêm action để handle khi rehydrate xong
     cartRehydrated: (state) => {
-      // Validate lại data sau khi restore
-      state.items = state.items.map(validateCartItem);
+      const isLegacy = state.items.some(item => !item.productInfo);
+      if (isLegacy) {
+        state.items = [];
+      }
+      
       recalculateCartTotals(state);
     }
   },
