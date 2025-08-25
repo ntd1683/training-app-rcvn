@@ -1,3 +1,5 @@
+import React from "react";
+
 export const Shipping = ({ shippingInfo, handleShippingInfoChange, dataProvinces, dataWards, errors, children }) => {
     return (
         <>

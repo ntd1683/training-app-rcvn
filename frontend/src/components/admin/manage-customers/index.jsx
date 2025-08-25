@@ -46,6 +46,7 @@ const ManageCustomers = () => {
   } = useCustomerManage();
   const navigate = useNavigate();
 
+  // eslint-disable-next-line
   const shouldForwardProp = (prop, defaultValidatorFn) => {
     return !['allowOverflow', 'button'].includes(prop) && isPropValid(prop);
   };

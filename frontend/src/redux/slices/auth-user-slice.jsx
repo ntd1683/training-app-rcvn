@@ -76,6 +76,7 @@ export const loginUser = createAsyncThunk(
 
 export const logoutUser = createAsyncThunk(
   'auth_user/logoutUser',
+  // eslint-disable-next-line no-unused-vars
   async (_, { rejectWithValue }) => {
     try {
       await logout({ isAdmin: true });

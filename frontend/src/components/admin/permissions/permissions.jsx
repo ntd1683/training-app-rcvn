@@ -26,7 +26,7 @@ const Permissions = () => {
     } = usePermissionManage();
     const navigate = useNavigate();
 
-    const shouldForwardProp = (prop, defaultValidatorFn) => {
+    const shouldForwardProp = (prop) => {
         return !['allowOverflow', 'button'].includes(prop) && isPropValid(prop);
     };
     return (

@@ -18,6 +18,7 @@ export const useDashboard = () => {
                 setTotalUsers(response.data.total_users || 0);
                 setTotalProducts(response.data.total_products || 0);
             } catch (error) {
+                console.error(error);
             }
         };
 

@@ -17,7 +17,7 @@ const TinyMCEEditor = ({
         setEditorContent(value);
     }, [value]);
 
-    const handleEditorChange = (content, editor) => {
+    const handleEditorChange = (content) => {
         setEditorContent(content);
         onChange(content);
     };

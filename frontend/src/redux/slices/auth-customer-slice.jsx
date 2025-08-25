@@ -206,6 +206,7 @@ export const updateProfile = createAsyncThunk(
 
 export const logoutUser = createAsyncThunk(
   'auth_customer/logoutUser',
+  // eslint-disable-next-line no-unused-vars
   async (_, { rejectWithValue }) => {
     try {
       await logout();
@@ -339,6 +340,7 @@ const authSlice = createSlice({
         state.isLoading = false;
         state.customer = action.payload.user;
       })
+      // eslint-disable-next-line no-unused-vars
       .addCase(getProfile.rejected, (state, action) => {
         state.isLoading = false;
       })
@@ -353,7 +355,7 @@ const authSlice = createSlice({
           state.customer = { ...state.customer, ...action.payload.user };
         }
       })
-      .addCase(updateProfile.rejected, (state, action) => {
+      .addCase(updateProfile.rejected, (state) => {
         state.isUpdateLoading = false;
       })
 

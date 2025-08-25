@@ -52,7 +52,7 @@ const ManageUsers = () => {
   const currentUserId = user.id;
   const currentUserRole = user.group_role || 'Reviewer';
 
-  const shouldForwardProp = (prop, defaultValidatorFn) => {
+  const shouldForwardProp = (prop) => {
     return !['allowOverflow', 'button'].includes(prop) && isPropValid(prop);
   };
 

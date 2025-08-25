@@ -187,4 +187,5 @@ const Layout = React.memo(({ children }) => {
     )
 });
 
+Layout.displayName = "Layout";
 export default Layout;

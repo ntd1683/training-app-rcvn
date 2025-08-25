@@ -1,8 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { fetchUserById, deleteUser, createUser, updateUser, fetchAllRoles, fetchCustomerById, createCustomer, updateCustomer, deleteCustomer } from '~/services/api';
+import { fetchCustomerById, createCustomer, updateCustomer, deleteCustomer } from '~/services/api';
 import { toast } from 'react-toastify';
-import RoleMain from '../../constants/role-main';
 import { useUserInfo } from './use-auth';
 
 export const useCreateOrEdit = () => {

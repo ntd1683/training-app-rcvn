@@ -1,3 +1,5 @@
+import React from "react";
+
 const LoadingSpinner = ({message, color}) => {
     return (
         <div className="col-md p-6">

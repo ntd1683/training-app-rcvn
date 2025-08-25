@@ -1,3 +1,4 @@
+import React from "react";
 import { Shipping } from "./shipping"
 
 export const Information = ({ user, shippingInfo, handleShippingInfoChange, dataProvinces, dataWards, errors, children }) => {
