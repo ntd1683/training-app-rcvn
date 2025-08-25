@@ -26740,10 +26740,6 @@ html:not(.layout-footer-fixed) .content-wrapper {
     block-size: 100dvh !important;
   }
 
-  .layout-menu-100vh .layout-overlay.visible-unset {
-    visibility: unset !important;
-  }
-
   .drag-target {
     position: fixed;
     z-index: 1036;
@@ -26751,6 +26747,12 @@ html:not(.layout-footer-fixed) .content-wrapper {
     inline-size: 40px;
     inset-block-start: 0;
     inset-inline-start: 0;
+  }
+}
+
+@media (max-width: 768px) {
+  .layout-menu-100vh .layout-overlay.visible-unset {
+    visibility: unset !important;
   }
 }
 

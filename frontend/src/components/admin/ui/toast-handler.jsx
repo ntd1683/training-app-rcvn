@@ -7,11 +7,12 @@ const ToastHandler = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    const randomId = Math.random().toString(36).substring(2, 10);
     if (location.state?.error) {
-      toast.error(location.state.error, { toastId: 'state-error-toast' });
+      toast.error(location.state.error, { toastId: `state-error-toast-${randomId}` });
       navigate(location.pathname, { replace: true, state: {} });
     } else if (location.state?.success) {
-      toast.success(location.state.success, { toastId: 'state-success-toast' });
+      toast.success(location.state.success, { toastId: `state-success-toast-${randomId}` });
       navigate(location.pathname, { replace: true, state: {} });
     }
   }, [location.pathname, location.state, navigate]);

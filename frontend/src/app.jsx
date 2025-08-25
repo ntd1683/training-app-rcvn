@@ -33,6 +33,7 @@ const AppContent = () => {
         draggable
         pauseOnHover
         theme="light"
+        limit={10}
       />
     </>
   );

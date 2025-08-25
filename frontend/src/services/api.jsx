@@ -687,3 +687,102 @@ export const rePayOrder = async (orderId) => {
     throw error;
   }
 };
+
+// fetch Customer : 
+export const fetchCustomers = async (page = 1, perPage = 10, filters = {}) => {
+  try {
+    const token = localStorage.getItem('user_token');
+
+    const params = {
+      page,
+      per_page: perPage,
+      search_name: filters.filterName || undefined,
+      search_email: filters.filterEmail || undefined,
+      filter_status: filters.filterStatus || undefined,
+      sort_by: filters.sortBy,
+      sort_order: filters.sortOrder
+    };
+
+    Object.keys(params).forEach(key => {
+      if (params[key] === undefined) {
+        delete params[key];
+      }
+    });
+
+    const response = await api.get(`${prefixApi}/customers`, {
+      params,
+      headers: { Authorization: `Bearer ${token}` }
+    });
+
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const fetchCustomerById = async (id) => {
+  try {
+    const token = localStorage.getItem('user_token');
+    const response = await api.get(`${prefixApi}/customers/${id}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return response.data.data;
+  } catch (error) {
+    throw error;
+  }
+}
+
+export const createCustomer = async (customerData) => {
+  try {
+    customerData.is_active = customerData.isActive;
+    customerData.is_delete = customerData.isDelete;
+    customerData.group_role = customerData.groupRole;
+    const token = localStorage.getItem('user_token');
+    const response = await api.post(`${prefixApi}/customers`, customerData, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+}
+
+export const updateCustomer = async (id, customerData) => {
+  try {
+    customerData.is_active = customerData.isActive;
+    customerData.is_delete = customerData.isDelete;
+    customerData.group_role = customerData.groupRole;
+    const token = localStorage.getItem('user_token');
+    const response = await api.put(`${prefixApi}/customers/${id}`, customerData, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+}
+
+export const deleteCustomer = async (id) => {
+  try {
+    const token = localStorage.getItem('user_token');
+    await api.delete(`${prefixApi}/customers/${id}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    return true;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const resetDeleteCustomer = async (id) => {
+  try {
+    const token = localStorage.getItem('user_token');
+    await api.patch(`${prefixApi}/customers/${id}/reset-delete`, {}, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return true;
+  } catch (error) {
+    throw error;
+  }
+};

@@ -5,52 +5,46 @@ import DataTable from 'react-data-table-component';
 import { StyleSheetManager } from 'styled-components';
 import isPropValid from '@emotion/is-prop-valid';
 import CustomPagination from '~/components/admin/ui/custom-pagination';
-import { useUserManage } from '~/hooks/admin/use-user-manage';
-import { UsersFilter } from './users-filter';
-import { columns, customStyles } from './user-table-config';
-import { DeleteUserModal, LockUserModal } from './manage-users-modal';
+import { CustomersFilter } from './customers-filter';
+import { columns, customStyles } from './customers-table-config';
+import { DeleteCustomerModal, LockCustomerModal } from './manage-customers-modal';
 import { checkRoleAndPermission } from '~/utils/common.jsx';
+import { useCustomerManage } from '~/hooks/admin/use-customer-manage';
 
-const ManageUsers = () => {
+const ManageCustomers = () => {
   const {
-    data,
     user,
-    roles,
+    data,
     isLoading,
     pagination,
     filterName,
     setFilterName,
     filterEmail,
     setFilterEmail,
-    filterGroup,
-    setFilterGroup,
     filterStatus,
     setFilterStatus,
-    selectedUser,
-    setSelectedUser,
+    sortBy,
+    sortOrder,
+    tableKey,
+    selectedCustomer,
+    setSelectedCustomer,
     showDeleteModal,
     setShowDeleteModal,
-    showLockModal,
-    setShowLockModal,
     isDeleting,
     deleteError,
-    isLocking,
-    lockError,
     handleSearch,
     handleReset,
     handlePageChange,
     handleRowsPerPageChange,
     handleSort,
     handleDelete,
+    showLockModal,
+    isLocking,
+    lockError,
+    setShowLockModal,
     handleLock,
-    sortBy,
-    sortOrder,
-    tableKey,
-  } = useUserManage();
+  } = useCustomerManage();
   const navigate = useNavigate();
-
-  const currentUserId = user.id;
-  const currentUserRole = user.group_role || 'Reviewer';
 
   const shouldForwardProp = (prop, defaultValidatorFn) => {
     return !['allowOverflow', 'button'].includes(prop) && isPropValid(prop);
@@ -61,7 +55,7 @@ const ManageUsers = () => {
       <div className="container-fluid flex-grow-1 py-4">
         <div className="card pb-4">
           <div className="card-header d-flex justify-content-between align-items-center">
-            <h5 className="mb-0">Quản lý Users</h5>
+            <h5 className="mb-0">Quản lý khách hàng</h5>
             {checkRoleAndPermission('users.store', user) && (
               <Link to="/admin/users/add" className="btn btn-primary">
                 <Icon icon="bx:plus" className="me-1" />
@@ -70,14 +64,11 @@ const ManageUsers = () => {
             )}
           </div>
           <div>
-            <UsersFilter
+            <CustomersFilter
               filterName={filterName}
               setFilterName={setFilterName}
               filterEmail={filterEmail}
               setFilterEmail={setFilterEmail}
-              roles={roles}
-              filterGroup={filterGroup}
-              setFilterGroup={setFilterGroup}
               filterStatus={filterStatus}
               setFilterStatus={setFilterStatus}
             />
@@ -92,13 +83,13 @@ const ManageUsers = () => {
           </div>
           <div className="px-3 py-2">
             <p className="mb-0">
-              Hiển thị từ {pagination.from} ~ {pagination.to} trong tổng số {pagination.total} thành viên
+              Hiển thị từ {pagination.from} ~ {pagination.to} trong tổng số {pagination.total} khách hàng
             </p>
           </div>
           <div className="table-responsive">
             <DataTable
               key={tableKey}
-              columns={columns(navigate, pagination, currentUserId, currentUserRole, setSelectedUser, setShowDeleteModal, setShowLockModal, user)}
+              columns={columns(navigate, pagination, setSelectedCustomer,setShowLockModal, setShowDeleteModal, user)}
               data={data}
               pagination={false}
               customStyles={customStyles}
@@ -122,8 +113,8 @@ const ManageUsers = () => {
           </div>
         </div>
 
-        <DeleteUserModal
-          selectedUser={selectedUser}
+        <DeleteCustomerModal
+          selectedCustomer={selectedCustomer}
           showDeleteModal={showDeleteModal}
           setShowDeleteModal={setShowDeleteModal}
           isDeleting={isDeleting}
@@ -131,8 +122,8 @@ const ManageUsers = () => {
           handleDelete={handleDelete}
         />
 
-        <LockUserModal
-          selectedUser={selectedUser}
+        <LockCustomerModal
+          selectedCustomer={selectedCustomer}
           showLockModal={showLockModal}
           setShowLockModal={setShowLockModal}
           isLocking={isLocking}
@@ -143,4 +134,4 @@ const ManageUsers = () => {
     </StyleSheetManager>
   );
 };
-export default ManageUsers;
+export default ManageCustomers;

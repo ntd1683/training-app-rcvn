@@ -162,6 +162,12 @@ const listNav = [
     label: 'Users'
   },
   {
+    permission: 'customers.index',
+    path: '/admin/customers',
+    icon: 'bx:user',
+    label: 'Customers'
+  },
+  {
     permission: 'roles.index',
     path: '/admin/roles',
     icon: 'bx:lock-open',

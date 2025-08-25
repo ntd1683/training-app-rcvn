@@ -1,14 +1,14 @@
 import React from 'react';
 import { Icon } from '@iconify/react';
-import { useCreateOrEdit } from '~/hooks/admin/use-create-or-edit-user';
+import { useCreateOrEdit } from '~/hooks/admin/use-create-or-edit-customer';
 import CustomShowGroupButtonCreateOrEdit from '~/components/admin/ui/custom-show-group-button-create-or-edit';
 import CustomModalDelete from '~/components/admin/ui/custom-modal-delete';
 
-const CreateOrEditUser = () => {
+const CreateOrEditCustomer = () => {
     const {
-        userLocal,
         user,
-        setUser,
+        customer,
+        setCustomer,
         isEdit,
         title,
         isLoading,
@@ -26,8 +26,6 @@ const CreateOrEditUser = () => {
         handleDelete,
         valDelete,
         errorDelete,
-        errorRole,
-        roles,
     } = useCreateOrEdit();
 
     return (
@@ -39,7 +37,7 @@ const CreateOrEditUser = () => {
                 <form>
                     <div className="mb-6">
                         <label className="form-label" htmlFor="basic-icon-default-name">
-                            Tên của bạn <span className="text-danger fw-bold fs-6">*</span>
+                            Tên khách hàng <span className="text-danger fw-bold fs-6">*</span>
                         </label>
                         <div className="input-group input-group-merge">
                             <span id="basic-icon-default-name2" className={`input-group-text ${errorName ? 'is-invalid' : ''}`}>
@@ -47,13 +45,14 @@ const CreateOrEditUser = () => {
                             </span>
                             <input
                                 type="text"
-                                className={`form-control ${errorName ? 'is-invalid' : ''}`}
+                                className={`form-control ps-2 ${errorName ? 'is-invalid' : ''}`}
                                 id="basic-icon-default-name"
                                 placeholder="Nguyễn Văn A"
                                 aria-label="Nguyễn Văn A"
                                 aria-describedby="basic-icon-default-name2"
-                                value={user.name}
-                                onChange={(e) => setUser({ ...user, name: e.target.value })}
+                                disabled={isEdit}
+                                value={customer.name}
+                                onChange={(e) => setCustomer({ ...customer, name: e.target.value })}
                             />
                         </div>
                         <div className="text-danger">{errorName}</div>
@@ -69,12 +68,13 @@ const CreateOrEditUser = () => {
                             <input
                                 type="text"
                                 id="basic-icon-default-email"
-                                className={`form-control ${errorEmail ? 'is-invalid' : ''}`}
+                                className={`form-control ps-2 ${errorEmail ? 'is-invalid' : ''}`}
                                 placeholder="abc@example.com"
                                 aria-label="abc@example.com"
                                 aria-describedby="basic-icon-default-email2"
-                                value={user.email}
-                                onChange={(e) => setUser({ ...user, email: e.target.value })}
+                                disabled={isEdit}
+                                value={customer.email}
+                                onChange={(e) => setCustomer({ ...customer, email: e.target.value })}
                             />
                         </div>
                         <div className="text-danger">{errorEmail}</div>
@@ -106,8 +106,8 @@ const CreateOrEditUser = () => {
                                         id="password"
                                         className={`form-control ${errorPassword ? 'is-invalid' : ''}`}
                                         name="password"
-                                        value={user.password}
-                                        onChange={(e) => setUser({ ...user, password: e.target.value })}
+                                        value={customer.password}
+                                        onChange={(e) => setCustomer({ ...customer, password: e.target.value })}
                                         placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;"
                                         aria-describedby="password"
                                     />
@@ -119,80 +119,107 @@ const CreateOrEditUser = () => {
                             </>
                         )}
                     </div>
-                    {isEdit && (
-                        <div className="mb-6">
-                            <label className="form-label">Trạng thái:</label>
-                            <div className="form-check">
-                                <input
-                                    name="isActive"
-                                    className="form-check-input"
-                                    type="radio"
-                                    id="isActiveRadio"
-                                    value="1"
-                                    checked={user.isActive === 1}
-                                    onChange={() => setUser({ ...user, isActive: 1 })}
-                                />
-                                <label className="form-check-label" htmlFor="isActiveRadio"> Hoạt động </label>
-                            </div>
-                            <div className="form-check">
-                                <input
-                                    name="isActive"
-                                    className="form-check-input"
-                                    type="radio"
-                                    id="notActiveRadio"
-                                    value="0"
-                                    checked={user.isActive === 0}
-                                    onChange={() => setUser({ ...user, isActive: 0 })}
-                                />
-                                <label className="form-check-label" htmlFor="notActiveRadio"> Khoá tài khoản </label>
-                            </div>
-                        </div>
-                    )}
-                    {isEdit && valDelete === 1 && (
+                    {isEdit && valDelete !== 0 && (
                         <div className="mb-6">
                             <label htmlFor="isDelete" className="form-label">Khôi Phục Tài Khoản</label>
                             <select
                                 className="form-select"
                                 id="isDelete"
                                 aria-label="Default select"
-                                onChange={(e) => setUser({ ...user, isDelete: Number(e.target.value) })}
+                                onChange={(e) => setCustomer({ ...customer, deleted_at: Number(e.target.value) })}
                             >
                                 <option value="">Bạn có muốn khôi phục tài khoản không?</option>
                                 <option value="0">Khôi Phục Tài Khoản</option>
                             </select>
                         </div>
                     )}
-                    <div className="mb-6">
-                        <label htmlFor="groupRole" className="form-label">Vai trò</label>
-                        <select
-                            className={`form-select ${errorRole ? 'is-invalid' : ''}`}
-                            id="groupRole"
-                            aria-label="Default select2"
-                            value={user.groupRole}
-                            onChange={(e) => setUser({ ...user, groupRole: e.target.value })}
-                        >
-                            {roles.map(role => (
-                                <option key={role.id} value={role.name}>
-                                    {role.name}
-                                </option>
-                            ))}
-                        </select>
-                        <div className="text-danger">{errorRole}</div>
-                    </div>
+
+                    {isEdit && (
+                        <>
+                            <div className="mb-6">
+                                <label className="form-label">
+                                    ID Kết Nối
+                                </label>
+                                <div className="input-group input-group-merge">
+                                    <span className={`input-group-text ${errorName ? 'is-invalid' : ''}`}>
+                                        <Icon icon="bx:user" className='icon-base bx' />
+                                    </span>
+                                    <input
+                                        type="text"
+                                        className={`form-control ps-2 ${errorName ? 'is-invalid' : ''}`}
+                                        aria-describedby="basic-icon-default-name2"
+                                        disabled
+                                        value={customer.provider_id}
+                                    />
+                                </div>
+                            </div>
+                            <div className="mb-6">
+                                <label className="form-label">
+                                    Email Xác Thực Lúc
+                                </label>
+                                <div className="input-group input-group-merge">
+                                    <span className={`input-group-text ${errorName ? 'is-invalid' : ''}`}>
+                                        <Icon icon="bx:user" className='icon-base bx' />
+                                    </span>
+                                    <input
+                                        type="text"
+                                        className={`form-control ps-2 ${errorName ? 'is-invalid' : ''}`}
+                                        aria-describedby="basic-icon-default-name2"
+                                        disabled
+                                        value={customer.email_verified_at ? new Date(customer.email_verified_at).toLocaleString('vi-VN') : 'Chưa xác thực'}
+                                    />
+                                </div>
+                            </div>
+                            <div className="mb-6">
+                                <label className="form-label">
+                                    Lần đăng nhập gần nhất
+                                </label>
+                                <div className="input-group input-group-merge">
+                                    <span className={`input-group-text ${errorName ? 'is-invalid' : ''}`}>
+                                        <Icon icon="bx:user" className='icon-base bx' />
+                                    </span>
+                                    <input
+                                        type="text"
+                                        className={`form-control ps-2 ${errorName ? 'is-invalid' : ''}`}
+                                        aria-describedby="basic-icon-default-name2"
+                                        disabled
+                                        value={customer.last_login_at ? new Date(customer.last_login_at).toLocaleString('vi-VN') : 'Chưa đăng nhập'}
+                                    />
+                                </div>
+                            </div>
+                            <div className="mb-6">
+                                <label className="form-label">
+                                    IP đăng nhập gần nhất
+                                </label>
+                                <div className="input-group input-group-merge">
+                                    <span className={`input-group-text ${errorName ? 'is-invalid' : ''}`}>
+                                        <Icon icon="bx:user" className='icon-base bx' />
+                                    </span>
+                                    <input
+                                        type="text"
+                                        className={`form-control ps-2 ${errorName ? 'is-invalid' : ''}`}
+                                        aria-describedby="basic-icon-default-name2"
+                                        disabled
+                                        value={customer.last_login_ip ? customer.last_login_ip : 'Chưa đăng nhập'}
+                                    />
+                                </div>
+                            </div>
+                        </>
+                    )}
                     <CustomShowGroupButtonCreateOrEdit
                         isEdit={isEdit}
                         isLoading={isLoading}
                         handleSubmit={handleSubmit}
                         title={title}
-                        titleModel="Thành Viên"
-                        page="users"
+                        titleModel="Khách hàng"
+                        page="customers"
                         setShowModal={setShowDeleteModal}
-                        user={userLocal}
+                        user={user}
                     />
                 </form>
             </div>
             <CustomModalDelete
-                title="Thành Viên"
+                title="Khách hàng"
                 showDeleteModal={showDeleteModal}
                 setShowDeleteModal={setShowDeleteModal}
                 isDeleting={isDeleting}
@@ -203,4 +230,4 @@ const CreateOrEditUser = () => {
     );
 }
 
-export default CreateOrEditUser;
+export default CreateOrEditCustomer;

@@ -26,4 +26,12 @@ interface CustomerRepository extends RepositoryInterface
      * @return Model|null
      */
     public function findByProviderId(string $providerId);
+
+    /**
+     * Reset the deleted_at field for a customer (restore soft-deleted customer)
+     *
+     * @param  int $id
+     * @return bool
+     */
+    public function resetDeletedAt($id);
 }

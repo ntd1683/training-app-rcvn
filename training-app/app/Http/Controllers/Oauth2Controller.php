@@ -41,7 +41,7 @@ class Oauth2Controller extends Controller
     public function handleGoogleCallback(Request $request)
     {
         try {
-            $token = $this->oauth2Service->handleGoogleCallback();
+            $token = $this->oauth2Service->handleGoogleCallback($request->ip());
             return redirect(config('app.frontend_url') . '/auth/google/token=' . $token);
         } catch (Exception $e) {
             return response()->json(['error' => 'Login failed'], 500);
@@ -61,7 +61,7 @@ class Oauth2Controller extends Controller
                 'id_token' => 'required|string',
             ]);
 
-            $token = $this->oauth2Service->verifyGoogleToken($request->id_token);
+            $token = $this->oauth2Service->verifyGoogleToken($request->id_token, $request->ip());
             $data = [
                 'token' => $token,
             ];

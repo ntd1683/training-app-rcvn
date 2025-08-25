@@ -6,6 +6,7 @@ use App\Enums\OrderStatusEnum;
 use App\Notifications\CustomVerifyEmail;
 use App\Notifications\PasswordResetMail;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -74,11 +75,11 @@ class Customer extends Authenticatable implements MustVerifyEmail
     }
 
     /**
-     * Get the total product purchased
+     * Get the total order completed
      *
      * @return int
      */
-    public function getTotalProductsAttribute(): int
+    public function getTotalOrdersAttribute(): int
     {
         return $this->orders()
             ->where('status', OrderStatusEnum::COMPLETED)
@@ -86,11 +87,26 @@ class Customer extends Authenticatable implements MustVerifyEmail
     }
 
     /**
-     * Get the total price order placed
+     * Scope a query to include the total orders of customer.
+     *
+     * This scope calculates the total order where order complete.
+     *
+     * @param  Builder  $query
+     * @return Builder
+     */
+    public function scopeWithTotalOrders($query)
+    {
+        return $query->withCount(['orders as total_orders' => function ($query) {
+            $query->where('status', OrderStatusEnum::COMPLETED);
+        }]);
+    }
+
+    /**
+     * Get the total spent order placed
      *
      * @return float
      */
-    public function getTotalPriceAttribute(): float
+    public function getTotalSpentAttribute(): float
     {
         return $this->orders()
             ->where('status', OrderStatusEnum::COMPLETED)

@@ -43,10 +43,10 @@ class Oauth2Service
     /**
      * Handle the callback from Google OAuth 2.0
      *
-     * @return string $token
+     * @return string $ip
      * @throws Exception
      */
-    public function handleGoogleCallback()
+    public function handleGoogleCallback($ip)
     {
         try {
             $googleUser = Socialite::driver('google')->stateless()->user();
@@ -58,6 +58,8 @@ class Oauth2Service
                     'email' => $googleUser->email,
                     'provider_id' => $googleUser->id,
                     'password' => bcrypt(Str::random(8)),
+                    'last_login_ip' => $ip,
+                    'last_login_at' => now(),
                 ];
                 $customer = $this->customerRepository->create($data);
             }
@@ -76,7 +78,7 @@ class Oauth2Service
      * @return mixed
      * @throws Exception
      */
-    public function verifyGoogleToken(string $token)
+    public function verifyGoogleToken(string $token, string $ip)
     {
         try {
             $googleUser = Socialite::driver('google')->userFromToken($token);
@@ -89,6 +91,8 @@ class Oauth2Service
                     'provider_id' => $googleUser->id,
                     'password' => bcrypt(Str::random(8)),
                     'email_verified_at' => now(),
+                    'last_login_ip' => $ip,
+                    'last_login_at' => now(),
                 ];
                 $customer = $this->customerRepository->create($data);
             }

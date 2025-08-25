@@ -2,16 +2,14 @@
 
 namespace App\Repositories\Services;
 
-use App\Repositories\Criteria\UserFilterCriteria;
+use App\Repositories\Criteria\CustomerFilterCriteria;
 use App\Repositories\CustomerRepository;
-use App\Repositories\UserRepository;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Role;
-use App\Enums\DefaultRoleEnum;
 use Exception;
 use Throwable;
 
@@ -46,12 +44,16 @@ class CustomerService
     /**
      * Find a customer by ID
      *
-     * @param  int $id
+     * @param int $id
      * @return Model|null
+     * @throws Exception
      */
     public function getCustomerById($id)
     {
-        $customer = $this->customerRepository->find($id);
+        $customer = $this->customerRepository
+            ->withTrashed()
+            ->find($id);
+
         if (!$customer) {
             throw new Exception('Không tìm thấy người dùng', 404);
         }
@@ -68,41 +70,26 @@ class CustomerService
      */
     public function createCustomer(array $data)
     {
-        if (isset($data['password'])) {
-            $data['password'] = bcrypt($data['password']);
-        }
-
-        DB::beginTransaction();
-        try {
-            $customer = $this->customerRepository->create($data);
-
-            $role = Role::findByName('customer', 'customer');
-            if (!$role) {
-                throw new Exception('Vai trò không hợp lệ', 400);
-            }
-            $customer->assignRole($role);
-
-            DB::commit();
-            return $customer;
-        } catch (Exception $e) {
-            DB::rollBack();
-            throw $e;
-        }
+        return $this->customerRepository->create($data);
     }
 
     /**
-     * Update a user
+     * Update a customer
      *
-     * @param  int   $id
-     * @param  array $data
-     * @return \Illuminate\Database\Eloquent\Model
-     * @throws Exception
+     * @param int $id
+     * @param array $data
+     * @param $currentCustomer
+     * @return Model
+     * @throws Throwable
      */
-    public function updateCustomer($id, array $data, $currentUser = null)
+    public function updateCustomer($id, array $data, $currentCustomer = null)
     {
-        $customer = $this->customerRepository->find($id);
+        $customer = $this->customerRepository
+            ->withTrashed()
+            ->find($id);
+
         if (!$customer) {
-            throw new Exception('Không tìm thấy user', 404);
+            throw new Exception('Không tìm thấy khách hàng', 404);
         }
 
         if (!empty($data['password'])) {
@@ -111,14 +98,14 @@ class CustomerService
             unset($data['password']);
         }
 
-        if (isset($data['is_delete'])) {
-            $data['is_delete'] = false;
-        }
-
         DB::beginTransaction();
         try {
-            $updatedCustomer = $this->customerRepository->update($data, $id);
+            $this->customerRepository->withTrashed()->update($data, $id);
             DB::commit();
+
+            $updatedCustomer = $this->customerRepository
+                ->withTrashed()
+                ->find($id);
             return $updatedCustomer;
         } catch (Exception $e) {
             DB::rollBack();
@@ -130,23 +117,41 @@ class CustomerService
      * Delete a customer
      *
      * @param  int                                             $id
-     * @param  \Illuminate\Contracts\Auth\Authenticatable|null $currentCustomer
-     * @return bool
+     * @param  Authenticatable|null $currentCustomer
+     * @return int
      * @throws Exception
      */
-    public function deleteCustomer($id, $currentUser = null)
+    public function deleteCustomer($id, $currentCustomer = null)
     {
-        if ($currentUser && $currentUser->id === $id) {
+        if ($currentCustomer && $currentCustomer->id === $id) {
             throw new Exception('Bạn không thể xóa chính mình', 403);
         }
 
         $customer = $this->customerRepository->find($id);
+
         if (!$customer) {
-            throw new Exception('Không tìm thấy user', 404);
+            throw new Exception('Không tìm thấy Khách Hàng', 404);
         }
 
-        \Log::info("UserService: User $currentUser->id Attempting to soft delete user with ID: $id");
-        return $customer->delete();
+        $current = auth()->user();
+        \Log::info("Customer Service: Customer $current->id Attempting to soft delete customer with ID: $id");
+        return $this->customerRepository->delete($id);
+    }
+
+    /**
+     * Restore a soft-deleted customer
+     *
+     * @param int $id
+     * @return bool
+     * @throws Exception
+     */
+    public function restoreCustomer($id)
+    {
+        $restored = $this->customerRepository->resetDeletedAt($id);
+        if (!$restored) {
+            throw new Exception('Không thể khôi phục khách hàng hoặc khách hàng không tồn tại', 400);
+        }
+        return $restored;
     }
 
     /**
@@ -158,5 +163,26 @@ class CustomerService
     public function findCustomerByEmail($email)
     {
         return $this->customerRepository->findByEmail($email);
+    }
+
+    /**
+     * Get filtered and paginated customers
+     *
+     * @param  array $filters
+     * @return LengthAwarePaginator
+     */
+    public function getFilteredCustomers(array $filters)
+    {
+        $query = $this->customerRepository->newQuery();
+
+        $criteria = new CustomerFilterCriteria($filters);
+        $query = $criteria->apply($query, $this->customerRepository);
+
+        $count = $query->count();
+
+        $perPage = $count > 20 ? ($filters['per_page'] ?? 10) : 20;
+        $currentPage = $filters['page'] ?? 1;
+
+        return $query->paginate($perPage, ['*'], 'page', $currentPage);
     }
 }
