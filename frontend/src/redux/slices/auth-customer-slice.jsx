@@ -1,7 +1,8 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import {
   register, login, logout, verifyToken, verifyEmailWithToken, sendVerifyEmail,
-  resetPassword, changeResetPassword, getProfileData, updateProfileData
+  resetPassword, changeResetPassword, getProfileData, updateProfileData,
+  verifyTokenOauth2
 } from '../../services/api';
 
 // Async thunks
@@ -52,6 +53,24 @@ export const loginUser = createAsyncThunk(
       }
     } catch (error) {
       return rejectWithValue(error.response?.data?.message || 'Lỗi đăng nhập');
+    }
+  }
+);
+
+export const oauth2TokenVerify = createAsyncThunk(
+  'auth_customer/oauth2TokenVerify',
+  async (idToken, { rejectWithValue }) => {
+    try {
+      const response = await verifyTokenOauth2(idToken);
+      const data = response.data;
+      if (response.success && data.token) {
+        localStorage.setItem('customer_token', data.token);
+        return response.data.token;
+      } else {
+        throw new Error(response.message || 'Lỗi xác thực token');
+      }
+    } catch (error) {
+      return rejectWithValue(error.response?.data?.message || 'Lỗi xác thực token');
     }
   }
 );
@@ -288,6 +307,10 @@ const authSlice = createSlice({
         state.isLoginLoading = false;
         state.errorPassword = action.payload || 'Đăng nhập thất bại';
         state.authError = action.payload;
+      })
+
+      .addCase(oauth2TokenVerify.fulfilled, (state, action) => {
+        state.token = action.payload;
       })
 
       .addCase(registerUser.pending, (state) => {

@@ -5,6 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AuthCustomerController;
 use App\Http\Controllers\BannerController;
 use App\Http\Controllers\LogoutController;
+use App\Http\Controllers\Oauth2Controller;
 use App\Http\Controllers\OrderCustomerController;
 use App\Http\Controllers\PayPalController;
 use App\Http\Controllers\PermissionController;
@@ -73,6 +74,10 @@ Route::middleware('throttle:600,1')->group(function () {
 });
 
 Route::post('/login', [AuthCustomerController::class, 'login'])->middleware('throttle:10,1');
+Route::get('/auth/google', [Oauth2Controller::class, 'redirectToGoogle'])->middleware('throttle:10,1');
+Route::get('/auth/google/callback', [Oauth2Controller::class, 'handleGoogleCallback'])->middleware('throttle:10,1');
+Route::post('/auth/google/verify', [Oauth2Controller::class, 'verifyGoogleToken']);
+
 Route::post('/register', [AuthCustomerController::class, 'register'])->middleware('throttle:10,1');
 Route::post('/email/verify-token', [AuthCustomerController::class, 'verifyEmail'])
     ->middleware('throttle:6,1')

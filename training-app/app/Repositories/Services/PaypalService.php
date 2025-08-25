@@ -20,8 +20,8 @@ use PayPalCheckoutSdk\Orders\OrdersCreateRequest;
 use Throwable;
 
 /**
- * Class Product Service
- * Handles business logic for Product operations.
+ * Class PaypalService Service
+ * Handles business logic for PayPal operations.
  */
 class PaypalService
 {
@@ -33,7 +33,7 @@ class PaypalService
     private $client;
 
     /**
-     * Order constructor.
+     * PaypalService constructor.
      *
      * @param OrderRepository $orderRepository
      * @param OrderService    $orderService

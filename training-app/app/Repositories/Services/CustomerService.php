@@ -16,15 +16,15 @@ use Exception;
 use Throwable;
 
 /**
- * Class UserService
- * Handles business logic for User operations.
+ * Class CustomerService
+ * Handles business logic for Customer operations.
  */
 class CustomerService
 {
     protected $customerRepository;
 
     /**
-     * UserService constructor.
+     * CustomerService constructor.
      *
      * @param CustomerRepository $customerRepository
      */

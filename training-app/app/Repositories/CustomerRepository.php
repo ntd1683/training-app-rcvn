@@ -18,4 +18,12 @@ interface CustomerRepository extends RepositoryInterface
      * @return Model|null
      */
     public function findByEmail($email);
+
+    /**
+     * Find a customer by provider ID
+     *
+     * @param  string $providerId
+     * @return Model|null
+     */
+    public function findByProviderId(string $providerId);
 }
