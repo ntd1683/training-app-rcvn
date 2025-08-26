@@ -57,8 +57,8 @@ const ManageCustomers = () => {
         <div className="card pb-4">
           <div className="card-header d-flex justify-content-between align-items-center">
             <h5 className="mb-0">Quản lý khách hàng</h5>
-            {checkRoleAndPermission('users.store', user) && (
-              <Link to="/admin/users/add" className="btn btn-primary">
+            {checkRoleAndPermission('customers.store', user) && (
+              <Link to="/admin/customers/add" className="btn btn-primary">
                 <Icon icon="bx:plus" className="me-1" />
                 Thêm mới
               </Link>

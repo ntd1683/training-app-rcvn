@@ -134,12 +134,12 @@ export const adminRoutesConfig = [
         title: 'Quản lý khách hàng',
     },
     {
-        path: '/users/add',
-        element: CreateOrEditUser,
+        path: '/customers/add',
+        element: CreateOrEditCustomer,
         requireAuth: true,
         layout: true,
-        permissions: ['users.store'],
-        title: 'Thêm người dùng',
+        permissions: ['customers.store'],
+        title: 'Thêm khách hàng',
     },
     {
         path: '/customers/edit/:id',

@@ -70,6 +70,7 @@ class CustomerService
      */
     public function createCustomer(array $data)
     {
+        $data['password'] = bcrypt($data['password']);
         return $this->customerRepository->create($data);
     }
 
