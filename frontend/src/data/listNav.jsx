@@ -12,7 +12,7 @@ export const listNav = [
     label: 'Users',
     children: [
       { path: '/admin/users', label: 'Danh sách Nhân Viên', permission: 'users.index' },
-      { path: '/admin/users/create', label: 'Thêm Nhân Viên', permission: 'users.create' }
+      { path: '/admin/users/add', label: 'Thêm Nhân Viên', permission: 'users.store' }
     ]
   },
   {
@@ -22,7 +22,7 @@ export const listNav = [
     label: 'Khách hàng',
     children: [
       { path: '/admin/customers', label: 'Danh sách Khách Hàng', permission: 'customers.index' },
-      { path: '/admin/customers/create', label: 'Thêm Khách Hàng', permission: 'customers.create' }
+      { path: '/admin/customers/add', label: 'Thêm Khách Hàng', permission: 'customers.store' }
     ]
   },
   {
@@ -32,7 +32,7 @@ export const listNav = [
     label: 'Quản lý Vai Trò',
     children: [
       { path: '/admin/roles', label: 'Danh sách Vai Trò', permission: 'roles.index' },
-      { path: '/admin/roles/create', label: 'Thêm Vai Trò', permission: 'roles.create' }
+      { path: '/admin/roles/add', label: 'Thêm Vai Trò', permission: 'roles.store' }
     ]
   },
   {
@@ -42,7 +42,7 @@ export const listNav = [
     label: 'Quản lý Quyền',
     children: [
       { path: '/admin/permissions', label: 'Danh sách Quyền', permission: 'permissions.index' },
-      { path: '/admin/permissions/create', label: 'Thêm Quyền', permission: 'permissions.create' }
+      { path: '/admin/permissions/add', label: 'Thêm Quyền', permission: 'permissions.store' }
     ]
   },
   {
@@ -52,8 +52,7 @@ export const listNav = [
     label: 'Sản Phẩm',
     children: [
       { path: '/admin/products', label: 'Danh sách Sản Phẩm', permission: 'products.index' },
-      { path: '/admin/products/create', label: 'Thêm Sản Phẩm', permission: 'products.create' },
-      { path: '/admin/categories', label: 'Danh Mục', permission: 'categories.index' }
+      { path: '/admin/products/add', label: 'Thêm Sản Phẩm', permission: 'products.store' },
     ]
   }
 ];
