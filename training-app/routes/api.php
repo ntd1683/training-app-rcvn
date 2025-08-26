@@ -4,6 +4,7 @@ use App\Http\Controllers\AnalyticController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AuthCustomerController;
 use App\Http\Controllers\BannerController;
+use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\LogoutController;
 use App\Http\Controllers\Oauth2Controller;
 use App\Http\Controllers\OrderCustomerController;
@@ -27,6 +28,15 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::middleware(['permission'])->group(function () {
+        Route::prefix('customers')->group(function () {
+            Route::get('/', [CustomerController::class, 'index'])->name('customers.index');
+            Route::get('/{id}', [CustomerController::class, 'edit'])->name('users.edit');
+            Route::post('/', [CustomerController::class, 'store'])->name('users.store');
+            Route::put('/{id}', [CustomerController::class, 'update'])->name('users.update');
+            Route::patch('/{id}/reset-delete', [CustomerController::class, 'restore'])->name('users.edit');
+            Route::delete('/{id}', [CustomerController::class, 'delete'])->name('users.delete');
+        });
+
         Route::prefix('users')->group(function () {
             Route::get('/', [UserController::class, 'index'])->name('users.index');
             Route::get('/{id}', [UserController::class, 'edit'])->name('users.edit');

@@ -25,29 +25,26 @@ export const useCreateOrEditPermission = () => {
     const { id } = useParams();
     const title = isEdit ? 'Chỉnh Sửa' : 'Thêm';
 
-    if(isEdit && !id) {
-        navigate('/admin/permissions', {state: {error: "Không tìm thấy quyền để chỉnh sửa"}})
+    if (isEdit && !id) {
+        navigate('/admin/permissions', { state: { error: "Không tìm thấy quyền để chỉnh sửa" } })
     }
 
     const loadPermission = useCallback(async () => {
-        if(isEdit && id) {
-            try {
-                const response = await fetchPermission(id);
-                if (response) {
-                    const name = response.name.split('.');
-                    setInputModel(name[0]);
-                    const permission = name[1];
-                    if (permission === 'index' || permission === 'store' || permission === 'edit' || permission === 'update' || permission === 'delete') {
-                        setInputPermission(permission);
-                    } else {
-                        setInputPermission('other');
-                        setInputPermissionOther(permission);
-                    }
+        if (isEdit && id) {
+            const response = await fetchPermission(id);
+            if (response) {
+                const name = response.name.split('.');
+                setInputModel(name[0]);
+                const permission = name[1];
+                if (permission === 'index' || permission === 'store' || permission === 'edit' || permission === 'update' || permission === 'delete') {
+                    setInputPermission(permission);
+                } else {
+                    setInputPermission('other');
+                    setInputPermissionOther(permission);
                 }
-            } catch (error) {
             }
         }
-    },[isEdit, id])
+    }, [isEdit, id])
 
     useEffect(() => {
         loadPermission();
@@ -103,7 +100,7 @@ export const useCreateOrEditPermission = () => {
         }
 
         setInputModel(inputModel.trim().toLowerCase());
-        
+
         const permission = inputPermission === 'other' ? inputPermissionOther : inputPermission;
         const name = inputModel + '.' + permission;
         if (name.length > 255) {
@@ -116,7 +113,7 @@ export const useCreateOrEditPermission = () => {
             return;
         }
 
-        if(!isEdit) {
+        if (!isEdit) {
             try {
                 const response = await createPermission({
                     name: name,
@@ -143,8 +140,8 @@ export const useCreateOrEditPermission = () => {
                     name: name,
                 })
 
-                if(response.success) {
-                    navigate('/admin/permissions', {state: {success: "Chỉnh sửa quyền thành công!"}});
+                if (response.success) {
+                    navigate('/admin/permissions', { state: { success: "Chỉnh sửa quyền thành công!" } });
                 } else {
                     toast.error('Chỉnh sửa quyền thất bại: ' + response.message);
                 }

@@ -6,6 +6,7 @@ import CustomModalDelete from '~/components/admin/ui/custom-modal-delete';
 
 const CreateOrEditUser = () => {
     const {
+        userLocal,
         user,
         setUser,
         isEdit,
@@ -186,7 +187,7 @@ const CreateOrEditUser = () => {
                         titleModel="Thành Viên"
                         page="users"
                         setShowModal={setShowDeleteModal}
-                        user={user}
+                        user={userLocal}
                     />
                 </form>
             </div>

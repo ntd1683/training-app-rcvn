@@ -1,3 +1,5 @@
+import React from "react";
+
 const InputText = ({label, name, value,placeholder, onChange, disabled, isRequired, errors}) => {
     return (
         <div className="mb-3 form-password-toggle">

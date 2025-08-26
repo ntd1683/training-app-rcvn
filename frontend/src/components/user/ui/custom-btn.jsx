@@ -1,3 +1,5 @@
+import React from "react";
+
 export const CustomBtn = ({ onClick, className = '', classNameBtn = '', children }) => {
     return (
         <div className={`button ${className}`}>

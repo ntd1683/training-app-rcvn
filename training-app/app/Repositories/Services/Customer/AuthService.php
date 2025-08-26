@@ -70,8 +70,8 @@ class AuthService
         );
 
         $arr_customer = $customer->toArray();
-        $arr_customer['total_products'] = $customer->total_products;
-        $arr_customer['total_price'] = $customer->total_price;
+        $arr_customer['total_orders'] = $customer->total_orders;
+        $arr_customer['total_spent'] = $customer->total_spent;
 
         return array_merge(
             $arr_customer,

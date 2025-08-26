@@ -18,7 +18,7 @@ export const useForgotPassword = () => {
         }
     }, [isAuthenticated, navigate]);
 
-    const handleSubmit = async (e) => {        
+    const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
 
@@ -34,7 +34,7 @@ export const useForgotPassword = () => {
 
         try {
             const response = await handleResetPassword(email);
-            
+
             if (response.success) {
                 navigate('/dang-nhap', { state: { success: 'Vui lòng kiểm tra email để lấy lại mật khẩu' } });
             } else {

@@ -52,7 +52,7 @@ const ManageUsers = () => {
   const currentUserId = user.id;
   const currentUserRole = user.group_role || 'Reviewer';
 
-  const shouldForwardProp = (prop, defaultValidatorFn) => {
+  const shouldForwardProp = (prop) => {
     return !['allowOverflow', 'button'].includes(prop) && isPropValid(prop);
   };
 
@@ -62,7 +62,7 @@ const ManageUsers = () => {
         <div className="card pb-4">
           <div className="card-header d-flex justify-content-between align-items-center">
             <h5 className="mb-0">Quản lý Users</h5>
-            {checkRoleAndPermission('create_user', user) && (
+            {checkRoleAndPermission('users.store', user) && (
               <Link to="/admin/users/add" className="btn btn-primary">
                 <Icon icon="bx:plus" className="me-1" />
                 Thêm mới

@@ -44,7 +44,7 @@ const CreateOrEditPermission = () => {
 
                             <div className="mb-2">
                                 <small>
-                                    <strong>Models:</strong> Tên model cần xử lý (ví dụ: products, users, roles, ...). Viết thường và nên có hậu tố 's' nếu cần
+                                    <strong>Models:</strong> Tên model cần xử lý (ví dụ: products, users, roles, ...). Viết thường và nên có hậu tố &apos;s&apos; nếu cần
                                 </small>
                             </div>
 

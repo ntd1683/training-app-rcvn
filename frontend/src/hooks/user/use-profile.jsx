@@ -49,8 +49,8 @@ export const useProfile = () => {
             }));
             setUserStats(prev => ({
                 ...prev,
-                totalOrders: customer.total_products || 0,
-                totalSpent: customer.total_price || 0,
+                totalOrders: customer.total_orders || 0,
+                totalSpent: customer.total_spent || 0,
             }));
             setIsLoading(false);
         }

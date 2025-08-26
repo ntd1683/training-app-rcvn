@@ -42,19 +42,16 @@ export const useCreateOrEditProduct = () => {
 
     const fetchUser = useCallback(async () => {
         if (isEdit && id) {
-            try {
-                const response = await fetchProductById(id);
-                if (response) {
-                    setProduct({
-                        name: response.name || '',
-                        description: response.description || '',
-                        price: response.price || 0,
-                        currency: response.currency || 1,
-                        status: response.status || 0,
-                        image: response.image_url || null
-                    });
-                }
-            } catch (error) {
+            const response = await fetchProductById(id);
+            if (response) {
+                setProduct({
+                    name: response.name || '',
+                    description: response.description || '',
+                    price: response.price || 0,
+                    currency: response.currency || 1,
+                    status: response.status || 0,
+                    image: response.image_url || null
+                });
             }
         }
     }, [isEdit, id]);
@@ -169,7 +166,7 @@ export const useCreateOrEditProduct = () => {
             setIsLoading(false);
         } else {
             try {
-                await updateProduct(id,{
+                await updateProduct(id, {
                     name: product.name,
                     description: product.description,
                     price: product.price,

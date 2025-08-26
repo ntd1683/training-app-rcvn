@@ -1,3 +1,5 @@
+import React from "react";
+
 export const Payment = () => {
     return (
         <section className="checkout-steps-form-content collapse" id="collapsefive"

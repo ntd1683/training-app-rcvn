@@ -35,8 +35,8 @@ class AuthResource extends BaseApiResource
             'last_login_at' => $this->resource['last_login_at'] ?? '',
             'token' => $this->resource['token'] ?? '',
             'email_verified_at' => $this->resource['email_verified_at'] ?? null,
-            'total_products' => $this->resource['total_products'] ?? 0,
-            'total_price' => $this->resource['total_price'] ?? 0,
+            'total_orders' => $this->resource['total_orders'] ?? 0,
+            'total_spent' => $this->resource['total_spent'] ?? 0,
         ];
     }
 }

@@ -1,3 +1,5 @@
+import React from 'react';
+
 const RecipientInfo = ({ recipient }) => {
     return (
         <div className="row mb-4">
