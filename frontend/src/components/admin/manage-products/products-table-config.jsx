@@ -1,3 +1,4 @@
+import React from 'react';
 import { Icon } from '@iconify/react';
 import ProductStatus from '~/constants/product-status';
 import '~/assets/css/admin/image-tooltip.css';

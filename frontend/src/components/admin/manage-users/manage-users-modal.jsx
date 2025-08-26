@@ -1,3 +1,4 @@
+import React from 'react';
 import Modal from '~/components/admin/ui/modal';
 
 export const DeleteUserModal = ({ selectedUser, showDeleteModal, setShowDeleteModal, isDeleting, deleteError, handleDelete }) => {

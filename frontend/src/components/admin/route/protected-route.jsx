@@ -53,6 +53,7 @@ const ProtectedRoute = ({
 };
 
 export const withAuth = (Component, options = {}) => {
+    // eslint-disable-next-line
     return (props) => (
         <ProtectedRoute {...options}>
             <Component {...props} />

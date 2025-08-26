@@ -11,6 +11,7 @@ const STATUS_ICONS = {
 };
 
 const STATUS_CLASSES = {
+    // eslint-disable-next-line no-unused-vars
     0: (status) => 'bg-success text-white',
     1: (status) => (status >= 1 ? 'bg-success text-white' : 'bg-secondary text-white'),
     2: (status) => (status >= 2 ? 'border-success text-success' : 'border-secondary text-secondary'),

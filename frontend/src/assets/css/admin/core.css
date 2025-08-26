@@ -1,10 +1,5 @@
 @charset "UTF-8";
 
-/*!
- * Bootstrap  v5.3.3 (https://getbootstrap.com/)
- * Copyright 2011-2024 The Bootstrap Authors
- * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
- */
 :root,
 [data-bs-theme=light] {
   --bs-blue: #007bff;
@@ -5974,6 +5969,15 @@ fieldset:disabled .btn {
 
 .badge:empty {
   display: none;
+}
+
+.badge.badge-dot {
+  display: inline-block;
+  padding: 0;
+  border-radius: 50%;
+  margin: 0;
+  block-size: .5rem;
+  inline-size: .5rem
 }
 
 .btn .badge {
@@ -25164,6 +25168,8 @@ li:not(:first-child) .dropdown-item,
 }
 
 .menu .app-brand {
+  height: 64px;
+  margin-top: 12px;
   inline-size: 100%;
   padding-inline: calc(var(--bs-menu-vertical-link-padding-x) * 2.1333);
 }
@@ -25175,7 +25181,7 @@ li:not(:first-child) .dropdown-item,
 .menu .app-brand .layout-menu-toggle {
   position: absolute;
   z-index: 3;
-  border: 7px solid var(--bs-paper-bg);
+  border: 7px solid var(--bs-body-bg);
   border-radius: 50%;
   background-color: var(--bs-primary);
   inset-inline-start: 15.2rem;
@@ -25189,6 +25195,18 @@ li:not(:first-child) .dropdown-item,
   inline-size: 1.375rem;
   line-height: 1;
   transition: all 0.3s ease-in-out;
+}
+
+.menu .app-brand .layout-menu-toggle svg {
+  block-size: 1.375rem;
+  color: var(--bs-white);
+  inline-size: 1.375rem;
+  line-height: 1;
+  transition: all .3s ease-in-out
+}
+
+:dir(rtl) .menu .app-brand .layout-menu-toggle svg {
+  transform: scaleX(-1)
 }
 
 @media (min-width: 1200px) {
@@ -26168,6 +26186,32 @@ li:not(:first-child) .dropdown-item,
   inset-inline-end: -2px;
 }
 
+.badge.badge-notifications {
+  position: absolute;
+  margin: 0;
+  inset-block-start: auto;
+  transform: translate(-50%, -30%)
+}
+
+:dir(rtl) .badge.badge-notifications {
+  transform: translate(50%, -30%)
+}
+
+.badge.badge-notifications:not(.badge-center) {
+  font-size: .582rem;
+  line-height: .75rem;
+  padding-block: .05rem;
+  padding-inline: .2rem
+}
+
+.btn[class*=btn-] .badge.badge-notifications {
+  transform: translate(-50%, -50%)
+}
+
+:dir(rtl) .btn[class*=btn-] .badge.badge-notifications {
+  transform: translate(50%, -50%)
+}
+
 .layout-navbar .navbar-dropdown .dropdown-menu {
   overflow: hidden;
   min-inline-size: 22rem;
@@ -26720,7 +26764,7 @@ html:not(.layout-footer-fixed) .content-wrapper {
     overflow: hidden;
   }
 
-  .layout-overlay {
+  /* .layout-overlay {
     position: fixed;
     display: none;
     background: #22303e;
@@ -26729,7 +26773,7 @@ html:not(.layout-footer-fixed) .content-wrapper {
     inset-block-start: 0;
     inset-inline: 0;
     opacity: 0.5;
-  }
+  } */
 
   .layout-menu-expanded .layout-overlay {
     display: block;
@@ -26740,10 +26784,6 @@ html:not(.layout-footer-fixed) .content-wrapper {
     block-size: 100dvh !important;
   }
 
-  .layout-menu-100vh .layout-overlay.visible-unset {
-    visibility: unset !important;
-  }
-
   .drag-target {
     position: fixed;
     z-index: 1036;
@@ -26751,6 +26791,12 @@ html:not(.layout-footer-fixed) .content-wrapper {
     inline-size: 40px;
     inset-block-start: 0;
     inset-inline-start: 0;
+  }
+}
+
+@media (max-width: 768px) {
+  .layout-menu-100vh .layout-overlay.visible-unset {
+    visibility: unset !important;
   }
 }
 
@@ -26920,6 +26966,8 @@ body:not(.modal-open) .layout-content-navbar .layout-navbar {
 }
 
 .app-brand .app-brand-text {
+  font-size: 1.75rem;
+  letter-spacing: -0.5px;
   opacity: 1;
   transition: opacity 0.3s ease-in-out;
 }

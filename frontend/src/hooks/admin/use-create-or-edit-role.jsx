@@ -24,23 +24,20 @@ export const useCreateOrEditRole = () => {
     const { role } = useParams();
     const title = isEdit ? 'Chỉnh Sửa' : 'Thêm';
 
-    if(isEdit && !role) {
-        navigate('/admin/roles', {state: {error: "Không tìm thấy vai trò để chỉnh sửa"}})
+    if (isEdit && !role) {
+        navigate('/admin/roles', { state: { error: "Không tìm thấy vai trò để chỉnh sửa" } })
     }
 
     const fetchRole = useCallback(async () => {
-        if(isEdit && role) {
-            try {
-                const response = await fetchRoleByName(role);
-                if (response) {
-                    setInputName(response.name);
-                    setPermissions(response.permissions);
-                    setSelectedItems(response.permissions);
-                }
-            } catch (error) {
+        if (isEdit && role) {
+            const response = await fetchRoleByName(role);
+            if (response) {
+                setInputName(response.name);
+                setPermissions(response.permissions);
+                setSelectedItems(response.permissions);
             }
         }
-    },[isEdit, role])
+    }, [isEdit, role])
 
     useEffect(() => {
         fetchRole();
@@ -74,7 +71,7 @@ export const useCreateOrEditRole = () => {
             return;
         }
 
-        if(!isEdit) {
+        if (!isEdit) {
             try {
                 const response = await createRole({
                     name: inputName,
@@ -101,8 +98,8 @@ export const useCreateOrEditRole = () => {
                     permissions: permissions.map(permission => permission.name)
                 })
 
-                if(response.success) {
-                    navigate('/admin/roles', {state: {success: "Chỉnh sửa vai trò thành công!"}});
+                if (response.success) {
+                    navigate('/admin/roles', { state: { success: "Chỉnh sửa vai trò thành công!" } });
                 } else {
                     toast.error('Chỉnh sửa vai trò thất bại: ' + response.message);
                 }
@@ -146,7 +143,6 @@ export const useCreateOrEditRole = () => {
                     }
                 });
             }
-        } catch (error) {
         } finally {
             setLoading(false);
         }

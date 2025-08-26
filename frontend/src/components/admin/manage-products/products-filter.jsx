@@ -1,3 +1,4 @@
+import React from 'react';
 import ProductStatus from '~/constants/product-status';
 
 export const ProductsFilter = ({

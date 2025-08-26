@@ -1,3 +1,4 @@
+import React from 'react';
 import { Icon } from '@iconify/react';
 import RoleMain from '~/constants/role-main';
 import { checkRoleAndPermission } from '~/utils/common';

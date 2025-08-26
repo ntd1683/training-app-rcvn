@@ -21,13 +21,9 @@ export const useOrderDetail = () => {
     }, [dispatch, id]);
 
     const handleCreateOrder = useCallback(async () => {
-        try {
-            const response = await dispatch(rePay(id));
-            if (rePay.fulfilled.match(response)) {
-                return response.payload.data.id;
-            }
-        } catch (error) {
-            throw error;
+        const response = await dispatch(rePay(id));
+        if (rePay.fulfilled.match(response)) {
+            return response.payload.data.id;
         }
     }, [id, dispatch]);
 
@@ -49,6 +45,7 @@ export const useOrderDetail = () => {
         setShowModal(false);
     }, []);
 
+    // eslint-disable-next-line no-unused-vars
     const handleErrorOrder = useCallback((data) => {
         toast.error('Có lỗi xảy ra khi thanh toán!');
     }, []);

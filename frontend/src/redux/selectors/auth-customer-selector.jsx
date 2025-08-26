@@ -70,10 +70,10 @@ export const selectIsVerifiedEmail = createSelector(
 
 export const selectTotalProducts = createSelector(
     [selectCustomer],
-    (customer) => customer && customer.total_products ? customer.total_products : 0
+    (customer) => customer && customer.total_orders ? customer.total_orders : 0
 );
 
-export const selectTotalPrice = createSelector(
+export const selectTotalSpent = createSelector(
     [selectCustomer],
-    (customer) => customer && customer.total_price ? customer.total_price : 0
+    (customer) => customer && customer.total_spent ? customer.total_spent : 0
 );

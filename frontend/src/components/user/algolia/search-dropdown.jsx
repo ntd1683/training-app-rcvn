@@ -95,7 +95,7 @@ export const SearchDropdown = ({toggleMobileSearch}) => {
             <div className="d-flex align-items-center justify-content-center">
               <i className="lni lni-search-alt me-2 text-primary"></i>
               <span className="text-primary fw-bold">
-                Xem tất cả kết quả cho "<strong>{query}</strong>"
+                Xem tất cả kết quả cho &quot;<strong>{query}</strong>&quot;
               </span>
             </div>
           </div>
@@ -112,7 +112,7 @@ export const SearchDropdown = ({toggleMobileSearch}) => {
             onClick={handleSearchAll}
             style={{ cursor: 'pointer' }}
           >
-            Tìm kiếm với từ khóa "<strong>{query}</strong>"
+            Tìm kiếm với từ khóa &quot;<strong>{query}</strong>&quot;
           </div>
         </div>
       )}

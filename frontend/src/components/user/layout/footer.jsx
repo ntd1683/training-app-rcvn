@@ -1,4 +1,5 @@
-import credit from '../../../assets/images/credit-cards-footer.png'
+import React from 'react';
+import credit from '~/assets/images/credit-cards-footer.png'
 
 const Footer = () => {
     return (

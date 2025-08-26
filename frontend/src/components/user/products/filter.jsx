@@ -1,3 +1,4 @@
+import React from 'react';
 import DualRangeSlider from '../ui/dual-range-slider';
 import { CustomBtn } from '../ui/custom-btn';
 

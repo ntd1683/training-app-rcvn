@@ -181,8 +181,6 @@ export const useCheckout = () => {
                 note: shippingInfo.note,
             });
             return response.data.id;
-        } catch (error) {
-            throw error;
         } finally {
             setLoading(false);
         }
@@ -214,7 +212,8 @@ export const useCheckout = () => {
             toast.error('Có lỗi xảy ra khi hủy thanh toán đơn hàng!');
         }
     }, []);
-
+    
+    // eslint-disable-next-line no-unused-vars
     const handleErrorOrder = useCallback((data) => {
         toast.error('Có lỗi xảy ra khi thanh toán!');
     }, []);

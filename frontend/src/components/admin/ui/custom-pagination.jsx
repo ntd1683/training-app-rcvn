@@ -1,3 +1,5 @@
+import React from "react";
+
 const CustomPagination = ({ rowsPerPage, rowCount, onChangePage, onChangeRowsPerPage, currentPage }) => {
   const pageCount = Math.ceil(rowCount / rowsPerPage);
   const maxPagesToShow = 5;

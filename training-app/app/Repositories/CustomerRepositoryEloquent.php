@@ -54,4 +54,20 @@ class CustomerRepositoryEloquent extends BaseRepository implements CustomerRepos
     {
         return $this->findWhere(['provider_id' => $providerId])->first();
     }
+
+    /**
+     * Reset the deleted_at field for a customer (restore soft-deleted customer)
+     *
+     * @param  int $id
+     * @return bool
+     */
+    public function resetDeletedAt($id)
+    {
+        $customer = $this->withTrashed()->find($id);
+        if ($customer && $customer->trashed()) {
+            $customer->restore();
+            return true;
+        }
+        return false;
+    }
 }
