@@ -28,12 +28,12 @@ class OrderCustomerController extends Controller
         try {
             $validated = $request->validated();
             $customer = $request->user();
-            $products = $this->orderService->getFilteredOrdersForCustomer($validated, $customer);
+            $orders = $this->orderService->getFilteredOrders($validated, $customer);
 
-            return new OrderCollection($products, 'Lấy danh sách đơn hàng thành công');
+            return new OrderCollection($orders);
         } catch (\Exception $e) {
             return (new OrderResource(null))->errorResponse(
-                'SERVER_ERROR',
+                $e->getCode() ?: 'SERVER_ERROR',
                 null,
                 'Có lỗi xảy ra: ' . $e->getMessage()
             );

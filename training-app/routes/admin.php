@@ -4,6 +4,7 @@ use App\Http\Controllers\AnalyticController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AuthCustomerController;
 use App\Http\Controllers\LogoutController;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\RoleController;
@@ -26,6 +27,17 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('verify-token', [AuthController::class, 'verifyToken'])->name('verify.token');
     Route::get('profile', [AuthController::class, 'profile'])->name('profile.update');
     Route::post('/logout', [LogoutController::class, 'logout']);
+
+    Route::middleware(['permission'])->group(function () {
+        Route::prefix('orders')->group(function () {
+            Route::get('/', [OrderController::class, 'index'])
+                ->name('orders.index');
+            Route::get('/analytics', [OrderController::class, 'analytics'])
+                ->name('orders.index');
+//            Route::get('/{id}', [OrderCustomerController::class, 'edit'])
+//                ->name('orders.edit');
+        });
+    });
 })->middleware('throttle:300,1');
 
 Route::post('login', [AuthController::class, 'login'])->middleware('throttle:10,1');

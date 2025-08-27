@@ -87,7 +87,7 @@ class OrderService
             throw new Exception('Đơn hàng đã bị xóa trước đó', 404);
         }
 
-        if ($order->customer_id !== $customer->id) {
+        if (!$customer->group_role && $order->customer_id !== $customer->id) {
             throw new Exception('Bạn không có quyền truy cập vào đơn hàng này', 403);
         }
 
@@ -188,23 +188,57 @@ class OrderService
     }
 
     /**
+     * Get order analytics
+     *
+     * @return array
+     */
+    public function getOrderAnalytics(): array
+    {
+        $totalOrders = $this->orderRepository->count();
+        $totalPending = $this->orderRepository->count(['status' => OrderStatusEnum::PENDING->value]);
+        $totalProcessing = $this->orderRepository->count(['status' => OrderStatusEnum::PROCESSING->value]);
+        $totalCompleted = $this->orderRepository->count(['status' => OrderStatusEnum::COMPLETED->value]);
+//        $totalCancelled = $this->orderRepository->count(['status' => OrderStatusEnum::CANCELLED->value]);
+        $totalFailed = $this->orderRepository->count(['status' => OrderStatusEnum::PAYMENT_FAILED->value]);
+
+        return [
+            'total_orders' => $totalOrders,
+            'total_pending' => $totalPending,
+            'total_processing' => $totalProcessing,
+            'total_completed' => $totalCompleted,
+//            'total_cancelled' => $totalCancelled,
+            'total_failed' => $totalFailed,
+        ];
+    }
+
+    /**
      * Get filtered and paginated orders
      *
      * @param array $filters
+     * @param $currentUser
+     * @param bool $isCustomer
      * @return LengthAwarePaginator
      */
-    public function getFilteredOrdersForCustomer(array $filters, $customer)
+    public function getFilteredOrders(array $filters, $currentUser, bool $isCustomer = true)
     {
         $query = $this->orderRepository->newQuery();
         $criteria = new OrderFilterCriteria($filters);
-        $query->where('customer_id', $customer->id);
-        $query->with([
-            'orderDetails.product.image',
-        ]);
-        $query = $criteria->apply($query, $this->orderRepository);
-        $perPage = $filters['per_page'] ?? 10;
+        if ($isCustomer) {
+            $query->where('customer_id', $currentUser->id);
+            $query->with([
+                'orderDetails.product.image',
+            ]);
+            $query = $criteria->apply($query, $this->orderRepository);
+            $perPage = $filters['per_page'] ?? 10;
+        } else {
+            $query->with([
+                'orderDetails.product.image',
+            ]);
+            $query = $criteria->apply($query, $this->orderRepository);
+            $count = $query->count();
+            $perPage = $count > 20 ? ($filters['per_page'] ?? 10) : 20;
+        }
         $currentPage = $filters['page'] ?? 1;
-        $orders = $query->paginate($perPage, ['*'], 'page', $currentPage);
-        return $orders;
+        return $query->paginate($perPage, ['*'], 'page', $currentPage);
     }
 }

@@ -7,6 +7,11 @@ export const selectOrders = createSelector(
   (orderState) => orderState.data
 );
 
+export const selectAnalytics = createSelector(
+  [selectOrderState],
+  (orderState) => orderState.analytics
+);
+
 export const selectPagination = createSelector(
   [selectOrderState],
   (orderState) => orderState.pagination

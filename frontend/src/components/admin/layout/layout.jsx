@@ -21,7 +21,7 @@ const Layout = ({ children }) => {
     const handleResize = () => {
       const desktop = window.innerWidth >= 1200;
       setIsDesktop(desktop);
-      
+
       // Close mobile menu when switching to desktop
       if (desktop) {
         setIsMobileMenuOpen(false);
@@ -73,7 +73,7 @@ const Layout = ({ children }) => {
       const handleTouchMove = (e) => {
         if (!isDragging) return;
         currentX = e.touches[0].clientX;
-        
+
         // Only trigger if swipe starts from left edge
         if (startX < 50 && currentX - startX > 100) {
           setIsMobileMenuOpen(true);
@@ -100,7 +100,7 @@ const Layout = ({ children }) => {
   // Determine menu classes
   const getMenuClasses = () => {
     let classes = "layout-menu menu-vertical menu";
-    
+
     if (isDesktop) {
       if (isMenuCollapsed) {
         classes += " menu-collapsed";
@@ -114,30 +114,33 @@ const Layout = ({ children }) => {
         classes += " menu-mobile-open";
       }
     }
-    
+
     return classes;
   };
 
   // Get layout container classes
   const getLayoutContainerClasses = () => {
     let classes = "layout-container";
-    
+
     if (isDesktop && isMenuCollapsed) {
       classes += " menu-collapsed";
+      if (isHovering) {
+        classes += " layout-menu-hover-expanded";
+      }
     }
-    
+
     if (!isDesktop && isMobileMenuOpen) {
       classes += " mobile-menu-open";
     }
-    
+
     return classes;
   };
 
   return (
     <div className="layout-wrapper layout-content-navbar">
       <div className={getLayoutContainerClasses()}>
-        <aside 
-          id="layout-menu" 
+        <aside
+          id="layout-menu"
           className={getMenuClasses()}
           onMouseEnter={() => isDesktop && isMenuCollapsed && setIsHovering(true)}
           onMouseLeave={() => isDesktop && isMenuCollapsed && setIsHovering(false)}
@@ -149,13 +152,13 @@ const Layout = ({ children }) => {
             </Link>
 
             {isDesktop && (
-              <button 
+              <button
                 className="layout-menu-toggle menu-link text-large ms-auto btn btn-link p-0"
                 onClick={toggleDesktopMenu}
                 aria-label="Toggle menu"
               >
-                <Icon 
-                  icon={isMenuCollapsed ? "bx:bx-chevron-right" : "bx:bx-chevron-left"} 
+                <Icon
+                  icon={isMenuCollapsed ? "bx:bx-chevron-right" : "bx:bx-chevron-left"}
                   className="toggle-icon"
                 />
               </button>
@@ -170,10 +173,10 @@ const Layout = ({ children }) => {
             className={`layout-navbar container-fluid navbar-detached navbar navbar-expand-xl align-items-center
             bg-navbar-theme ${isScrolled ? 'navbar-scrolled' : ''}`}
             id="layout-navbar">
-            
+
             {!isDesktop && (
               <div className="layout-menu-toggle navbar-nav align-items-xl-center me-4 me-xl-0 d-xl-none">
-                <button 
+                <button
                   className="nav-item nav-link px-0 me-xl-6 btn btn-link"
                   onClick={toggleMobileMenu}
                   aria-label="Toggle mobile menu"
@@ -206,7 +209,7 @@ const Layout = ({ children }) => {
               </ul>
             </div>
           </nav>
-          
+
           <div className="content-wrapper">
             <div className="container-fluid flex-grow-1 container-p-y">
               {children}
@@ -217,10 +220,10 @@ const Layout = ({ children }) => {
       </div>
 
       {/* Mobile overlay */}
-        <div 
-          className={`layout-overlay layout-menu-toggle ${isMobileMenuOpen ? 'active' : ''}`}
-          onClick={closeMobileMenu}
-        ></div>
+      <div
+        className={`layout-overlay layout-menu-toggle ${isMobileMenuOpen ? 'active' : ''}`}
+        onClick={closeMobileMenu}
+      ></div>
       <div className="drag-target"></div>
     </div>
   );

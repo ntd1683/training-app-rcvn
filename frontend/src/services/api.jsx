@@ -469,8 +469,16 @@ export const fetchBanners = async (page = 1, perPage = 10, filters = {}) => {
 };
 
 // Order management functions
-export const fetchOrders = async (page = 1, perPage = 10, filters = {}) => {
-  const token = localStorage.getItem('customer_token');
+export const fetchOrders = async (page = 1, perPage = 10, filters = {}, isAdmin = false) => {
+  let token = '';
+  let url = '';
+  if (!isAdmin) {
+    token = localStorage.getItem('customer_token');
+    url = `${prefixApi}/orders`;
+  } else {
+    token = localStorage.getItem('user_token');
+    url = `${prefixApi}/admin/orders`;
+  }
 
   const params = {
     page,
@@ -488,8 +496,18 @@ export const fetchOrders = async (page = 1, perPage = 10, filters = {}) => {
     }
   });
 
-  const response = await api.get(`${prefixApi}/orders`, {
+  const response = await api.get(`${url}`, {
     params,
+    headers: { Authorization: `Bearer ${token}` }
+  });
+
+  return response.data;
+};
+
+export const fetchOrderAnalytics = async () => {
+  const token = localStorage.getItem('user_token');
+
+  const response = await api.get(`${prefixApi}/admin/orders/analytics`, {
     headers: { Authorization: `Bearer ${token}` }
   });
 

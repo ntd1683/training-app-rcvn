@@ -1,12 +1,12 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { fetchOrders, fetchOrderById, rePayOrder, approveOrder, cancelOrder } from '~/services/api';
+import { fetchOrders, fetchOrderById, rePayOrder, approveOrder, cancelOrder, fetchOrderAnalytics } from '~/services/api';
 
 // Async thunks
 export const loadOrders = createAsyncThunk(
     'orders/loadOrders',
-    async ({ page = 1, perPage = 10, filters = {} }, { rejectWithValue }) => {
+    async ({ page = 1, perPage = 10, filters = {}, isAdmin = false }, { rejectWithValue }) => {
         try {
-            const response = await fetchOrders(page, perPage, filters);
+            const response = await fetchOrders(page, perPage, filters, isAdmin);
             if (response.success) {
                 return {
                     data: response.data,
@@ -21,6 +21,48 @@ export const loadOrders = createAsyncThunk(
                 };
             } else {
                 throw new Error('Lỗi khi lấy danh sách đơn hàng');
+            }
+        } catch (error) {
+            return rejectWithValue(error.message);
+        }
+    }
+);
+
+export const loadAllOrders = createAsyncThunk(
+    'orders/loadAllOrders',
+    async ({ count , filters = {}, isAdmin = false }, { rejectWithValue }) => {
+        try {
+            const response = await fetchOrders(1, count, filters, isAdmin);
+            if (response.success) {
+                return {
+                    data: response.data,
+                    pagination: {
+                        current_page: 1,
+                        per_page: response.pagination?.total > 20 ? response.pagination.per_page : 1000,
+                        total: response.pagination?.total || 0,
+                        last_page: response.pagination?.last_page || 1,
+                        from: response.pagination?.from || 0,
+                        to: response.pagination?.to || 0,
+                    },
+                };
+            } else {
+                throw new Error('Lỗi khi lấy danh sách đơn hàng');
+            }
+        } catch (error) {
+            return rejectWithValue(error.message);
+        }
+    }
+);
+
+export const loadAnalytics = createAsyncThunk(
+    'orders/loadAnalytics',
+    async (_, { rejectWithValue }) => {
+        try {
+            const response = await fetchOrderAnalytics();
+            if (response.success) {
+                return response.data;
+            } else {
+                throw new Error('Lỗi khi lấy dữ liệu phân tích');
             }
         } catch (error) {
             return rejectWithValue(error.message);
@@ -105,6 +147,12 @@ export const cancelCheckout = createAsyncThunk(
 // Initial state
 const initialState = {
     data: [],
+    analytics: {
+        total_pending: 0,
+        total_processing: 0,
+        total_completed: 0,
+        total_failed: 0,
+    },
     pagination: {
         current_page: 1,
         per_page: 10,
@@ -289,6 +337,11 @@ const orderSlice = createSlice({
                 state.isLoading = false;
                 state.data = [];
                 state.error = action.payload;
+            })
+
+            // Load analytics
+            .addCase(loadAnalytics.fulfilled, (state, action) => {
+                state.analytics = action.payload.data || action.payload;
             })
 
             // Load more orders
