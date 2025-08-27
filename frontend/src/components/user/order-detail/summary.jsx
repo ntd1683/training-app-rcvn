@@ -2,7 +2,7 @@ import React from 'react';
 import { Icon } from '@iconify/react';
 import { formatPrice } from '~/utils/common';
 
-const Summary = ({ orderData }) => {
+const Summary = ({ orderData, className = '' }) => {
     
     const total_product = () => {
         return orderData.products.reduce((total, product) => total + parseFloat(product.order_price) * product.order_quantity, 0);
@@ -15,7 +15,7 @@ const Summary = ({ orderData }) => {
                     <div className="card-body p-4">
                         <div className="row">
                             <div className="col-md-8"></div>
-                            <div className="col-md-4">
+                            <div className={`col-md-4 ${className}`}>
                                 <div className="d-flex justify-content-between mb-2">
                                     <span>Tổng tiền hàng</span>
                                     <span>{formatPrice(total_product())}</span>

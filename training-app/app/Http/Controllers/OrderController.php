@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Admin\OrderUpdateRequest;
 use App\Http\Requests\OrderSearchRequest;
+use App\Http\Resources\OrderCollection;
+use App\Http\Resources\OrderResource;
 use App\Repositories\Services\OrderService;
 use App\Repositories\Services\ProductService;
 use Illuminate\Http\Request;
@@ -21,17 +24,66 @@ class OrderController extends Controller
         $this->orderService = $orderService;
     }
 
+    public function analytics(Request $request)
+    {
+        try {
+            $data = $this->orderService->getOrderAnalytics();
+
+            return new OrderResource($data, 'Thống kê đơn hàng thành công');
+        } catch (\Exception $e) {
+            return (new OrderResource(null))->errorResponse(
+                $e->getCode() ?: 'SERVER_ERROR',
+                null,
+                'Có lỗi xảy ra: ' . $e->getMessage()
+            );
+        }
+    }
+
     public function index(OrderSearchRequest $request)
     {
         try {
             $validated = $request->validated();
-            $customer = $request->user();
-            $products = $this->orderService->getFilteredOrders($validated, $customer);
+            $user = auth()->user();
+            $orders = $this->orderService->getFilteredOrders($validated, $user, false);
 
-            return new ProductCollection($products, 'Lấy danh sách sản phẩm thành công');
+            return new OrderCollection($orders);
         } catch (\Exception $e) {
-            return (new ProductResource(null))->errorResponse(
-                'SERVER_ERROR',
+            return (new OrderResource(null))->errorResponse(
+                $e->getCode() ?: 'SERVER_ERROR',
+                null,
+                'Có lỗi xảy ra: ' . $e->getMessage()
+            );
+        }
+    }
+
+    public function edit($id, Request $request)
+    {
+        try {
+            $order = $this->orderService->getOrderById($id, $request->user());
+            if (!$order) {
+                return (new OrderResource(null))->errorResponse(
+                    'NOT_FOUND',
+                    null,
+                    'Không tìm thấy đơn hàng'
+                );
+            }
+            return new OrderResource($order, 'Lấy thông tin đơn hàng thành công');
+        } catch (\Exception $e) {
+            return (new OrderResource(null))->errorResponse(
+                $e->getCode() ?: 'SERVER_ERROR',
+                null,
+                'Có lỗi xảy ra: ' . $e->getMessage()
+            );
+        }
+    }
+
+    public function update($id, OrderUpdateRequest $request) {
+        try {
+            $order = $this->orderService->updateOrder($id, $request->validated(), $request->user());
+            return new OrderResource($order, 'Cập nhật đơn hàng thành công');
+        } catch (\Exception $e) {
+            return (new OrderResource(null))->errorResponse(
+                $e->getCode() ?: 'SERVER_ERROR',
                 null,
                 'Có lỗi xảy ra: ' . $e->getMessage()
             );
