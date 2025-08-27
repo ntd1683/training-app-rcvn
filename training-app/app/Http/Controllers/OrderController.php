@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Admin\OrderUpdateRequest;
 use App\Http\Requests\OrderSearchRequest;
 use App\Http\Resources\OrderCollection;
 use App\Http\Resources\OrderResource;
@@ -46,6 +47,40 @@ class OrderController extends Controller
             $orders = $this->orderService->getFilteredOrders($validated, $user, false);
 
             return new OrderCollection($orders);
+        } catch (\Exception $e) {
+            return (new OrderResource(null))->errorResponse(
+                $e->getCode() ?: 'SERVER_ERROR',
+                null,
+                'Có lỗi xảy ra: ' . $e->getMessage()
+            );
+        }
+    }
+
+    public function edit($id, Request $request)
+    {
+        try {
+            $order = $this->orderService->getOrderById($id, $request->user());
+            if (!$order) {
+                return (new OrderResource(null))->errorResponse(
+                    'NOT_FOUND',
+                    null,
+                    'Không tìm thấy đơn hàng'
+                );
+            }
+            return new OrderResource($order, 'Lấy thông tin đơn hàng thành công');
+        } catch (\Exception $e) {
+            return (new OrderResource(null))->errorResponse(
+                $e->getCode() ?: 'SERVER_ERROR',
+                null,
+                'Có lỗi xảy ra: ' . $e->getMessage()
+            );
+        }
+    }
+
+    public function update($id, OrderUpdateRequest $request) {
+        try {
+            $order = $this->orderService->updateOrder($id, $request->validated(), $request->user());
+            return new OrderResource($order, 'Cập nhật đơn hàng thành công');
         } catch (\Exception $e) {
             return (new OrderResource(null))->errorResponse(
                 $e->getCode() ?: 'SERVER_ERROR',

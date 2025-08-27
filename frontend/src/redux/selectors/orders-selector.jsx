@@ -89,15 +89,17 @@ export const selectLoadingStates = createSelector(
     isLoading: orderState.isLoading,
     isLoadingMore: orderState.isLoadingMore,
     currentUserLoading: orderState.currentUserLoading,
+    isUpdateOrder: orderState.isUpdateOrder,
   })
 );
 
 export const selectErrorStates = createSelector(
   [selectOrderState],
-  (productState) => ({
-    error: productState.error,
-    errorLoadMore: productState.errorLoadMore,
-    currentUserError: productState.currentUserError,
+  (orderState) => ({
+    error: orderState.error,
+    errorLoadMore: orderState.errorLoadMore,
+    currentUserError: orderState.currentUserError,
+    errorUpdateOrder: orderState.errorUpdateOrder,
   })
 );
 
@@ -185,4 +187,14 @@ export const selectCreateEditData = createSelector(
 export const selectIsRePay = createSelector(
   [selectOrderState],
   (orderState) => orderState.isRePay
+);
+
+export const selectIsUpdateOrder = createSelector(
+  [selectOrderState],
+  (orderState) => orderState.isUpdateOrder
+);
+
+export const selectErrorUpdateOrder = createSelector(
+  [selectOrderState],
+  (orderState) => orderState.errorUpdateOrder
 );

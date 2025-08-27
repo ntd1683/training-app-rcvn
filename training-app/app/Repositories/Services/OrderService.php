@@ -87,7 +87,7 @@ class OrderService
             throw new Exception('Đơn hàng đã bị xóa trước đó', 404);
         }
 
-        if (!$customer->group_role && $order->customer_id !== $customer->id) {
+        if ($customer->group_role === '' && $order->customer_id !== $customer->id) {
             throw new Exception('Bạn không có quyền truy cập vào đơn hàng này', 403);
         }
 
@@ -184,6 +184,45 @@ class OrderService
         }
 
         $order->update(['status' => $status]);
+        return $order;
+    }
+
+    /**
+     * Update a order
+     *
+     * @param int $id
+     * @param array $data
+     * @param  $currentUser
+     * @return Model
+     * @throws Throwable
+     */
+    public function updateOrder($id, array $data, $currentUser)
+    {
+        $order = $this->orderRepository->find($id);
+        if (!$order) {
+            throw new Exception('Không tìm thấy đơn hàng', 404);
+        }
+
+        if ($order->deleted_at) {
+            throw new Exception('Đơn hàng đã bị xóa trước đó', 404);
+        }
+
+        if ($currentUser->group_role === '' && $order->customer_id !== $currentUser->id) {
+            throw new Exception('Bạn không có quyền chỉnh sửa đơn hàng này', 403);
+        }
+
+        $timeline = $this->orderTimelineRepository->create(
+            [
+                'order_id' => $order->id,
+                'type' => OrderTimelineStatusEnum::PROCESSING->value,
+                'note' => 'Đơn hàng đã được cập nhật thông tin bởi nhân viên',
+            ]
+        );
+
+        \Log::info('Đơn hàng đã được cập nhật bởi người dùng ID: ' . $currentUser->id
+            . ', data cũ: ' . json_encode($order)
+            . ', data mới: ' . json_encode($data));
+        $order->update($data);
         return $order;
     }
 

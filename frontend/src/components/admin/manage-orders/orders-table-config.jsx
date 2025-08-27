@@ -80,7 +80,7 @@ export const columns = (navigate, pagination, user) => [
             <div className="d-flex gap-2">
                 { checkRoleAndPermission('orders.edit', user) && (
                     <button type="button" className="btn p-0" onClick={() => {
-                        navigate(`/admin/orders/edit/${row.id}`);
+                        navigate(`/admin/order/${row.id}`);
                     }}>
                         <Icon icon="bx:pen" className="text-primary fs-4" />
                     </button>

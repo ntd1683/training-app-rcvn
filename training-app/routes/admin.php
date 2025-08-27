@@ -34,6 +34,10 @@ Route::middleware('auth:sanctum')->group(function () {
                 ->name('orders.index');
             Route::get('/analytics', [OrderController::class, 'analytics'])
                 ->name('orders.index');
+            Route::get('/{id}', [OrderController::class, 'edit'])
+                ->name('orders.edit');
+            Route::put('/{id}', [OrderController::class, 'update'])
+                ->name('orders.update');
 //            Route::get('/{id}', [OrderCustomerController::class, 'edit'])
 //                ->name('orders.edit');
         });

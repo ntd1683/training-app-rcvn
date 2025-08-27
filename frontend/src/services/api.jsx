@@ -562,6 +562,23 @@ export const rePayOrder = async (orderId) => {
   return response.data;
 };
 
+export const updateOrder = async (orderId, orderData, isAdmin = false) => {
+  let token = '';
+  let url = '';
+  if (isAdmin) {
+    token = localStorage.getItem('user_token');
+    url = `${prefixApi}/admin/orders/${orderId}`;
+  } else {
+    token = localStorage.getItem('customer_token');
+    url = `${prefixApi}/orders/${orderId}`;
+  }
+
+  const response = await api.put(`${url}`, orderData, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return response.data;
+};
+
 // fetch Customer : 
 export const fetchCustomers = async (page = 1, perPage = 10, filters = {}) => {
   const token = localStorage.getItem('user_token');

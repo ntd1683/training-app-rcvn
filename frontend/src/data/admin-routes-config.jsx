@@ -13,6 +13,7 @@ const NoPermission = lazy(() => import('../components/no-permission'));
 const ManageCustomers = lazy(() => import('../components/admin/manage-customers'));
 const CreateOrEditCustomer = lazy(() => import('../components/admin/create-or-edit-customer'));
 const ManageOrders = lazy(() => import('../components/admin/manage-orders'));
+const OrderDetail = lazy(() => import('../components/admin/order-detail'));
 
 export const adminRoutesConfig = [
     {
@@ -157,6 +158,14 @@ export const adminRoutesConfig = [
         layout: true,
         permissions: ['orders.index'],
         title: 'Quản lý đơn hàng',
+    },
+    {
+        path: '/order/:id',
+        element: OrderDetail,
+        requireAuth: true,
+        layout: true,
+        permissions: ['orders.edit'],
+        title: 'Chi tiết đơn hàng',
     },
     // Other routes
     {

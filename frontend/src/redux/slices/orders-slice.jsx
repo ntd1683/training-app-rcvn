@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { fetchOrders, fetchOrderById, rePayOrder, approveOrder, cancelOrder, fetchOrderAnalytics } from '~/services/api';
+import { fetchOrders, fetchOrderById, rePayOrder, approveOrder, cancelOrder, fetchOrderAnalytics, updateOrder } from '~/services/api';
 
 // Async thunks
 export const loadOrders = createAsyncThunk(
@@ -144,6 +144,19 @@ export const cancelCheckout = createAsyncThunk(
     }
 );
 
+export const handleUpdateOrder = createAsyncThunk(
+    'order/update-order',
+    async ({ orderId, orderData, isAdmin = false }, { rejectWithValue }) => {
+        try {
+            console.log(orderId);
+            const response = await updateOrder(orderId, orderData, isAdmin);
+            return response;
+        } catch (error) {
+            return rejectWithValue(error.response?.data?.message || 'Có lỗi xảy ra khi cập nhật đơn hàng');
+        }
+    }
+);
+
 // Initial state
 const initialState = {
     data: [],
@@ -201,6 +214,8 @@ const initialState = {
     },
     currentOrderLoading: false,
     currentOrderError: null,
+    isUpdateOrder: false,
+    errorUpdateOrder: null,
 };
 
 const orderSlice = createSlice({
@@ -405,6 +420,31 @@ const orderSlice = createSlice({
                     fee: 0,
                     payment_type: ''
                 };
+            })
+
+            .addCase(handleUpdateOrder.pending, (state) => {
+                state.isUpdateOrder = true;
+                state.errorUpdateOrder = null;
+            })
+            .addCase(handleUpdateOrder.fulfilled, (state, action) => {
+                state.isUpdateOrder = false;
+                state.currentOrder.status = action.payload.data.status || action.payload.status;
+                const data = action.payload.data || action.payload;
+                
+                state.currentOrder.recipient = {
+                    name: data.recipient_name,
+                    phone: data.recipient_phone,
+                    address: data.recipient_address,
+                    ward: data.recipient_ward,
+                    province: data.recipient_province,
+                    post_code: data.post_code,
+                    note: data.note
+                }
+                state.errorUpdateOrder = null;
+            })
+            .addCase(handleUpdateOrder.rejected, (state, action) => {
+                state.isUpdateOrder = false;
+                state.errorUpdateOrder = action.payload;
             })
 
             .addCase(approveCheckout.pending, (state) => {
