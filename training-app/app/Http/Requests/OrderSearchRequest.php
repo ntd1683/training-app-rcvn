@@ -25,11 +25,11 @@ class OrderSearchRequest extends FormRequest
     {
         return [
             'page' => 'integer|min:1',
-            'per_page' => 'integer|min:1|max:100',
+            'per_page' => 'integer|min:1',
             'name' => 'string|nullable',
             'date' => 'date|nullable',
             'status' => 'integer|nullable|in:0,1,2,3',
-            'sort_by' => 'string|nullable|in:id,name,date,created_at',
+            'sort_by' => 'string|nullable|in:id,name,date,total_amount,recipient_name,created_at',
             'sort_order' => 'string|nullable|in:asc,desc',
         ];
     }

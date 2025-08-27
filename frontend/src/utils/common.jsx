@@ -73,3 +73,32 @@ export const truncateText = (text, maxLength = 50) => {
   if (!text) return '';
   return text.length > maxLength ? text.substring(0, maxLength) + '...' : text;
 };
+
+export const shortenText = (str) => {
+  if (!str) return '';
+  if (str.length <= 19) return str;
+
+  const first = str.slice(0, 8);
+  const last = str.slice(-8);
+  return `${first}...${last}`;
+}
+
+export const formatDate = (dateString) => {
+  const date = new Date(dateString);
+  return date.toLocaleTimeString('vi-VN', {
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit'
+  }) + ' ' + date.toLocaleDateString('vi-VN', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric'
+  });
+}
+
+export const combinedAddress = (address, ward, district, province) => {
+    return (address ? address + ', ' : '') + 
+    (ward ? ward + ', ' : '') +
+    (district ? district + ', ' : '') + 
+    (province ? province : '');
+}

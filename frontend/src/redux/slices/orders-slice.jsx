@@ -1,12 +1,12 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { fetchOrders, fetchOrderById, rePayOrder, approveOrder, cancelOrder } from '~/services/api';
+import { fetchOrders, fetchOrderById, rePayOrder, approveOrder, cancelOrder, fetchOrderAnalytics, updateOrder } from '~/services/api';
 
 // Async thunks
 export const loadOrders = createAsyncThunk(
     'orders/loadOrders',
-    async ({ page = 1, perPage = 10, filters = {} }, { rejectWithValue }) => {
+    async ({ page = 1, perPage = 10, filters = {}, isAdmin = false }, { rejectWithValue }) => {
         try {
-            const response = await fetchOrders(page, perPage, filters);
+            const response = await fetchOrders(page, perPage, filters, isAdmin);
             if (response.success) {
                 return {
                     data: response.data,
@@ -21,6 +21,48 @@ export const loadOrders = createAsyncThunk(
                 };
             } else {
                 throw new Error('Lỗi khi lấy danh sách đơn hàng');
+            }
+        } catch (error) {
+            return rejectWithValue(error.message);
+        }
+    }
+);
+
+export const loadAllOrders = createAsyncThunk(
+    'orders/loadAllOrders',
+    async ({ count , filters = {}, isAdmin = false }, { rejectWithValue }) => {
+        try {
+            const response = await fetchOrders(1, count, filters, isAdmin);
+            if (response.success) {
+                return {
+                    data: response.data,
+                    pagination: {
+                        current_page: 1,
+                        per_page: response.pagination?.total > 20 ? response.pagination.per_page : 1000,
+                        total: response.pagination?.total || 0,
+                        last_page: response.pagination?.last_page || 1,
+                        from: response.pagination?.from || 0,
+                        to: response.pagination?.to || 0,
+                    },
+                };
+            } else {
+                throw new Error('Lỗi khi lấy danh sách đơn hàng');
+            }
+        } catch (error) {
+            return rejectWithValue(error.message);
+        }
+    }
+);
+
+export const loadAnalytics = createAsyncThunk(
+    'orders/loadAnalytics',
+    async (_, { rejectWithValue }) => {
+        try {
+            const response = await fetchOrderAnalytics();
+            if (response.success) {
+                return response.data;
+            } else {
+                throw new Error('Lỗi khi lấy dữ liệu phân tích');
             }
         } catch (error) {
             return rejectWithValue(error.message);
@@ -102,9 +144,28 @@ export const cancelCheckout = createAsyncThunk(
     }
 );
 
+export const handleUpdateOrder = createAsyncThunk(
+    'order/update-order',
+    async ({ orderId, orderData, isAdmin = false }, { rejectWithValue }) => {
+        try {
+            console.log(orderId);
+            const response = await updateOrder(orderId, orderData, isAdmin);
+            return response;
+        } catch (error) {
+            return rejectWithValue(error.response?.data?.message || 'Có lỗi xảy ra khi cập nhật đơn hàng');
+        }
+    }
+);
+
 // Initial state
 const initialState = {
     data: [],
+    analytics: {
+        total_pending: 0,
+        total_processing: 0,
+        total_completed: 0,
+        total_failed: 0,
+    },
     pagination: {
         current_page: 1,
         per_page: 10,
@@ -153,6 +214,8 @@ const initialState = {
     },
     currentOrderLoading: false,
     currentOrderError: null,
+    isUpdateOrder: false,
+    errorUpdateOrder: null,
 };
 
 const orderSlice = createSlice({
@@ -291,6 +354,11 @@ const orderSlice = createSlice({
                 state.error = action.payload;
             })
 
+            // Load analytics
+            .addCase(loadAnalytics.fulfilled, (state, action) => {
+                state.analytics = action.payload.data || action.payload;
+            })
+
             // Load more orders
             .addCase(loadMoreOrders.pending, (state) => {
                 state.isLoadingMore = true;
@@ -352,6 +420,31 @@ const orderSlice = createSlice({
                     fee: 0,
                     payment_type: ''
                 };
+            })
+
+            .addCase(handleUpdateOrder.pending, (state) => {
+                state.isUpdateOrder = true;
+                state.errorUpdateOrder = null;
+            })
+            .addCase(handleUpdateOrder.fulfilled, (state, action) => {
+                state.isUpdateOrder = false;
+                state.currentOrder.status = action.payload.data.status || action.payload.status;
+                const data = action.payload.data || action.payload;
+                
+                state.currentOrder.recipient = {
+                    name: data.recipient_name,
+                    phone: data.recipient_phone,
+                    address: data.recipient_address,
+                    ward: data.recipient_ward,
+                    province: data.recipient_province,
+                    post_code: data.post_code,
+                    note: data.note
+                }
+                state.errorUpdateOrder = null;
+            })
+            .addCase(handleUpdateOrder.rejected, (state, action) => {
+                state.isUpdateOrder = false;
+                state.errorUpdateOrder = action.payload;
             })
 
             .addCase(approveCheckout.pending, (state) => {

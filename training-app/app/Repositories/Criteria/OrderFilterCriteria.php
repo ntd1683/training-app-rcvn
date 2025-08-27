@@ -47,6 +47,21 @@ class OrderFilterCriteria implements CriteriaInterface
             });
         }
 
+        $recipientName = $this->filters['recipient_name'] ?? null;
+        if (isset($recipientName)) {
+            $model->where('recipient_name', 'like', '%' . $recipientName . '%');
+        }
+
+        $recipientPhone = $this->filters['recipient_phone'] ?? null;
+        if (isset($recipientPhone)) {
+            $model->where('recipient_phone', 'like', '%' . $recipientPhone . '%');
+        }
+
+        $orderCode = $this->filters['order_code'] ?? null;
+        if (isset($orderCode)) {
+            $model->where('order_code', 'like', '%' . $orderCode . '%');
+        }
+
         $status = $this->filters['status'] ?? null;
         if (isset($status)) {
             if ($status === OrderStatusEnum::PROCESSING) {

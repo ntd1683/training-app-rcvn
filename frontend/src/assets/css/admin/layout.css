@@ -472,3 +472,29 @@
 .menu .app-brand .layout-menu-toggle {
   inset-inline-start: 15.2rem;
 }
+
+.layout-page {
+  transition: padding-inline-start 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@media (min-width: 1200px) {
+  .layout-menu {
+    position: fixed !important;
+  }
+
+  .menu-collapsed .layout-menu,
+  .menu-collapsed .layout-menu {
+    position: fixed;
+    inset-block: 0;
+    inset-inline-start: 0;
+    margin-inline: 0 !important;
+  }
+
+  .menu-collapsed .layout-page {
+    padding-inline-start: var(--bs-menu-collapsed-width) !important;
+  }
+
+  .layout-page {
+    padding-inline-start: var(--bs-menu-width) !important;
+  }
+}

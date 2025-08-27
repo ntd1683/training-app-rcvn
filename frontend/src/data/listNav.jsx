@@ -1,7 +1,7 @@
 export const listNav = [
   {
     permission: 'dashboard.index',
-    path: '/admin/dashboard',
+    path: '/admin',
     icon: 'bx:bx-home-smile',
     label: 'Dashboards',
   },
@@ -53,6 +53,15 @@ export const listNav = [
     children: [
       { path: '/admin/products', label: 'Danh sách Sản Phẩm', permission: 'products.index' },
       { path: '/admin/products/add', label: 'Thêm Sản Phẩm', permission: 'products.store' },
+    ]
+  },
+  {
+    permission: 'orders.index',
+    path: '/admin/orders',
+    icon: 'bx:package',
+    label: 'Đơn Hàng',
+    children: [
+      { path: '/admin/orders', label: 'Danh sách Đơn Hàng', permission: 'orders.index' },
     ]
   }
 ];
